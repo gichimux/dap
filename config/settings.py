@@ -39,8 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 'crispy_forms',
     # 'crispy_bootstrap4',
-    # 'core',
-    # 'accounts',
+    'core',
+    'accounts',
     # 'products',
     # 'analytics',
     # 'crm',
@@ -96,7 +96,7 @@ if config('MODE')=="dev":
        
    }
 
-# AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'accounts.User'
 
 
 # Password validation
