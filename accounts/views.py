@@ -4,11 +4,9 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth import login, authenticate 
 from django.contrib.auth.forms import AuthenticationForm 
-from .forms import SubdomainForm
 # from workspace.views  import dashboard
 from .models import Profile
 from django.contrib.auth.decorators import login_required
-from core.views import profile
 from .forms import ProfileForm, EditProfileForm
 
 
