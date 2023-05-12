@@ -2,15 +2,15 @@
 {% load static %}
 {% block content %}
 {% load crispy_forms_tags %}         
-
-<div class="py-5"></div>
+<br>
+<div class="py-5 mt-5"></div>
 <div id="wrapper"><br>
 
-	<div class="card card-authentication1 mx-auto ">
+	<div class="auth-card mx-auto col-lg-4 ">
 		<div class="card-body">
 		 <div class="card-content p-2">
 		 	
-		  <div class="card-title text-uppercase text-center py-3">Sign Up</div>
+		  <div class="card-title text-uppercase text-center py-3"><h3>Create your Account</h3></div><hr>
 		    <form method="POST">
 				<div class="form-group">
 				{% csrf_token %}
