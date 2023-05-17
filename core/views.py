@@ -11,6 +11,44 @@ def home(request):
    }
     return render (request, 'app/home.html', context )
 
+def user_profile(request):
+       
+    context ={
+     
+   }
+    return render (request, 'profiles/userprofile.html', context )
+
+def free_store(request):
+       
+    context ={
+     
+   }
+    return render (request, 'markets/freestore.html', context )
+
+def chat_list(request):
+       
+    context ={
+     
+   }
+    return render (request, 'chats/chatlist.html', context )
+
+def notification_list(request):
+       
+    context ={
+     
+   }
+    return render (request, 'notifications/notificationlist.html', context )
+
+def settings_list(request):
+       
+    context ={
+     
+   }
+    return render (request, 'settings/settingslist.html', context )
+
+
+
+
 def landing(request):
 		
     form = AuthenticationForm(request, data=request.POST)

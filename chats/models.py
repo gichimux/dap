@@ -5,53 +5,18 @@ import math
 
 # Create your models here.
 
-class Condition(models.TextChoices):
-        NEW = 'New', "NEW"
-        WELL_USED = 'Well used', "WELL_USED"
-        USED = 'Used', "USED"
-        SCRAP = 'Scrap', "SCRAP"
-        
-class Pick_Up(models.TextChoices):
-        MEETUP = 'Meetup', "MEETUP"
-        ON_PREMISE = 'On Premise', "ON_PREMISE"
-        DELIVERY = 'delivery', "DELIVERY"
 
-class Payment_Method(models.TextChoices):
-        MPESA_ON_DELIVERY = 'Mpesa on delivery', "MPESA_ON_DELIVERY"
-        ESCROW = 'Escrow', "ESCROW"
-        CASH_ON_DELIVERY = 'Cash ondelivery', "CASH_ON_DELIVERY"        
-
-class Post_Type(models.TextChoices):
-        SELL = 'Sell', "SELL"
-        FLIP = 'Flip', "FLIP"
- 
 class Feed(models.Model):
     pass
 
-class Post(models.Model):
-    post_type = models.CharField(max_length=50,
-        choices=Post_Type.choices,
-        default=Post_Type.SELL
-        )
-    posted_by = models.ForeignKey(
-        Profile, related_name="posted_by", on_delete=models.CASCADE, null=True
+class Thread(models.Model):
+    
+    thread_by = models.ForeignKey(
+        Profile, related_name="thread_by", on_delete=models.CASCADE, null=True
     ) 
-    product_name = models.CharField(max_length=20)
-    story = models.CharField(max_length=100)
-    display_price = models.IntegerField(default=0)
-    actual_price = models.IntegerField(default=0)
-    product_condition = models.CharField(max_length=50,
-        choices=Condition.choices,
-        default=Condition.NEW
-        )
-    product_pick_up = models.CharField(max_length=50,
-        choices=Pick_Up.choices,
-        default=Pick_Up.MEETUP
-        )
-    payment_method = models.CharField(max_length=50,
-        choices=Payment_Method.choices,
-        default=Payment_Method.MPESA_ON_DELIVERY
-        )
+    headline = models.CharField(max_length=20)
+    story = models.CharField(max_length=500)
+    
     timestamp = models.DateTimeField(auto_now_add=True)
 
 
@@ -131,55 +96,53 @@ class Post(models.Model):
 
 
 class Like(models.Model):
-    product = models.ForeignKey(
-        Post, related_name="post_likes", on_delete=models.CASCADE
+    thread = models.ForeignKey(
+        Thread, related_name="thread_likes", on_delete=models.CASCADE
         )
     user = models.ForeignKey(
-        Profile, related_name="profile_likes", on_delete=models.CASCADE, null=True
+        Profile, related_name="profile_thread_likes", on_delete=models.CASCADE, null=True
     )
     created_on = models.DateTimeField(auto_now_add=True)
 
 
 class Comment(models.Model):
     comment_by = models.ForeignKey(
-        Profile, related_name="comment_by", on_delete=models.CASCADE, null=True
+        Profile, related_name="commented_by", on_delete=models.CASCADE, null=True
     )
     related_post = models.ForeignKey(
-        Post, related_name="post_comment", on_delete=models.CASCADE
+        Thread, related_name="thread_comment", on_delete=models.CASCADE
     )
     comment_image = models.ImageField(upload_to='images/')
 
     comment = models.CharField(max_length=300)
 
-
 class Reply(models.Model):
     reply_by = models.ForeignKey(
-        Profile, related_name="reply_by", on_delete=models.CASCADE, null=True
+        Profile, related_name="replied_by", on_delete=models.CASCADE, null=True
     )
     related_comment = models.ForeignKey(
-        Comment, related_name="post_comment_reply", on_delete=models.CASCADE
+        Comment, related_name="thread_comment_reply", on_delete=models.CASCADE
     )
     reply_image = models.ImageField(upload_to='images/')
 
     comment = models.CharField(max_length=300)
 
 
-class RePost(models.Model):
-    reposted_by = models.ForeignKey(
-        Profile, related_name="profile_repost", on_delete=models.CASCADE, null=True
+class ReThread(models.Model):
+    rethread_by = models.ForeignKey(
+        Profile, related_name="profile_rethread", on_delete=models.CASCADE, null=True
     )
-    original_post = models.ForeignKey(
-        Post, related_name="original_post", on_delete=models.CASCADE, null=True
+    original_thread = models.ForeignKey(
+        Thread, related_name="original_thread", on_delete=models.CASCADE, null=True
     )
 
-class PostImage(models.Model):
+class ThreadImage(models.Model):
     img_name = models.CharField(max_length=255, null=True)
-    post = models.ForeignKey(
-        Post, related_name="for_product", on_delete=models.CASCADE
+    thread = models.ForeignKey(
+        Thread, related_name="for_thread", on_delete=models.CASCADE
         )
     image = models.ImageField(upload_to='images/')
     default = models.BooleanField(default=False)
 
     def __str__(self):
         return self.img_name
-

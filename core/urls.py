@@ -4,10 +4,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [ 
+    path("home", views.home, name="home"),
+
     path("", views.landing, name="landing"),
-    # path("post-detail/", views.post_detail, name="post_detail"),
-    # path("about/", views.about, name="about"),
-    # path("login/", views.login, name="login"),
+    path("user_profile/", views.user_profile, name="user_profile"),
+    path("free_store/", views.free_store, name="free_store"),
+    path("chat_list/", views.chat_list, name="chat_list"),
+    path("notification_list/", views.notification_list, name="notification_list"),
+    path("settings/", views.settings_list, name="settings_list"),
+
     # path("profile/", views.profile, name="profile"),
 
 

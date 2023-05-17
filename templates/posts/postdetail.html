@@ -1,4 +1,4 @@
-{% extends './base.html' %}
+{% extends '../app/base.html' %}
 {% block content %}
 
 {% load static %}
@@ -12,8 +12,8 @@
 
   <div class="container">
   <ul class="tabs-bar pt-5">
-    <li id="tab1" class="tab tab-active"><b>For you</b></li>
-    <li id="tab2" class="tab"><i class="fa-solid fa-location-dot"></i><b> Near You</b></li>
+    <li id="tab1" class="tab tab-active"><b><i class="fa-regular fa-gem blue mr-2"></i> Gem store</b></li>
+    <li id="tab2" class="tab"><b><i class="fa-solid fa-rotate red mr-2"></i> Flip Store</b></li>
     
   </ul>
   </br>
@@ -30,26 +30,8 @@
           <div class="brand__logo"><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/4a2f6bdb-b381-4982-ad59-4e7f26ee2028.jpg"/></div>
           <div class="brand__info">
             <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
-            <div class=" account-details-hover">
-              <a href="{% url 'user_profile'%}">
-              <div class="account">
-                <div class="account-avatar">
-                  <img src="{% static 'img/avatar.jpg'%}" c alt="">
-                </div>
-                <div class="user-details ">
-                  <p><b>John Smith</b></p>
-                  <p class="blue">@johnsmith</p>
-                </div>
-                <div class="menuicon ml-3">
-                  <i class="fa-solid fa-ellipsis"></i>
-                </div>
-              </div>
-            </a>
-            </div>
-            <div class="name-tag ">
             <span class="bold"><b>Mercedes Benz</b> @mercedesbenz<span><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/b1eeb5f0-24d4-4393-8620-5af0b174fa38.png" class="badge" /></span></span> <span>
-            <span class="grey"><br>Posted 3hrs ago</span> 
-            </div>
+            <span class="grey">Posted 3hrs ago</span> 
           </div>
         </div>
             <div><p>we’ve got it all. Cumulus offers the products, services, knowledge, and resources necessary for your financial success.<span class="blue">See more...</span> </p></div>
@@ -60,9 +42,11 @@
       </div>
       <div class="ig__post--summary">
         <a href="https://cumulusfinserv.com/">
-          <div class="ig__post--cta">
-            <span><b>KES 13,100,000</b></span>
-            <span><button class="btn btn-outline-light px-3">BID</button></span>
+          <div class="ig__post--cta gem-currency">
+            <span><b>30,000 </b> 
+              <img src="{% static 'img/gem.png'%}" alt="">
+          </span>
+            <span><button class="btn btn-outline-light">Deal +</button></span>
           </div>
         </a>
         <div class="ig__post--input">

@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'core',
     'accounts',
-    # 'products',
+    'posts',
     # 'analytics',
     # 'crm',
 ]

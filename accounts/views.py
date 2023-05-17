@@ -4,7 +4,7 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth import login, authenticate 
 from django.contrib.auth.forms import AuthenticationForm 
-# from workspace.views  import dashboard
+from core.views  import home
 from .models import Profile
 from django.contrib.auth.decorators import login_required
 from .forms import ProfileForm, EditProfileForm
@@ -17,7 +17,7 @@ def register_request(request):
 			user = form.save()
 			login(request, user)
 			messages.success(request, "Registration successful." )
-			return redirect("dashboard")
+			return redirect("home")
 		messages.error(request, "Unsuccessful registration. Invalid information.")
 	form = NewUserForm()
 	return render (request=request, template_name="auth/register.html", context={"register_form":form})
