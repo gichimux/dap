@@ -131,7 +131,7 @@ class Post(models.Model):
 
 
 class Like(models.Model):
-    product = models.ForeignKey(
+    post = models.ForeignKey(
         Post, related_name="post_likes", on_delete=models.CASCADE
         )
     user = models.ForeignKey(
@@ -139,7 +139,9 @@ class Like(models.Model):
     )
     created_on = models.DateTimeField(auto_now_add=True)
 
-
+    def __str__(self):
+        return self.post
+    
 class Comment(models.Model):
     comment_by = models.ForeignKey(
         Profile, related_name="comment_by", on_delete=models.CASCADE, null=True
@@ -151,6 +153,8 @@ class Comment(models.Model):
 
     comment = models.CharField(max_length=300)
 
+    def __str__(self):
+        return self.related_post
 
 class Reply(models.Model):
     reply_by = models.ForeignKey(
@@ -163,6 +167,8 @@ class Reply(models.Model):
 
     comment = models.CharField(max_length=300)
 
+    def __str__(self):
+        return self.related_comment
 
 class RePost(models.Model):
     reposted_by = models.ForeignKey(
@@ -172,6 +178,9 @@ class RePost(models.Model):
         Post, related_name="original_post", on_delete=models.CASCADE, null=True
     )
 
+    def __str__(self):
+        return self.original_post
+    
 class PostImage(models.Model):
     img_name = models.CharField(max_length=255, null=True)
     post = models.ForeignKey(

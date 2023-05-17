@@ -6,7 +6,7 @@ import math
 # Create your models here.
 
 
-class Feed(models.Model):
+class ThreadFeed(models.Model):
     pass
 
 class Thread(models.Model):
@@ -95,7 +95,7 @@ class Thread(models.Model):
         return self.product_name
 
 
-class Like(models.Model):
+class ThreadLike(models.Model):
     thread = models.ForeignKey(
         Thread, related_name="thread_likes", on_delete=models.CASCADE
         )
@@ -105,7 +105,7 @@ class Like(models.Model):
     created_on = models.DateTimeField(auto_now_add=True)
 
 
-class Comment(models.Model):
+class ThreadComment(models.Model):
     comment_by = models.ForeignKey(
         Profile, related_name="commented_by", on_delete=models.CASCADE, null=True
     )
@@ -116,7 +116,7 @@ class Comment(models.Model):
 
     comment = models.CharField(max_length=300)
 
-class Reply(models.Model):
+class ThreadReply(models.Model):
     reply_by = models.ForeignKey(
         Profile, related_name="replied_by", on_delete=models.CASCADE, null=True
     )
