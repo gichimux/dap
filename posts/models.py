@@ -3,6 +3,9 @@ from accounts.models import Profile
 from django.utils import timezone
 import math
 
+from django.conf import settings
+User = settings.AUTH_USER_MODEL
+
 # Create your models here.
 
 class Condition(models.TextChoices):
@@ -34,12 +37,11 @@ class Post(models.Model):
         default=Post_Type.SELL
         )
     posted_by = models.ForeignKey(
-        Profile, related_name="posted_by", on_delete=models.CASCADE, null=True
+        User, related_name="posted_by", on_delete=models.CASCADE, null=True
     ) 
-    product_name = models.CharField(max_length=20)
-    story = models.CharField(max_length=100)
+    about = models.CharField(max_length=100)
     display_price = models.IntegerField(default=0)
-    actual_price = models.IntegerField(default=0)
+    price_limit = models.IntegerField(default=0)
     product_condition = models.CharField(max_length=50,
         choices=Condition.choices,
         default=Condition.NEW
@@ -127,7 +129,7 @@ class Post(models.Model):
         ordering = ["timestamp"]
 
     def __str__(self):
-        return self.product_name
+        return self.post_type
 
 
 class Like(models.Model):
@@ -135,7 +137,7 @@ class Like(models.Model):
         Post, related_name="post_likes", on_delete=models.CASCADE
         )
     user = models.ForeignKey(
-        Profile, related_name="profile_likes", on_delete=models.CASCADE, null=True
+        User, related_name="profile_likes", on_delete=models.CASCADE, null=True
     )
     created_on = models.DateTimeField(auto_now_add=True)
 
@@ -144,7 +146,7 @@ class Like(models.Model):
     
 class Comment(models.Model):
     comment_by = models.ForeignKey(
-        Profile, related_name="comment_by", on_delete=models.CASCADE, null=True
+        User, related_name="comment_by", on_delete=models.CASCADE, null=True
     )
     related_post = models.ForeignKey(
         Post, related_name="post_comment", on_delete=models.CASCADE

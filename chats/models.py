@@ -121,7 +121,7 @@ class ThreadReply(models.Model):
         Profile, related_name="replied_by", on_delete=models.CASCADE, null=True
     )
     related_comment = models.ForeignKey(
-        Comment, related_name="thread_comment_reply", on_delete=models.CASCADE
+        ThreadComment, related_name="thread_comment_reply", on_delete=models.CASCADE
     )
     reply_image = models.ImageField(upload_to='images/')
 

@@ -42,8 +42,9 @@ INSTALLED_APPS = [
     'core',
     'accounts',
     'posts',
-    # 'analytics',
-    # 'crm',
+    'notifications',
+    'chats',
+    'markets',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

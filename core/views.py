@@ -1,13 +1,30 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate 
 from django.contrib import messages
-
+from posts.models import Post,Post_Type
+from posts.forms import NewSellForm
 from django.contrib.auth.forms import AuthenticationForm 
+# from accounts.models import Profile 
+from django.contrib import messages
 
 def home(request):
-       
+    
+    posts = Post.objects.all()
+    
+    if request.method == 'POST':
+        sell_form = NewSellForm(request.POST)
+
+        if sell_form.is_valid():
+            sell_form.instance.posted_by = request.user
+            sell_form.instance.post_type = Post_Type.SELL
+            sell_form.save()
+            messages.success(request, 'Your product has been posted')
+            return redirect(request.META['HTTP_REFERER'])
+    else:
+        sell_form = NewSellForm(request.POST)
+
     context ={
-     
+     'sell_form': sell_form,
    }
     return render (request, 'app/home.html', context )
 

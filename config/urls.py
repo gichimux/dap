@@ -20,6 +20,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     path('auth/', include('accounts.urls')),
-    path('posts/', include('accounts.urls')),
+    path('posts/', include('posts.urls')),
+    # path('chats/', include('chats.urls')),
+    # path('markets/', include('markets.urls')),
+    # path('notifications/', include('notifications.urls')),
 
 ]

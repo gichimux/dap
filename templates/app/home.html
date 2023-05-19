@@ -12,8 +12,8 @@
 
   <div class="container">
   <ul class="tabs-bar pt-5">
-    <li id="tab1" class="tab tab-active"><b>For you</b></li>
-    <li id="tab2" class="tab"><i class="fa-solid fa-location-dot"></i><b> Near You</b></li>
+    <li id="tab1" class="tab tab-active"><b>For You</b></li>
+    <li id="tab2" class="tab"><i class="fa-solid fa-location-dot"></i><b> By Location</b></li>
     
   </ul>
   </br>
@@ -25,28 +25,52 @@
      
 
       <!-- 1st post -->
-      <div class="ig__post pb-5"> <span class="ml-auto"><i class="fa-solid fa-ellipsis"></i></span>
+      <div class="ig__post pb-5"> 
+        <div class="ml-auto">
+           <div class="card-action">
+			 <div class="dropdown">
+			 <a href="javascript:void();" class="dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown">
+        <i class="fa-solid fa-ellipsis"></i>
+
+			 </a>
+				<div class="dropdown-menu dropdown-menu-right">
+				<a class="dropdown-item" href="javascript:void();">Action</a>
+				<a class="dropdown-item" href="javascript:void();">Another action</a>
+				<a class="dropdown-item" href="javascript:void();">Something else here</a>
+				<div class="dropdown-divider"></div>
+				<a class="dropdown-item" href="javascript:void();">Separated link</a>
+			   </div>
+			  </div>
+		   </div>
+      </div>
         <div class="ig__post--brand">
           <div class="brand__logo"><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/4a2f6bdb-b381-4982-ad59-4e7f26ee2028.jpg"/></div>
           <div class="brand__info">
             <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
-            <div class=" account-details-hover">
-              <a href="{% url 'user_profile'%}">
-              <div class="account">
-                <div class="account-avatar">
-                  <img src="{% static 'img/avatar.jpg'%}" c alt="">
-                </div>
-                <div class="user-details ">
-                  <p><b>John Smith</b></p>
-                  <p class="blue">@johnsmith</p>
-                </div>
-                <div class="menuicon ml-3">
-                  <i class="fa-solid fa-ellipsis"></i>
-                </div>
-              </div>
-            </a>
-            </div>
+        
             <div class="name-tag ">
+
+              <div class=" account-details-hover">
+                <a href="{% url 'user_profile'%}">
+                <div class="account-hover-content p-3">
+                  <div class="account-avatar ml-2">
+                    <img src="{% static 'img/avatar.jpg'%}" alt="">
+                  </div>
+                  <div class="account-name-tag row ml-2">
+                    <p><b>John Smith</b> <br> @johnsmith </p>
+]                    <span> 
+                      <button class="btn btn-dark px-3 ml-5">Follow</button>
+
+                    </span>
+                  </div>
+                  <div><p>we’ve got it all. Cumulus offers the products, services, k your financial succes</p></div>
+
+                 
+                  
+                </div>
+              </a>
+              </div>
+              
             <span class="bold"><b>Mercedes Benz</b> @mercedesbenz<span><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/b1eeb5f0-24d4-4393-8620-5af0b174fa38.png" class="badge" /></span></span> <span>
             <span class="grey"><br>Posted 3hrs ago</span> 
             </div>
@@ -62,7 +86,7 @@
         <a href="https://cumulusfinserv.com/">
           <div class="ig__post--cta">
             <span><b>KES 13,100,000</b></span>
-            <span><button class="btn btn-outline-light px-3">BID</button></span>
+            <span><button class="btn btn-outline-light px-3">Bid</button></span>
           </div>
         </a>
         <div class="ig__post--input">
@@ -70,12 +94,12 @@
           <div class="ig__post--input--left">
           <span class="post-icons"><i class="fa-solid fa-heart"></i></span><span class="post-engagement">300</span>
           <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>
-          <span class="post-icons ml-3"><i class="fa-solid fa-chart-simple"></i></span><span class="post-engagement">3.7k</span>
+          <div class="mine-icon ml-3 mt-3">
+            <img src="{% static 'img/mine.png'%}" alt="">
+          </div>
         </div>
         <div class="ig__post--input--right mt-3">
-          <span class="post-icons">
-            <i class="fa-regular fa-gem blue"></i><i class="fa-solid fa-circle-plus red"></i>
-          </span>
+          <span class="post-icons "><i class="fa-solid fa-chart-simple"></i></span><span class="post-engagement">3.7k</span>
         </div>
           <!-- DO NOT CHANGE THIS IMAGE -->
         </div>
@@ -129,7 +153,11 @@
 
      
 
-     
+        <div class="input-group main-search mt-4 pb-3">
+          <input type="search" class="form-control rounded search-input" placeholder="Search in appname" aria-label="Search" aria-describedby="search-addon" />
+          <button type="button" class="btn btn-outline-dark"><i class="fa-solid fa-magnifying-glass-location"></i></button>
+        </div>
+
     <!-- 2nd post -->
     <div class="ig__post">
       <div class="ig__post--brand">
@@ -160,7 +188,12 @@
         <span class="post-icons ml-3"><i class="fa-solid fa-chart-simple"></i></span><span class="post-engagement">3.7k</span>
       </div>
       <div class="ig__post--input--right mt-3">
-        <span class="post-icons"><i class="fa-solid fa-square-plus"></i></span>
+        <div class="row gem">
+          <div class="gem-icon">
+            <img src="{% static 'img/gem.png'%}" alt="" class="mt-2 ml-2"> 
+          </div>
+          <div class="badge badge-danger mr-auto">4</div>
+        </div>
       </div>
         <!-- DO NOT CHANGE THIS IMAGE -->
       </div>
@@ -178,6 +211,68 @@
     
 
 </div>
+<div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
 
+      <div class="modal-body mx-auto">
+          <p>Post 1 </p>
+          <hr>
+          <form method="POST" class="text-center ">
+            {% csrf_token %}
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Describe your product</label><br>
+              
+              {{ sell_form.about}}
+            </div>
+          
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Display price</label><br>
+              
+              {{ sell_form.display_price}}
+            </div>
+
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Price limit</label><br>
+              
+              {{ sell_form.price_limit}}
+            </div>
+
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Product condition</label><br>
+              
+              {{ sell_form.product_condition}}
+            </div>
+
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Pick up</label><br>
+              
+              {{ sell_form.product_pick_up}}
+            </div>
+
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Payment method</label><br>
+              
+              {{ sell_form.payment_method}}
+            </div>
+
+          <br>
+          
+           <button type="submit" class="btn btn-dark px-5 ">Post</button>
+            
+         
+          
+           </form>        </div>
+      <div class="modal-footer">
+      
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Feed Ends -->
 {% endblock %}
