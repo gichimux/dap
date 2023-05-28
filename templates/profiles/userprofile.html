@@ -3,46 +3,49 @@
 
 {% load static %}
 <div class="col">
-<section class="profile-card">
+  <div class="spacer"></div>
+<section class="profile-card ">
 	
 	<div id="container">
-    <span class="edit-btn"><i class="fa-solid fa-pen"></i></span>
-
+    <span class="edit-btn mr-3" data-toggle="modal" data-target="#ProfileEditModal">
+      <button class="btn btn-outline-dark px-3"><i class="fa-solid fa-user-pen"></i> Edit </button></span>
+    
     <div class="mx-auto profile-bg">
 		<div class="profile-image mb-1">
       <img src="{% static 'img/avatar.jpg' %}">
 		</div>
 
     <div>
-      <h4 class="user-name-tag ml-4"><b>Jane Doe</b> <br>@mercedesbenz </h4>
+      <h4 class="user-name-tag ml-3 pt-4 "><b>{{my_profile.name}}</b> <br> <span class="blue" >@{{user.username}} </span></h4>
     </div>
   </div>
-  <div class="ml-auto edit-div ">
-    
-</div>
-  <div class="social-stats social-bio  row">
+  
+  <div class="social-stats row social-bio mt-2 ml-2 ">
                 
-
-    <p>Lorem ipsum solot colert bdkr tyur sjfhri ekdhr sjdkei skf sdkei </p>
+    <p> {{my_profile.bio}} </p>
 </div>
+<div class="icon-info row mt-2 ml-3">
+  <p><i class="fa-solid fa-location-dot"></i> {{my_profile.location}}<b></b></p>
+  <p class="ml-4"><i class="fa-solid fa-cake-candles"></i> 10 10 001</p>
+  <p class="ml-4"> Member Since 10 10 001</p>
 
-		<div class="social-media-box">
+</div>
         
            
 
-			<div class="social-stats mt-3 mx-auto row">
-				<div class="col"><h3>
+			<div class="social-stats mt-3 row ml-2">
+				<div class="col-4"><h3>
                     <b>70</b>
                 </h3>
             <p>Posts</p></div>
            
-            <div class="col"><h3>
+            <div class="col-4"><h3>
             <b> 10k</b>
                  </h3>
                 <p>Followers<osts/p>
             </div>
 
-        <div class="col">
+        <div class="col-4">
             <h3>
             <b> 3.3k</b>
             </h3>
@@ -51,12 +54,7 @@
                 
             
 			</div>
-        
-            
-            
-            <br> 
-
-		</div>
+      
 
 	</div>
 
@@ -69,10 +67,10 @@
     <div class=" feed">
 
         <div class="container">
-        <ul class="tabs-bar pt-5">
-          <li id="tab1" class="tab tab-active"><b>Your Store</b></li>
-          <li id="tab2" class="tab"><b> Comments & replies</b></li>
-          <li id="tab2" class="tab"><b> Media</b></li>
+        <ul class="tabs-bar pt-5 text-center">
+          <li id="tab1" class="tab tab-active">Mine</li>
+          <li id="tab2" class="tab"> Replies</li>
+          <li id="tab2" class="tab"> Communities</li>
 
           
         </ul>
@@ -219,5 +217,52 @@
       
       </div>
 </section>
+</div>
+
+<div class="modal fade" id="ProfileEditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body mx-auto">
+          <p>Post 1 </p>
+          <hr>
+          <form method="POST" class="text-center ">
+            {% csrf_token %}
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Username</label><br>
+              {{edit_profile_form.name}}
+             
+            </div>
+          
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">location</label><br>
+              {{edit_profile_form.location}}
+             
+            </div>
+
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">bio</label><br>
+              {{edit_profile_form.bio}}
+             
+            </div>
+            
+
+          <br>
+          
+           <button type="submit" class="btn btn-dark px-5 ">Post</button>
+            
+         
+          
+           </form>        </div>
+      <div class="modal-footer">
+      
+      </div>
+    </div>
+  </div>
 </div>
 {%endblock%}

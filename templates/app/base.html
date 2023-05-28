@@ -22,44 +22,67 @@
   
     <title>app UI</title>
   </head>
+  
+  <div class="sticky-top currency-bar mt-3">
+    <!-- Menu -->
 
+    <div class="btn-toolbar " role="toolbar" aria-label="Toolbar with button groups">
+        
+        <div class="btn-group  ml-auto" role="group" aria-label="Actions group">
+            <button type="button" class="btn btn-success"><img src="{% static 'img/gold.png'%}" alt="" class=""></button>
+            <button type="button" class="btn btn-warning"><img src="{% static 'img/order.png'%}" alt="" class=""></button>
+     </div>
+
+    </div>
+
+</div>  
   <body>
     <!-- Main Body Starts -->
 
     <div class="container">
+    
+    <div class="ml-5 mb-2">
+      <div class="logo">
+        <a href="index.html"><img src="{% static 'img/logo.png'%}" alt=""></a>
+    </div>
 
+    </div>
+    
     <div class="row">
       <!-- Sidebar Starts -->
       
       <div class="col left__rail">
         <div class="sidebar">
-          <div class="logo">
-            <a href="index.html"><img src="{% static 'img/logo.png'%}" alt=""></a>
-        </div>         
+               
         <a href="{% url 'home'%}"><div class="sidebar__link">
          
             <span class="sidebar-icons"><img src="{% static 'img/icons/home.png'%}"/></span>
             
-            <span class="pt-3"><h2 >Home</h2></span>
+            <span class="pt-2"><h2 >Home</h2></span>
           
           </div>
         </a>
+        <a href="{% url 'explore'%}"><div class="sidebar__link">
+          <span class="sidebar-icons"><img src="{% static 'img/icons/explore.png'%}"/></span>
+        <span class="pt-2"><h2>Explore</h2></span>
+        </div>
+      </a>
           <a href="{% url 'chat_list'%}"><div class="sidebar__link">
             <span class="sidebar-icons"><img src="{% static 'img/icons/chats.png'%}"/></span>
-          <span class="pt-3"><h2>Chats</h2></span>
+          <span class="pt-2"><h2>Chats</h2></span>
           </div>
         </a>
         <a href="{% url 'free_store'%}"><div class="sidebar__link">
-            <span class="sidebar-icons"><img src="{% static 'img/icons/free.png'%}"/></span>
-          <span class="pt-3"><h2>Free Store</h2></span>
+            <span class="sidebar-icons"><img src="{% static 'img/coin.png'%}"/></span>
+          <span class="pt-2"><h2>Gold Store</h2></span>
           </div></a>
           <a href="{% url 'notification_list'%}"><div class="sidebar__link">
             <span class="sidebar-icons"><img src="{% static 'img/icons/notification.png'%}"/></span>
-          <span class="pt-3"><h2>Notifications</h2></span>
+          <span class="pt-2"><h2>Notifications</h2></span>
           </div></a>
           <div class="sidebar__link">
             <span class="sidebar-icons"><img src="{% static 'img/icons/more.png'%}"/></span>
-          <span class="pt-3"><h2>More</h2></span>
+          <span class="pt-2"><h2>More</h2></span>
           </div>
           <div class="mx-auto mt-2 mb-2 post-cta " >
              <button class="btn btn-large btn-dark btn-post px-5" data-toggle="modal" data-target="#postModal"><b>POST</b></button>
@@ -68,18 +91,17 @@
          
        
           <div class=" mt-3 profile-link">
-            <a href="{% url 'user_profile'%}">
+            <a href="{% url 'user_profile' %}">
             <div class="account">
               <div class="account-avatar">
                 <img src="{% static 'img/avatar.jpg'%}" c alt="">
               </div>
-              <div class="user-details ">
-                <p><b>John Smith</b></p>
-                <p class="blue">@johnsmith</p>
+              <div class="user-details mr-auto">
+                <p ><b>{{my_profile.name}}</b></p>
+                <p class="blue ">@{{user.username}}</p>
               </div>
-              <div class="menuicon ml-3">
                 <i class="fa-solid fa-ellipsis"></i>
-              </div>
+             
             </div>
           </a>
           </div>
@@ -87,31 +109,27 @@
       </div>
       <!-- Sidebar Ends -->
 
-     {% block content %} {%endblock%}
+     {% block content %} 
+     
+     {%endblock%}
 
   <!-- Widgets Starts -->
 
-  <div class="col ml-3 right__rail">
+  <div class="col right__rail">
     
-    <div class="row ml-1 coin-count px-3">
-      <div class="coin-icon">
-        <img src="{% static 'img/wallet.png'%}" alt="" class="mt-2 ml-2"> 
-        
-      </div>
-      <div class="coin-no ml-2 "><p class="text-warning"><b>100</b></p></div>
-    </div>
-
+  
     <div class="featured">
-      <div class="input-group main-search mt-4 pb-3">
-        <input type="search" class="form-control rounded search-input" placeholder="Search in appname" aria-label="Search" aria-describedby="search-addon" />
-        <button type="button" class="btn btn-outline-clear"><i class="fa-solid fa-magnifying-glass"></i></button>
-      </div>
+      <span class="right-nav-menu mr-3"><i class="fa-solid fa-ellipsis"></i></span>
+
 
       <div class="featured__sticky pt-3">
         <div class="trending-block pb-3 mb-4">
           <div class="trending-title">
-          <span ><h3 class="ml-4 pt-3"><b> Deals Moto 🔥 </b> </h3> </span>
-          <span class="nav-menu mr-auto ml-3"><i class="fa-solid fa-ellipsis"></i></span>
+            <span class="baraza ml-4 pt-3"> 
+              <img  src="{% static 'img/baraza.png'%}">
+            </span>
+          <span ><h3 class="ml-3 pt-3"><b> <a href="{% url 'baraza'%}">Trends</a> </b> </h3> </span>
+          
         </div>
         <div class="pb-3">
           <p class="ml-4 pt-3  "><span class="grey">Trending in Kenya </span> <br> <span class="blue"> Phones & tablets </span> <br> <span class="grey"> 5678 Deals</span> </p>
@@ -132,7 +150,7 @@
                 <p><b>John Smith</b></p>
                 <p class="blue">@johnsmith</p>
               </div>
-              <div class="follow-btn ml-5">
+              <div class="follow-btn ml-3">
                 <button class="btn btn-dark px-3">Follow</button>
               </div>
             </div>
@@ -145,7 +163,7 @@
                 <p><b>John Smith</b></p>
                 <p class="blue">@johnsmith</p>
               </div>
-              <div class="follow-btn ml-5">
+              <div class="follow-btn ml-3">
                 <button class="btn btn-dark px-3">Follow</button>
               </div>
           </div>
@@ -158,6 +176,8 @@
       
 
         </div>
+
+
         <div class="footer">
           Terms of Service - Privacy Policy - Cookie Policy - Accessibility - @ 2022 Social, Inc.
         </div>
@@ -167,14 +187,55 @@
     
     <!-- Widgets Ends -->
   </div>
+
+ 
   </div>
+
+  
   </div>
+
+  <div class="fixed-bottom-menu ">
+    <div class="fixed-bottom-menuــrow row ">
+      <a href="{% url 'home'%}" title="" class="fixed-bottom-menu__a">
+        <span class="">
+          <img src="{% static 'img/icons/home.png'%}"/>
+        </span>
+        <h6 class="mt-1">Home</h6>
+      </a>
+    
+      <a href="{% url 'chat_list'%}" title="" class="fixed-bottom-menu__a">
+        <span class="">
+          <img src="{% static 'img/icons/chats.png'%}"/>
+        </span>
+        <h6 class="mt-1">Chats</h6>
+      </a>
+      <a href="{% url 'free_store'%}" title="" class="fixed-bottom-menu__a">
+        <span class="">
+          <img src="{% static 'img/coin.png'%}"/>
+        </span>
+        <h6 class="mt-1">Gold store</h6>
+      </a>
+      <a href="{% url 'notification_list'%}" title="" class="fixed-bottom-menu__a">
+        <span class="">
+          <img src="{% static 'img/icons/notification.png'%}"/>
+        </span>
+        <h6 class="mt-1">Alerts</h6>
+      </a>
+      <a href="#" title="" class="fixed-bottom-menu__a">
+        <span class="">
+          <img src="{% static 'img/icons/more.png'%}"/>
+        </span>
+        <h6 class="mt-1">More</h6>
+      </a>
+    </div>
+</div>
+
+
+
+  <!-- Main Body Ends -->
+  </body>
   <script src="{% static 'js/vendor/jquery-1.12.4.min.js'%}"></script>
   <script src="{% static 'js/popper.min.js'%}"></script>
   <script src="{% static 'js/bootstrap.min.js'%}"></script>
   <script src="{% static 'js/app_scripts.js'%}"></script>
-
-  <!-- Main Body Ends -->
-  </body>
-
 </html>

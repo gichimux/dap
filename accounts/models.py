@@ -18,25 +18,21 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+
 class Profile(models.Model): 
   
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile" )
     phone_regex = RegexValidator(regex=r'^\+\d{8,15}$', message="Phone number must be entered in the format: '+254722123456'. Up to 15 digits allowed.")
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
+    location = models.CharField(max_length=50)
     phone_number = models.CharField(validators=[phone_regex], max_length=16, blank=True)
+    bio = models.TextField(max_length=150)
+
     avatar = models.FileField(
         max_length=1000, upload_to="profile_pics/", null=True, blank=True
     )    
     
-    
-    def get_fullname(self):
-        if self.first_name:
-            if self.last_name:
-                return self.first_name + " " + self.last_name
-            return self.first_name
-        return self.user.username
-
+ 
     def __str__(self):
         return self.user.username
 

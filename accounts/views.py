@@ -7,7 +7,6 @@ from django.contrib.auth.forms import AuthenticationForm
 from core.views  import home
 from .models import Profile
 from django.contrib.auth.decorators import login_required
-from .forms import ProfileForm, EditProfileForm
 
 
 def register_request(request):

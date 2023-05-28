@@ -10,17 +10,10 @@
   
  <div class="col feed">
 
-  <div class="container">
-  <ul class="tabs-bar pt-5">
-    <li id="tab1" class="tab tab-active"><b><i class="fa-regular fa-gem blue mr-2"></i> Gem store</b></li>
-    <li id="tab2" class="tab"><b><i class="fa-solid fa-rotate red mr-2"></i> Flip Store</b></li>
-    
-  </ul>
-  </br>
+ 
   <div class="content-container">
-    <div class="content content-tab1 content-active">
 
-      <div class="ig__phone--feed">
+      <div class="ig__phone--feed row">
 
      
 
@@ -30,13 +23,39 @@
           <div class="brand__logo"><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/4a2f6bdb-b381-4982-ad59-4e7f26ee2028.jpg"/></div>
           <div class="brand__info">
             <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
-            <span class="bold"><b>Mercedes Benz</b> @mercedesbenz<span><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/b1eeb5f0-24d4-4393-8620-5af0b174fa38.png" class="badge" /></span></span> <span>
-            <span class="grey">Posted 3hrs ago</span> 
+            <span class="bold"><b>{{post_detail.poster_full}} </b> @{{post_detail.posted_by}}<span><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/b1eeb5f0-24d4-4393-8620-5af0b174fa38.png" class="badge" /></span></span> <span>
+            <span class="grey">{{post_detail.whenpublished}}</span> 
           </div>
         </div>
-            <div><p>we’ve got it all. Cumulus offers the products, services, knowledge, and resources necessary for your financial success.<span class="blue">See more...</span> </p></div>
+            <div><p>{{ post_detail.about}} </p></div>
 
-        <div class="ig__post--creative">
+            <div class="row">
+              <div class="col">
+                  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                      <div class="panel panel-default">
+                          <div class="panel-heading" role="tab" id="headingOne">
+                              <h4 class="panel-title">
+                                  <a class="first" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                      Product Details
+                                      <span> </span>
+                                  </a>
+                              </h4>
+                          </div>
+                          <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                              <div class="panel-body">
+                                  <p>Lorem , iaculis ex. Nulla vitae ipsum diam. Pellentesque vitae metus vitae massa egestas posuere. Mauris ultricies vehicula tempor. Pellentesque justo turpis, blandit nec ex eu, tempus placerat diam. Morbi a felis commodo eros consectetur rhoncus sed eget lectus. Praesent non erat vehic</p>
+                              </div>
+                          </div>
+                      </div>
+      
+                    
+      
+                  
+                  </div>
+              </div>
+          </div>
+        
+            <div class="ig__post--creative">
           <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
           </img>
       </div>
@@ -49,6 +68,7 @@
             <span><button class="btn btn-outline-light">Deal +</button></span>
           </div>
         </a>
+          
         <div class="ig__post--input">
           <!-- DO NOT CHANGE THIS IMAGE -->
           <div class="ig__post--input--left">
@@ -65,100 +85,61 @@
         </div>
        
       </div>
-    </div>
-    <!-- 2nd post -->
-    <div class="ig__post"> <span class="ml-auto"><i class="fa-solid fa-ellipsis"></i></span>
-      <div class="ig__post--brand">
-        <div class="brand__logo"><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/4a2f6bdb-b381-4982-ad59-4e7f26ee2028.jpg"/></div>
-        <div class="brand__info">
-          <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
-          <span class="bold"><b>Mercedes Benz</b> @mercedesbenz<span><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/b1eeb5f0-24d4-4393-8620-5af0b174fa38.png" class="badge" /></span></span>
+      
+      <div class="comment-form">
+      <form method="POST" class="text-center ">
+        {% csrf_token %}
+        <div class="col-lg-12 text-center">
+          <label class=" col-form-label form-control-label">Describe your product</label><br>
+          
+          {{ post_comment_form.comment}}
         </div>
-      </div>
-          <div><p>we’ve got it all. Cumulus offers the products, services, knowledge, and resources necessary for your financial success.<span class="blue">See more...</span> </p></div>
+        <button type="submit" class="btn btn-dark px-5 ">Post</button>
 
-      <div class="ig__post--creative">
-        <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
-        </img>
-    </div>
-    <div class="ig__post--summary">
-      <a href="https://cumulusfinserv.com/">
-        <div class="ig__post--cta">
-          <span><b>KES 13,100,000</b></span>
-          <span><button class="btn btn-light">Make Offer</button></span>
+      </form>
+      </div>
+
+      {% for comment in post_comments %}
+      <div class=" comment-card row ml-3 mt-5 mr-3">
+        <a href="#">
+        <div class="account-hover-content ">
+          <div class="account-avatar  ml-2 row">
+            <div>
+              <img src="{% static 'img/avatar.jpg'%}" alt="">
+            </div>
+          <div class="ml-2 mt-2">
+             <p class=" "><b>{{comment.poster_full}}</b>  <span class=" ml-4 comment-time"> {{comment.whenpublished}}</span> </p>
+             <i class=" fa-solid fa-arrow-turn-up fa-rotate-90"></i> @{{comment.related_poster}} 
+
+          </div>
+            
+          </div> 
+
+        </div>
+        <div class="row ml-2 mt-2 ">
+          <p>{{comment.comment}} </p>
+        </div>
+        
+        <div class="row ml-2">
+          <span class="post-icons"><i class="fa-solid fa-heart"></i></span><span class="post-engagement">300</span>
+          <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>
+         
         </div>
       </a>
-      <div class="ig__post--input">
-        <!-- DO NOT CHANGE THIS IMAGE -->
-        <div class="ig__post--input--left">
-        <span class="post-icons"><i class="fa-solid fa-heart"></i></span><span class="post-engagement">300</span>
-        <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>
-        <span class="post-icons ml-3"><i class="fa-solid fa-chart-simple"></i></span><span class="post-engagement">3.7k</span>
       </div>
-      <div class="ig__post--input--right mt-2">
-        <span class="post-icons"><i class="fa-solid fa-square-plus red"></i></span>
-      </div>
-        <!-- DO NOT CHANGE THIS IMAGE -->
-      </div>
-     
+      {% endfor %}
+   
     </div>
-  </div>
+  
+    
   <!-- END FEED-->
 </div>
 
-    </div>
-    <div class="content content-tab2">
 
-      <div class="ig__phone--feed">
-
-     
-
-     
-    <!-- 2nd post -->
-    <div class="ig__post">
-      <div class="ig__post--brand">
-        <div class="brand__logo"><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/4a2f6bdb-b381-4982-ad59-4e7f26ee2028.jpg"/></div>
-        <div class="brand__info">
-          <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
-          <span class="bold"><b>Mercedes Benz</b> @mercedesbenz<span><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/b1eeb5f0-24d4-4393-8620-5af0b174fa38.png" class="badge" /></span></span>
-        </div>
-      </div>
-          <div><p>we’ve got it all. Cumulus offers the products, services, knowledge, and resources necessary for your financial success.<span class="blue">See more...</span> </p></div>
-
-      <div class="ig__post--creative">
-        <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
-        </img>
-    </div>
-    <div class="ig__post--summary">
-      <a href="https://cumulusfinserv.com/">
-        <div class="ig__post--cta">
-          <span><b>KES 13,100,000</b></span>
-          <span><button class="btn btn-light">Make Offer</button></span>
-        </div>
-      </a>
-      <div class="ig__post--input">
-        <!-- DO NOT CHANGE THIS IMAGE -->
-        <div class="ig__post--input--left">
-        <span class="post-icons"><i class="fa-solid fa-heart"></i></span><span class="post-engagement">300</span>
-        <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>
-        <span class="post-icons ml-3"><i class="fa-solid fa-chart-simple"></i></span><span class="post-engagement">3.7k</span>
-      </div>
-      <div class="ig__post--input--right mt-3">
-        <span class="post-icons"><i class="fa-solid fa-square-plus"></i></span>
-      </div>
-        <!-- DO NOT CHANGE THIS IMAGE -->
-      </div>
-     
-    </div>
-  </div>
-  <!-- END FEED-->
-</div>
-
-    </div>
     
   </div>
-</div>
     
+  
     
 
 </div>

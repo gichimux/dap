@@ -23,19 +23,14 @@ class NewUserForm(UserCreationForm):
 		return user
 
 
-class SubdomainForm(forms.Form):
-    name = forms.CharField(label='name', max_length=100)
-
 class EditProfileForm(ModelForm):
-    class Meta:
-        model = User
-        fields = (
-                 'username',
-                 'email',
-                )
-
-class ProfileForm(ModelForm):
+    
     class Meta:
         model = Profile
-        fields = ('first_name', 'last_name', 'phone_number', 'avatar')
+        fields = ('name', 'location', 'bio')
+
+# class ProfileForm(ModelForm):
+#     class Meta:
+#         model = Profile
+#         fields = ('first_name', 'last_name', 'phone_number', 'avatar')
         

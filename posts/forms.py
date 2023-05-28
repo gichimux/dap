@@ -4,21 +4,25 @@ from django import forms
 from .models import *
 from django.forms import ModelForm
 
-class NewSellForm(ModelForm):
+class NewProductForm(ModelForm):
     class Meta:
-        model = Post
-        fields = ('about', 'display_price', 'price_limit', 'product_condition', 'product_pick_up', 'payment_method'  )
+        model = Product
+        fields = ( 'post_location', 'product_condition', 'about', 'display_price', 'product_pick_up', 'payment_method')
+
+class NewSwapForm(ModelForm):
+    class Meta:
+        model = Swap
+        fields = ( 'post_location', 'about', 'swap_pick_up', 'swap_condition')
 
 
-# class NewPostForm(ModelForm):
-#     class Meta:
-#         model = Product
-#         fields = ('product_name', 'condition', 'description', 'category', 'tags' )
+class NewCommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ('comment', )
 
 
-
-# class NewCategoryForm(ModelForm):
-#     class Meta:
-#         model = Category
-#         fields = ( 'category_name','category_image')
+class NewReplyForm(ModelForm):
+    class Meta:
+        model = Reply
+        fields = ('comment', )
 
