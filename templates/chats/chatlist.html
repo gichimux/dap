@@ -3,6 +3,11 @@
 
 {% load static %}
 
+<style>
+  #roomSelect {
+      height: 300px;
+  }
+</style>
 
  <!-- Feed Starts -->
 
@@ -11,103 +16,33 @@
   
  <div class="col feed">
 
-  <div class="container">
-  <ul class="tabs-bar pt-5">
-    <li id="tab1" class="tab tab-active"><b>Chats</b></li>
-    <li id="tab2" class="tab">Chat Boards</b></li>
-    <li id="tab2" class="tab"> Groups</b></li>
+  <div class="col-12 col-md-8">
+    <div class="mb-2">
+        <label for="roomInput">Enter a room name to connect to it:</label>
+        <input type="text" class="form-control" id="roomInput" placeholder="Room name">
+        <small id="roomInputHelp" class="form-text text-muted">If the room doesn't exist yet, it will be created for you.</small>
+    </div>
+    <button type="button" id="roomConnect" class="btn btn-success">Connect</button>
+</div>
 
-    
-  </ul>
-  <div class="input-group pt-3 pb-3">
-    <input type="search" class="form-control rounded search-input" placeholder="Search in appname" aria-label="Search" aria-describedby="search-addon" />
-    <button type="button" class="btn btn-outline-dark">search</button>
-  </div>
-  </br>
+  <h2 class="text-center">Your Chats</h2>
+
+  <div class="container mt-3">
+ 
+ 
   <div class="content-container">
-    <div class="content content-tab1 content-active">
 
-      <div class="chat-item mb-3">
-
-        <a href="">
-        <ul class="list-group list-group-horizontal ">
-          
-          <li class="list-group-item">
-            <span class="chat-avatar"><img src="{% static 'img/avatar.jpg'%}"></span>
-          </li>
-          <li class="list-group-item"><b>John Doe</b><br> lorem ipsum so ...</li>
-          <li class="list-group-item">Just Now <br>  <span class="badge badge-danger mr-auto">4</span></li>
-        
-        </ul></a>
-    
-   
-</div>
-
-<div class="chat-item mb-3">
-
-  <a href="">
-  <ul class="list-group list-group-horizontal ">
-    
-    <li class="list-group-item">
-      <span class="chat-avatar"><img src="{% static 'img/avatar.jpg'%}"></span>
-    </li>
-    <li class="list-group-item"><b>John Doe</b><br> lorem ipsum so ...</li>
-    <li class="list-group-item">Just Now <br>  <span class="badge badge-danger mr-auto">4</span></li>
-  
-  </ul></a>
-
-
-</div>
-
-    </div>
-    <div class="content content-tab2">
-
-      <div class="ig__phone--feed">
-
-     
-
-     
-    <!-- 2nd post -->
-    <div class="ig__post">
-      <div class="ig__post--brand">
-        <div class="brand__logo"><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/4a2f6bdb-b381-4982-ad59-4e7f26ee2028.jpg"/></div>
-        <div class="brand__info">
-          <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
-          <span class="bold"><b>Mercedes Benz</b> @mercedesbenz<span><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/b1eeb5f0-24d4-4393-8620-5af0b174fa38.png" class="badge" /></span></span>
-        </div>
-      </div>
-          <div><p>we’ve got it all. Cumulus offers the products, services, knowledge, and resources necessary for your financial success.<span class="blue">See more...</span> </p></div>
-
-      <div class="ig__post--creative">
-        <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
-        </img>
-    </div>
-    <div class="ig__post--summary">
-      <a href="https://cumulusfinserv.com/">
-        <div class="ig__post--cta">
-          <span><b>KES 13,100,000</b></span>
-          <span><button class="btn btn-light">Make Offer</button></span>
-        </div>
-      </a>
-      <div class="ig__post--input">
-        <!-- DO NOT CHANGE THIS IMAGE -->
-        <div class="ig__post--input--left">
-        <span class="post-icons"><i class="fa-solid fa-heart"></i></span><span class="post-engagement">300</span>
-        <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>
-        <span class="post-icons ml-3"><i class="fa-solid fa-chart-simple"></i></span><span class="post-engagement">3.7k</span>
-      </div>
-      <div class="ig__post--input--right mt-3">
-        <span class="post-icons"><i class="fa-solid fa-square-plus"></i></span>
-      </div>
-        <!-- DO NOT CHANGE THIS IMAGE -->
-      </div>
-     
-    </div>
+    <div class="col-12 col-md-4">
+      <label for="roomSelect">Active rooms</label>
+      <select multiple class="form-control" id="roomSelect">
+          {% for room in chats %}
+              <option>{{ room }}</option>
+          {% endfor %}
+      </select>
   </div>
-  <!-- END FEED-->
-</div>
 
-    </div>
+
+    
     
   </div>
 </div>
@@ -115,6 +50,34 @@
     
 
 </div>
+
 
 <!-- Feed Ends -->
+
+{% block scripts %} 
+<script>
+    // focus 'roomInput' when user opens the page
+document.querySelector("#roomInput").focus();
+
+// submit if the user presses the enter key
+document.querySelector("#roomInput").onkeyup = function(e) {
+    if (e.keyCode === 13) {  // enter key
+        document.querySelector("#roomConnect").click();
+    }
+};
+
+// redirect to '/room/<roomInput>/'
+document.querySelector("#roomConnect").onclick = function() {
+    let roomName = document.querySelector("#roomInput").value;
+    window.location.pathname = "chats/" + roomName + "/";
+}
+
+// redirect to '/room/<roomSelect>/'
+document.querySelector("#roomSelect").onchange = function() {
+    let roomName = document.querySelector("#roomSelect").value.split(" (")[0];
+    window.location.pathname = "chats/" + roomName + "/";
+}
+</script>
+{%endblock%}
+
 {%endblock%}

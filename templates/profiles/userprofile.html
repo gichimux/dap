@@ -7,8 +7,26 @@
 <section class="profile-card ">
 	
 	<div id="container">
-    <span class="edit-btn mr-3" data-toggle="modal" data-target="#ProfileEditModal">
-      <button class="btn btn-outline-dark px-3"><i class="fa-solid fa-user-pen"></i> Edit </button></span>
+    <span class="edit-btn mr-3">
+      {% if profile_detail.user == user %}
+      <button class="btn btn-outline-dark px-3"  data-toggle="modal" data-target="#ProfileEditModal"><i class="fa-solid fa-user-pen"></i> Edit </button>
+      {% else %}
+      <button class="btn btn-outline-dark "><i class="fa-regular fa-comment"></i> </button>
+      {% endif %}
+       
+      {% if profile_detail.user != user %}
+      
+      {% if user.profile in profile_detail.following.all %}
+        <a href="{% url 'follow_toggle' profile_detail.user.username  %}" class="btn btn-outline-danger px-3">Unfollow</a>
+
+        {% else %}
+        
+        <a  href="{% url 'follow_toggle' profile_detail.user.username  %}" class="btn btn-outline-dark px-3"> Follow </a>
+      {% endif %}
+      
+      {% endif %}
+
+    </span>
     
     <div class="mx-auto profile-bg">
 		<div class="profile-image mb-1">
@@ -16,18 +34,18 @@
 		</div>
 
     <div>
-      <h4 class="user-name-tag ml-3 pt-4 "><b>{{my_profile.name}}</b> <br> <span class="blue" >@{{user.username}} </span></h4>
+      <h4 class="user-name-tag ml-3 pt-4 "><b>{{profile_detail.name}}</b> <br> <span class="blue" >@{{profile_detail.user.username}} </span></h4>
     </div>
   </div>
   
   <div class="social-stats row social-bio mt-2 ml-2 ">
                 
-    <p> {{my_profile.bio}} </p>
+    <p> {{profile_detail.bio}} </p>
 </div>
 <div class="icon-info row mt-2 ml-3">
-  <p><i class="fa-solid fa-location-dot"></i> {{my_profile.location}}<b></b></p>
+  <p><i class="fa-solid fa-location-dot"></i> {{profile_detail.location}}<b></b></p>
   <p class="ml-4"><i class="fa-solid fa-cake-candles"></i> 10 10 001</p>
-  <p class="ml-4"> Member Since 10 10 001</p>
+  <p class="ml-4"> Member Since {{profile_detail.user.date_joined|date:"M, Y" }}</p>
 
 </div>
         
@@ -35,23 +53,31 @@
 
 			<div class="social-stats mt-3 row ml-2">
 				<div class="col-4"><h3>
-                    <b>70</b>
+                    <b>{{ posts_count }}</b>
                 </h3>
             <p>Posts</p></div>
            
-            <div class="col-4"><h3>
-            <b> 10k</b>
+              <div class="col-4">
+                <a href="{% url 'follow_list' profile_detail.user.username %}">
+
+                <h3>
+            <b> {{ profile_detail.followers.count }}</b>
                  </h3>
-                <p>Followers<osts/p>
+                <p>Following<osts/p>
+                </a>
             </div>
+          
 
         <div class="col-4">
+          <a href="{% url 'follow_list' profile_detail.user.username %}">
+
             <h3>
-            <b> 3.3k</b>
+            <b> {{ profile_detail.following.count }}</b>
             </h3>
-            <p>Following</p>
+            <p>Followers</p>
+          </a>  
+
         </div>
-                
             
 			</div>
       
@@ -68,9 +94,10 @@
 
         <div class="container">
         <ul class="tabs-bar pt-5 text-center">
-          <li id="tab1" class="tab tab-active">Mine</li>
-          <li id="tab2" class="tab"> Replies</li>
-          <li id="tab2" class="tab"> Communities</li>
+          <li id="tab1" class="tab tab-active"> Store</li>
+          <li id="tab2" class="tab">Replies</li>
+          <li id="tab3" class="tab">Reviews</li>
+
 
           
         </ul>
@@ -79,84 +106,73 @@
           <div class="content content-tab1 content-active">
       
             <div class="ig__phone--feed">
+              
+              {% for post in profile_posts %}
+     <div class="ig__post pb-5"> 
+      <div class="ml-auto">
+         <div class="card-action">
+     <div class="dropdown">
+     <a href="javascript:void();" class="dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown">
+      <i class="fa-solid fa-ellipsis"></i>
+
+     </a>
+      <div class="dropdown-menu dropdown-menu-right">
+      <a class="dropdown-item" href="{% url 'delete_post' post.id %}">Delete post</a>
+      <a class="dropdown-item" href="javascript:void();">Another action</a>
+      <a class="dropdown-item" href="javascript:void();">Something else here</a>
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="javascript:void();">Separated link</a>
+       </div>
+      </div>
+     </div>
+    </div>
+      <div class="ig__post--brand">
+        <div class="brand__logo"><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/4a2f6bdb-b381-4982-ad59-4e7f26ee2028.jpg"/></div>
+        <div class="brand__info">
+          <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
       
-           
-      
-            <!-- 1st post -->
-            <div class="ig__post pb-5"> <span class="ml-auto"><i class="fa-solid fa-ellipsis"></i></span>
-              <div class="ig__post--brand">
-                <div class="brand__logo"><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/4a2f6bdb-b381-4982-ad59-4e7f26ee2028.jpg"/></div>
-                <div class="brand__info">
-                  <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
-                  <span class="bold"><b>Mercedes Benz</b> @mercedesbenz<span><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/b1eeb5f0-24d4-4393-8620-5af0b174fa38.png" class="badge" /></span></span> <span>
-                  <span class="grey">Posted 3hrs ago</span> 
-                </div>
-              </div>
-                  <div><p>we’ve got it all. Cumulus offers the products, services, knowledge, and resources necessary for your financial success.<span class="blue">See more...</span> </p></div>
-      
-              <div class="ig__post--creative">
-                <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
-                </img>
-            </div>
-            <div class="ig__post--summary">
-              <a href="https://cumulusfinserv.com/">
-                <div class="ig__post--cta">
-                  <span><b>KES 13,100,000</b></span>
-                  <span><button class="btn btn-outline-light">Make Offer</button></span>
-                </div>
-              </a>
-              <div class="ig__post--input">
-                <!-- DO NOT CHANGE THIS IMAGE -->
-                <div class="ig__post--input--left">
-                <span class="post-icons"><i class="fa-solid fa-heart"></i></span><span class="post-engagement">300</span>
-                <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>
-                <span class="post-icons ml-3"><i class="fa-solid fa-chart-simple"></i></span><span class="post-engagement">3.7k</span>
-              </div>
-              <div class="ig__post--input--right mt-3">
-                <span class="post-icons"><i class="fa-solid fa-square-plus red"></i></span>
-              </div>
-                <!-- DO NOT CHANGE THIS IMAGE -->
-              </div>
-             
-            </div>
-          </div>
-          <!-- 2nd post -->
-          <div class="ig__post"> <span class="ml-auto"><i class="fa-solid fa-ellipsis"></i></span>
-            <div class="ig__post--brand">
-              <div class="brand__logo"><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/4a2f6bdb-b381-4982-ad59-4e7f26ee2028.jpg"/></div>
-              <div class="brand__info">
-                <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
-                <span class="bold"><b>Mercedes Benz</b> @mercedesbenz<span><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/b1eeb5f0-24d4-4393-8620-5af0b174fa38.png" class="badge" /></span></span>
-              </div>
-            </div>
-                <div><p>we’ve got it all. Cumulus offers the products, services, knowledge, and resources necessary for your financial success.<span class="blue">See more...</span> </p></div>
-      
-            <div class="ig__post--creative">
-              <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
-              </img>
-          </div>
-          <div class="ig__post--summary">
-            <a href="https://cumulusfinserv.com/">
-              <div class="ig__post--cta">
-                <span><b>KES 13,100,000</b></span>
-                <span><button class="btn btn-light">Make Offer</button></span>
-              </div>
-            </a>
-            <div class="ig__post--input">
-              <!-- DO NOT CHANGE THIS IMAGE -->
-              <div class="ig__post--input--left">
-              <span class="post-icons"><i class="fa-solid fa-heart"></i></span><span class="post-engagement">300</span>
-              <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>
-              <span class="post-icons ml-3"><i class="fa-solid fa-chart-simple"></i></span><span class="post-engagement">3.7k</span>
-            </div>
-            <div class="ig__post--input--right mt-2">
-              <span class="post-icons"><i class="fa-solid fa-square-plus red"></i></span>
-            </div>
-              <!-- DO NOT CHANGE THIS IMAGE -->
-            </div>
-           
+          <div class="name-tag ">
+         
+          <span class="bold"><b>{{post.poster_full}}</b> @{{post.posted_by}} <span><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/b1eeb5f0-24d4-4393-8620-5af0b174fa38.png" class="badge" /></span></span> <span>
+          <span class="grey"><br>{{post.whenpublished}}</span> 
           </div>
         </div>
+      </div>
+          <div><p>{{post.about}}.<a href="{% url 'post_detail' post.id %}">See more...</a> </p></div>
+
+      <div class="ig__post--creative">
+        <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
+        </img>
+    </div>
+    <div class="ig__post--summary">
+      <a href="https://cumulusfinserv.com/">
+        <div class="ig__post--cta">
+          <span><b>KES {{post.display_price}}</b></span>
+          <span><button class="btn btn-outline-light px-3">Bid</button></span>
+        </div>
+      </a>
+      <div class="ig__post--input">
+        <!-- DO NOT CHANGE THIS IMAGE -->
+        <div class="ig__post--input--left">
+        <div class="post-icons">
+          <span> <a href="{% url 'like_toggle' post.id %}"><i class="fa-regular fa-heart"></i></a></span>
+          <span class="post-engagement">{{ post.likes.count }}</span>
+          </div>
+        <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>
+        <div class="post-icons ml-3">
+          <i class="fa-regular fa-share-from-square"></i>
+        </div>
+      </div>
+      <div class="ig__post--input--right mt-3">
+        <span class="post-icons "><i class="fa-solid fa-chart-simple"></i></span><span class="post-engagement">3.7k</span>
+      </div>
+        <!-- DO NOT CHANGE THIS IMAGE -->
+      </div>
+     
+    </div>
+  </div>
+     {% endfor %}
+
         <!-- END FEED-->
       </div>
       
@@ -210,6 +226,54 @@
       
           </div>
           
+          <div class="content content-tab3">
+      
+            <div class="ig__phone--feed">
+      
+           
+      
+           
+          <!-- 2nd post -->
+          <div class="ig__post">
+            <div class="ig__post--brand">
+              <div class="brand__logo"><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/4a2f6bdb-b381-4982-ad59-4e7f26ee2028.jpg"/></div>
+              <div class="brand__info">
+                <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
+                <span class="bold"><b>Mercedes Benz</b> @mercedesbenz<span><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/b1eeb5f0-24d4-4393-8620-5af0b174fa38.png" class="badge" /></span></span>
+              </div>
+            </div>
+                <div><p>we’ve got it all. Cumulus offers the products, services, knowledge, and resources necessary for your financial success.<span class="blue">See more...</span> </p></div>
+      
+            <div class="ig__post--creative">
+              <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
+              </img>
+          </div>
+          <div class="ig__post--summary">
+            <a href="https://cumulusfinserv.com/">
+              <div class="ig__post--cta">
+                <span><b>KES 13,100,000</b></span>
+                <span><button class="btn btn-light">Make Offer</button></span>
+              </div>
+            </a>
+            <div class="ig__post--input">
+              <!-- DO NOT CHANGE THIS IMAGE -->
+              <div class="ig__post--input--left">
+              <span class="post-icons"><i class="fa-solid fa-heart"></i></span><span class="post-engagement">300</span>
+              <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>
+              <span class="post-icons ml-3"><i class="fa-solid fa-chart-simple"></i></span><span class="post-engagement">3.7k</span>
+            </div>
+            <div class="ig__post--input--right mt-3">
+              <span class="post-icons"><i class="fa-solid fa-square-plus"></i></span>
+            </div>
+              <!-- DO NOT CHANGE THIS IMAGE -->
+            </div>
+           
+          </div>
+        </div>
+        <!-- END FEED-->
+      </div>
+      
+          </div>
         </div>
       </div>
           

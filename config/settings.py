@@ -31,6 +31,7 @@ SESSION_COOKIE_AGE = 86400
 # Application definition
 
 INSTALLED_APPS = [
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -78,7 +79,15 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = "config.asgi.application" 
 WSGI_APPLICATION = 'config.wsgi.application'
+
+CHANNEL_LAYERS =  {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        
+        },
+    }
 
 
 # Database
@@ -121,6 +130,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+LOGIN_URL = '/login/'
+
+
 
 LANGUAGE_CODE = 'en-us'
 

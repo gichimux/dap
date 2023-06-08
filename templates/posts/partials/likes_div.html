@@ -1,0 +1,11 @@
+<div id="likesarea">
+    <button hx-post="{% url 'like_toggle' post.id %}" id="like-button" 
+          hx-target="#likesarea" hx-swap="outerHTML">
+          {% if request.user in post.likes.all %}
+          <i class="fa-solid fa-heart red"></i>
+          {% else %}
+          <i class="fa-regular fa-heart"></i>
+          {% endif %}
+        </button>
+    <span class="post-engagement">{{ post.likes.count }}</span>
+</div>

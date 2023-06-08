@@ -21,6 +21,7 @@
 
   
     <title>app UI</title>
+
   </head>
   
   <div class="sticky-top currency-bar mt-3">
@@ -54,7 +55,7 @@
       <div class="col left__rail">
         <div class="sidebar">
                
-        <a href="{% url 'home'%}"><div class="sidebar__link">
+        <a href="{% url 'core:home'%}"><div class="sidebar__link">
          
             <span class="sidebar-icons"><img src="{% static 'img/icons/home.png'%}"/></span>
             
@@ -62,7 +63,7 @@
           
           </div>
         </a>
-        <a href="{% url 'explore'%}"><div class="sidebar__link">
+        <a href="{% url 'core:explore'%}"><div class="sidebar__link">
           <span class="sidebar-icons"><img src="{% static 'img/icons/explore.png'%}"/></span>
         <span class="pt-2"><h2>Explore</h2></span>
         </div>
@@ -72,11 +73,11 @@
           <span class="pt-2"><h2>Chats</h2></span>
           </div>
         </a>
-        <a href="{% url 'free_store'%}"><div class="sidebar__link">
+        <a href="{% url 'core:free_store'%}"><div class="sidebar__link">
             <span class="sidebar-icons"><img src="{% static 'img/coin.png'%}"/></span>
           <span class="pt-2"><h2>Gold Store</h2></span>
           </div></a>
-          <a href="{% url 'notification_list'%}"><div class="sidebar__link">
+          <a href="{% url 'core:notification_list'%}"><div class="sidebar__link">
             <span class="sidebar-icons"><img src="{% static 'img/icons/notification.png'%}"/></span>
           <span class="pt-2"><h2>Notifications</h2></span>
           </div></a>
@@ -91,7 +92,7 @@
          
        
           <div class=" mt-3 profile-link">
-            <a href="{% url 'user_profile' %}">
+            <a href="{% url 'core:view_profile' user.username %}">
             <div class="account">
               <div class="account-avatar">
                 <img src="{% static 'img/avatar.jpg'%}" c alt="">
@@ -111,6 +112,7 @@
 
      {% block content %} 
      
+
      {%endblock%}
 
   <!-- Widgets Starts -->
@@ -128,7 +130,7 @@
             <span class="baraza ml-4 pt-3"> 
               <img  src="{% static 'img/baraza.png'%}">
             </span>
-          <span ><h3 class="ml-3 pt-3"><b> <a href="{% url 'baraza'%}">Trends</a> </b> </h3> </span>
+          <span ><h3 class="ml-3 pt-3"><b> <a href="{% url 'core:baraza'%}">Trends</a> </b> </h3> </span>
           
         </div>
         <div class="pb-3">
@@ -196,7 +198,7 @@
 
   <div class="fixed-bottom-menu ">
     <div class="fixed-bottom-menuــrow row ">
-      <a href="{% url 'home'%}" title="" class="fixed-bottom-menu__a">
+      <a href="{% url 'core:home'%}" title="" class="fixed-bottom-menu__a">
         <span class="">
           <img src="{% static 'img/icons/home.png'%}"/>
         </span>
@@ -209,13 +211,13 @@
         </span>
         <h6 class="mt-1">Chats</h6>
       </a>
-      <a href="{% url 'free_store'%}" title="" class="fixed-bottom-menu__a">
+      <a href="{% url 'core:free_store'%}" title="" class="fixed-bottom-menu__a">
         <span class="">
           <img src="{% static 'img/coin.png'%}"/>
         </span>
         <h6 class="mt-1">Gold store</h6>
       </a>
-      <a href="{% url 'notification_list'%}" title="" class="fixed-bottom-menu__a">
+      <a href="{% url 'core:notification_list'%}" title="" class="fixed-bottom-menu__a">
         <span class="">
           <img src="{% static 'img/icons/notification.png'%}"/>
         </span>
@@ -234,8 +236,40 @@
 
   <!-- Main Body Ends -->
   </body>
+  {% block scripts %}
+
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script>
+    // AJAX CALL
+    $('.likin').click(function(){
+        $.ajax({
+                 type: "POST",
+                 url: "{% url 'core:like_button' %}",
+                 data: {'post_id': $(this).attr('name'),'operation':'like_submit','csrfmiddlewaretoken': '{{ csrf_token }}'},
+                 dataType: "json",
+                 success: function(response) {
+                  selector = document.getElementsByName(response.post_id);
+                        if(response.liked==true){
+                          $(selector).css("color","red");
+                        }
+                        else if(response.liked==false){
+                          $(selector).css("color","black");
+                        }
+    
+    
+                  }
+    
+            });
+    
+      })
+    </script>
+
   <script src="{% static 'js/vendor/jquery-1.12.4.min.js'%}"></script>
   <script src="{% static 'js/popper.min.js'%}"></script>
   <script src="{% static 'js/bootstrap.min.js'%}"></script>
   <script src="{% static 'js/app_scripts.js'%}"></script>
+
+{%endblock%}
+  
 </html>

@@ -1,4 +1,4 @@
-{% extends './base.html' %}
+{% extends '../app/base.html' %}
 {% block content %}
 
 {% load static %}
@@ -7,19 +7,21 @@
 
  
  
-  <div class="col">
-   
- <div class="  feed">
+  
+ <div class="col feed">
 
   <div class="container">
-  <ul class="tabs-bar pt-5 text-center">
+  <ul class="tabs-bar pt-3">
     <li id="tab1" class="tab tab-active"><b>For You</b></li>
     <li id="tab2" class="tab"> <b>Near You</b></li>
 
   </ul>
    
-
-  <div class="content-container ">
+  <div class="input-group main-search mt-4 pb-3">
+    <input type="search" class="form-control rounded search-input" placeholder="Search in appname" aria-label="Search" aria-describedby="search-addon" />
+    <button type="button" class="btn btn-outline-clear"><i class="fa-solid fa-magnifying-glass"></i></button>
+  </div>
+  <div class="content-container">
     <div class="content content-tab1 content-active">
 
       <div class="ig__phone--feed">
@@ -34,7 +36,7 @@
 
      </a>
       <div class="dropdown-menu dropdown-menu-right">
-      <a class="dropdown-item" href="{% url 'core:delete_post' post.id %}">Delete post</a>
+      <a class="dropdown-item" href="{% url 'delete_post' post.id %}">Delete post</a>
       <a class="dropdown-item" href="javascript:void();">Another action</a>
       <a class="dropdown-item" href="javascript:void();">Something else here</a>
       <div class="dropdown-divider"></div>
@@ -51,15 +53,17 @@
           <div class="name-tag ">
 
             <div class=" account-details-hover">
-              <a href="{% url 'core:view_profile' post.posted_by%}">
+              <a href="{% url 'user_profile'%}">
               <div class="account-hover-content p-3">
                 <div class="account-avatar ml-2">
                   <img src="{% static 'img/avatar.jpg'%}" alt="">
                 </div>
                 <div class="account-name-tag row ml-2">
                   <p><b>{{post.poster_full}} </b> <br> @{{post.posted_by}} </p>
-                  
-                  
+]                    <span> 
+                    <button class="btn btn-dark px-3 ml-5">Follow</button>
+
+                  </span>
                 </div>
                 <div><p>{{post.poster_bio |truncatechars:50 }}</p></div>
 
@@ -74,7 +78,7 @@
           </div>
         </div>
       </div>
-          <div><p>{{post.about}}.<a href="{% url 'core:post_detail' post.id %}">See more...</a> </p></div>
+          <div><p>{{post.about}}.<a href="{% url 'post_detail' post.id %}">See more...</a> </p></div>
 
       <div class="ig__post--creative">
         <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
@@ -90,21 +94,10 @@
       <div class="ig__post--input">
         <!-- DO NOT CHANGE THIS IMAGE -->
         <div class="ig__post--input--left">
-        <div class="post-icons">
-          <span> 
-            {% if request.user in post.likes.all %}
-
-              <a name="{{ post.id }}"  class="likin" id="co"><i class="fa-solid fa-heart "  aria-hidden="true"></i></a>
-              {% else %}
-            
-              <a name="{{ post.id }}"  class="likin" id="co"><i class="fa-solid fa-heart"   aria-hidden="true"></i></a>         
-              {% endif %}
-          </span>
-          <span class="post-engagement">{{ post.total_likes }}</span>
-          </div>
+        <span class="post-icons"><i class="fa-solid fa-heart"></i></span><span class="post-engagement">300</span>
         <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>
-        <div class="post-icons ml-3">
-          <i class="fa-regular fa-share-from-square"></i>
+        <div class="mine-icon ml-3 mt-3">
+          <img src="{% static 'img/mine.png'%}" alt="">
         </div>
       </div>
       <div class="ig__post--input--right mt-3">
@@ -114,7 +107,7 @@
       </div>
      
     </div>
-      </div>
+  </div>
      {% endfor %}
 
   <!-- END FEED-->
@@ -136,7 +129,7 @@
           <span class="bold"><b>Mercedes Benz</b> @mercedesbenz<span><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/b1eeb5f0-24d4-4393-8620-5af0b174fa38.png" class="badge" /></span></span>
         </div>
       </div>
-          <div><p>we’ve got it all. Cumulus offers the posts, services, knowledge, and resources necessary for your financial success.<span class="blue">See more...</span> </p></div>
+          <div><p>we’ve got it all. Cumulus offers the products, services, knowledge, and resources necessary for your financial success.<span class="blue">See more...</span> </p></div>
 
       <div class="ig__post--creative">
         <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
@@ -180,8 +173,6 @@
     
 
 </div>
-</div>
-
 <div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -194,127 +185,61 @@
       <div class="modal-body mx-auto">
           <p>Post 1 </p>
           <hr>
-          <div class="container">
-            <ul class="form-tabs-bar pt-5 text-center">
-              <li id="tab1" class="form-tab form-tab-active">Sell</li>
-              <li id="tab2" class="form-tab"> Swap</li>
-            </ul>
-             
-          
-            <div class="form-content-container ">
-              <div class="form-content form-content-tab1 form-content-active">
-                <form method="POST" class="text-center ">
-                  {% csrf_token %}
-                  <div class="col-lg-12 text-center">
-                    <label class=" col-form-label form-control-label">Describe your post</label><br>
-                    
-                    {{ sell_form.about}}
-                  </div>
+          <form method="POST" class="text-center ">
+            {% csrf_token %}
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Describe your product</label><br>
               
-      
-                  <div class="col-lg-12 text-center">
-                    <label class=" col-form-label form-control-label">post location</label><br>
-                    
-                    {{ sell_form.post_location}}
-                  </div>
+              {{ sell_form.about}}
+            </div>
+          
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Display price</label><br>
+              
+              {{ sell_form.display_price}}
+            </div>
 
-                  <div class="col-lg-12 text-center">
-                    <label class=" col-form-label form-control-label">Display price</label><br>
-                    
-                    {{ sell_form.sale_price}}
-                  </div>
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Price limit</label><br>
+              
+              {{ sell_form.price_limit}}
+            </div>
 
-                  <div class="col-lg-12 text-center">
-                    <label class=" col-form-label form-control-label">post condition</label><br>
-                    
-                    {{ sell_form.product_condition}}
-                  </div>
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Product location</label><br>
+              
+              {{ sell_form.product_location}}
+            </div>
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Product condition</label><br>
+              
+              {{ sell_form.product_condition}}
+            </div>
 
-      
-                
-      
-                  <div class="col-lg-12 text-center">
-                    <label class=" col-form-label form-control-label">Pick up</label><br>
-                    
-                    {{ sell_form.product_pick_up}}
-                  </div>
-      
-                  <div class="col-lg-12 text-center">
-                    <label class=" col-form-label form-control-label">Payment method</label><br>
-                    
-                    {{ sell_form.payment_method}}
-                  </div>
-      
-                <br>
-                
-                 <button type="submit" class="btn btn-dark px-5 ">Post</button>
-                  
-               
-                
-                 </form> 
-                </div>
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Pick up</label><br>
+              
+              {{ sell_form.product_pick_up}}
+            </div>
 
-                <div class="form-content form-content-tab2 ">
-                  <form method="POST" class="text-center ">
-                    {% csrf_token %}
-                    <div class="col-lg-12 text-center">
-                      <label class=" col-form-label form-control-label">Describe your post</label><br>
-                      
-                      {{ swap_form.about}}
-                    </div>
-                  
-                    <div class="col-lg-12 text-center">
-                      <label class=" col-form-label form-control-label">Display price</label><br>
-                      
-                      {{ swap_form.gold_price}}
-                    </div>
-        
-                  
-        
-                    <div class="col-lg-12 text-center">
-                      <label class=" col-form-label form-control-label">post location</label><br>
-                      
-                      {{ swap_form.post_location}}
-                    </div>
-                    <div class="col-lg-12 text-center">
-                      <label class=" col-form-label form-control-label">post condition</label><br>
-                      
-                      {{ swap_form.product_condition}}
-                    </div>
-        
-                    <div class="col-lg-12 text-center">
-                      <label class=" col-form-label form-control-label">Pick up</label><br>
-                      
-                      {{ swap_form.product_pick_up}}
-                    </div>
-        
-                    <div class="col-lg-12 text-center">
-                      <label class=" col-form-label form-control-label">Payment method</label><br>
-                      
-                      {{ swap_form.payment_method}}
-                    </div>
-        
-                  <br>
-                  
-                   <button type="submit" class="btn btn-dark px-5 ">Post</button>
-                    
-                 
-                  
-                   </form> 
-                  </div>
-                  
-                
-                 </div>
-                </div>
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Payment method</label><br>
+              
+              {{ sell_form.payment_method}}
+            </div>
+
+          <br>
+          
+           <button type="submit" class="btn btn-dark px-5 ">Post</button>
+            
+         
+          
+           </form>        </div>
       <div class="modal-footer">
       
       </div>
     </div>
   </div>
 </div>
-</div>
-
-
-
 <!-- Feed Ends -->
 {% endblock %}

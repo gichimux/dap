@@ -1,0 +1,63 @@
+{% extends '../app/base.html' %}
+{% block content %}
+
+{% load static %}
+<div class="col">
+    <div class="container">
+        <ul class="tabs-bar pt-5 text-center">
+          <li id="tab1" class="tab tab-active"><b>Following</b></li>
+          <li id="tab2" class="tab"> <b>Followers</b></li>
+      
+        </ul>
+
+        <div class="content-container ">
+            <div class="content content-tab1 content-active">
+    
+     {% for follower in followers %}
+     {% if followers %}
+    <a href="{% url 'view_profile' follower.user.username %}">
+    <div class="follow-account ml-3">
+        <div class="account-avatar">
+          <img src="{% static 'img/avatar.jpg'%}" c alt="">
+        </div>
+        <div class="user-details ">
+          <p><b>{{follower.name}}</b></p>
+          <p class="blue">@{{follower.user.username}}</p>
+        </div>
+        <div class="follow-btn ml-auto">
+          <button class="btn btn-dark px-3">Follow</button>
+        </div>
+      </div>
+    </a>
+    {% endif %}
+    {%endfor%}
+    
+    </div>
+    </div>
+
+    <div class="content-container ">
+        <div class="content content-tab2 ">
+            {% for follower in following %}
+            <a href="{% url 'view_profile' follower.user.username %}">
+            <div class="follow-account ml-3">
+                <div class="account-avatar">
+                  <img src="{% static 'img/avatar.jpg'%}" c alt="">
+                </div>
+                <div class="user-details ">
+                  <p><b>{{follower.name}}</b></p>
+                  <p class="blue">@{{follower.user.username}}</p>
+                </div>
+                <div class="follow-btn ml-auto">
+                  <button class="btn btn-dark px-3">Follow</button>
+                </div>
+              </div>
+            </a>
+        
+            {%endfor%}
+    </div>
+    </div>
+
+</div>
+
+</div>
+{%endblock%}

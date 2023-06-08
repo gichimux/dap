@@ -4,62 +4,140 @@ from django.contrib import messages
 from posts.models import *
 from posts.forms import *
 from django.contrib.auth.forms import AuthenticationForm 
-from accounts.models import Profile 
+from accounts.models import User, Profile 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from accounts.forms import EditProfileForm
-
+from django.shortcuts import get_object_or_404 
+import json
+from django.http import HttpResponse
 
 def home(request):
-    
+
     my_profile = Profile.objects.get(user=request.user)
     posts = Post.objects.all()
     
     if request.method == 'POST':
-        product_form = NewProductForm(request.POST)
+        sell_form = NewSellForm(request.POST)
         swap_form = NewSwapForm(request.POST)
 
-        if product_form.is_valid():
-            product_form.instance.posted_by = request.user
-            product_form.save()
-            messages.success(request, 'Your product has been posted')
+        if sell_form.is_valid():
+            sell_form.instance.posted_by = request.user
+            sell_form.save()
+            messages.success(request, 'Your post has been posted')
             return redirect(request.META['HTTP_REFERER'])
-        
+
         if swap_form.is_valid():
             swap_form.instance.posted_by = request.user
             swap_form.save()
-            messages.success(request, 'Your product has been posted')
+            messages.success(request, 'Your post has been posted')
             return redirect(request.META['HTTP_REFERER'])
-        
+
     else:
-        product_form = NewProductForm(request.POST)
+        sell_form = NewSellForm(request.POST)
         swap_form = NewSwapForm(request.POST)
 
     context ={
-     'product_form': product_form,
-     'posts' : posts,
+     'sell_form': sell_form,
      'swap_form': swap_form,
+     'posts' : posts,
      'my_profile': my_profile,
    }
     return render (request, 'app/home.html', context )
 
+
 @login_required
-def user_profile(request):
-    my_profile = Profile.objects.get(user=request.user)
-    edit_profile_form = EditProfileForm(request.POST, instance=my_profile)
+def follow_toggle(request, profile_username):
+    user_id = User.objects.get(username=profile_username)
+    profile_user = Profile.objects.get(user=user_id)
+    
+    authorObj = User.objects.get(id=user_id.id)
+    currentUserObj = User.objects.get(id=request.user.id)
+    following = profile_user.following.all()
+
+    # if profile_username != currentUserObj.username:
+    if currentUserObj.profile in following:
+        profile_user.following.remove(currentUserObj.id)
+    else:
+        profile_user.following.add(currentUserObj.id)
+
+    return redirect(request.META['HTTP_REFERER'])
+
+@login_required
+def like_toggle(request, post_id):
+    post = Post.objects.get(id=post_id)
+    currentUserObj = User.objects.get(id=request.user.id)
+    
+    likes = post.likes.all()
+
+    # if profile_username != currentUserObj.username:
+    if currentUserObj in likes:
+        post.likes.remove(currentUserObj.id)
+    else:
+        post.likes.add(currentUserObj.id)
+
+    return redirect(request.META['HTTP_REFERER'])
+
+
+def like_button(request):
+   if request.method =="POST":
+       if request.POST.get("operation") == "like_submit" and request.is_ajax():
+         post_id=request.POST.get("post_id",None)
+         post=get_object_or_404(Post,pk=post_id)
+         if post.likes.filter(id=request.user.id): #already liked the post
+            post.likes.remove(request.user) #remove user from likes 
+            liked=False
+         else:
+             post.likes.add(request.user) 
+             liked=True
+         ctx={"likes_count":post.total_likes,"liked":liked,"post_id":post_id}
+         return HttpResponse(json.dumps(ctx), content_type='application/json')
+   
+  
+
+   
+   
+def follow_list(request, profile_username):
+    user_id = User.objects.get(username=profile_username)
+    profile_user = Profile.objects.get(user=user_id)
+    # followers = Profile.objects.filter(fol)
+    
+    following = profile_user.following.all()
+    followers = profile_user.followers.all()
+    context ={
+     'following': following,
+     'followers': followers,
+     'profile_user': profile_user,
+     
+    }
+    
+    return render (request, 'profiles/following_list.html', context )
+
+
+def view_profile(request, profile_username):
+    profile_user = User.objects.get(username=profile_username)
+    profile_detail = Profile.objects.get(user=profile_user)
+    profile_posts = Post.objects.filter(posted_by=profile_user)
+    posts_count = profile_posts.count()
+
+    edit_profile_form = EditProfileForm(request.POST, instance=profile_detail)
 
     if edit_profile_form.is_valid():
             edit_profile_form.save()
             messages.success(request, 'Your profile has been updated successfully')
             return redirect(request.META['HTTP_REFERER'])
     else:
-        edit_profile_form = EditProfileForm(instance=my_profile)
+        edit_profile_form = EditProfileForm(instance=profile_detail)
 
     context ={
-     'my_profile': my_profile,
+     'posts_count': posts_count,
+     'profile_posts': profile_posts,
+     'profile_detail': profile_detail,
      'edit_profile_form': edit_profile_form,
-   }
+    }
+    
     return render (request, 'profiles/userprofile.html', context )
+
 
 
 @login_required

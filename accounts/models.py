@@ -27,10 +27,14 @@ class Profile(models.Model):
     location = models.CharField(max_length=50)
     phone_number = models.CharField(validators=[phone_regex], max_length=16, blank=True)
     bio = models.TextField(max_length=150)
-
+    following = models.ManyToManyField(
+        "self", blank=True, related_name="followers", symmetrical=False
+    )
     avatar = models.FileField(
         max_length=1000, upload_to="profile_pics/", null=True, blank=True
-    )    
+    )   
+    website = models.URLField(max_length=200, blank=True)
+ 
     
  
     def __str__(self):

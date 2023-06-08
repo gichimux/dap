@@ -17,12 +17,14 @@ class Condition(models.TextChoices):
 class Pick_Up(models.TextChoices):
         MEETUP = 'Meetup', "MEETUP"
         ON_PREMISE = 'On Premise', "ON_PREMISE"
-        DELIVERY = 'delivery', "DELIVERY"
+
+class Post_Type(models.TextChoices):
+        SELL = 'Sell', "SELL"
+        SWAP = 'Swap', "SWAP"
 
 class Payment_Method(models.TextChoices):
-        MPESA_ON_DELIVERY = 'Mpesa on delivery', "MPESA_ON_DELIVERY"
-        ESCROW = 'Escrow', "ESCROW"
-        CASH_ON_DELIVERY = 'Cash ondelivery', "CASH_ON_DELIVERY"        
+        MPESA = 'Mpesa ', "MPESA"
+        CASH = 'Cash', "CASH"        
 
  
 
@@ -38,7 +40,34 @@ class Post(models.Model):
 
     
     timestamp = models.DateTimeField(auto_now_add=True)
+    product_condition = models.CharField(max_length=50,
+        choices=Condition.choices,
+        default=Condition.NEW
+        )
+    post_type = models.CharField(max_length=50,
+        choices=Post_Type.choices,
+        default=Post_Type.SELL
+        )
+    about = models.CharField(max_length=100)
+    sale_price = models.IntegerField(default=0)
+    gold_price = models.IntegerField(default=0)
 
+    product_pick_up = models.CharField(max_length=50,
+        choices=Pick_Up.choices,
+        default=Pick_Up.MEETUP
+        )
+    payment_method = models.CharField(max_length=50,
+        choices=Payment_Method.choices,
+        default=Payment_Method.MPESA
+        )
+    likes = models.ManyToManyField(
+        User, blank=True, related_name="liked_by", symmetrical=False
+    )
+
+    @property
+    def total_likes(self):
+        return self.likes.count()
+    
     # @property
     def poster_full(self):
         le_profile = Profile.objects.get(user=self.posted_by)
@@ -124,35 +153,7 @@ class Post(models.Model):
     def __str__(self):
         return self.post_location
 
-class Product(Post):
-
-    product_condition = models.CharField(max_length=50,
-        choices=Condition.choices,
-        default=Condition.NEW
-        )
-    about = models.CharField(max_length=100)
-    display_price = models.IntegerField(default=0)
-    product_pick_up = models.CharField(max_length=50,
-        choices=Pick_Up.choices,
-        default=Pick_Up.MEETUP
-        )
-    payment_method = models.CharField(max_length=50,
-        choices=Payment_Method.choices,
-        default=Payment_Method.MPESA_ON_DELIVERY
-        )
-    
-
-class Swap(Post):
-    about = models.CharField(max_length=300)
-    swap_pick_up = models.CharField(max_length=50,
-        choices=Pick_Up.choices,
-        default=Pick_Up.MEETUP
-        )
-    swap_condition = models.CharField(max_length=50,
-        choices=Condition.choices,
-        default=Condition.NEW
-        )
-
+   
 class Like(models.Model):
     post = models.ForeignKey(
         Post, related_name="post_likes", on_delete=models.CASCADE
