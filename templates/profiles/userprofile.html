@@ -58,7 +58,7 @@
             <p>Posts</p></div>
            
               <div class="col-4">
-                <a href="{% url 'follow_list' profile_detail.user.username %}">
+                <a href="{% url 'core:follow_list' profile_detail.user.username %}">
 
                 <h3>
             <b> {{ profile_detail.followers.count }}</b>
@@ -69,7 +69,7 @@
           
 
         <div class="col-4">
-          <a href="{% url 'follow_list' profile_detail.user.username %}">
+          <a href="{% url 'core:follow_list' profile_detail.user.username %}">
 
             <h3>
             <b> {{ profile_detail.following.count }}</b>
@@ -117,7 +117,7 @@
 
      </a>
       <div class="dropdown-menu dropdown-menu-right">
-      <a class="dropdown-item" href="{% url 'delete_post' post.id %}">Delete post</a>
+      <a class="dropdown-item" href="{% url 'core:delete_post' post.id %}">Delete post</a>
       <a class="dropdown-item" href="javascript:void();">Another action</a>
       <a class="dropdown-item" href="javascript:void();">Something else here</a>
       <div class="dropdown-divider"></div>
@@ -138,7 +138,7 @@
           </div>
         </div>
       </div>
-          <div><p>{{post.about}}.<a href="{% url 'post_detail' post.id %}">See more...</a> </p></div>
+          <div><p>{{post.about}}.<a href="{% url 'core:post_detail' post.id %}">See more...</a> </p></div>
 
       <div class="ig__post--creative">
         <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
@@ -155,7 +155,7 @@
         <!-- DO NOT CHANGE THIS IMAGE -->
         <div class="ig__post--input--left">
         <div class="post-icons">
-          <span> <a href="{% url 'like_toggle' post.id %}"><i class="fa-regular fa-heart"></i></a></span>
+          <span> <a href="{% url 'core:like_button'  %}"><i class="fa-regular fa-heart"></i></a></span>
           <span class="post-engagement">{{ post.likes.count }}</span>
           </div>
         <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>

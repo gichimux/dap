@@ -232,7 +232,7 @@ def landing(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"Welcome, you are now logged in as {username}.")
-                return redirect("home")
+                return redirect("core:home")
             else:
                 messages.error(request,"Invalid username or password.")
         else:
