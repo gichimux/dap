@@ -8,33 +8,35 @@
  
  
   <div class="col">
-   
- <div class="  feed">
+    <div class="container">
 
-  <div class="container">
-  <ul class="tabs-bar pt-5 text-center">
-    <li id="tab1" class="tab tab-active"><b>For You</b></li>
-    <li id="tab2" class="tab"> <b>Near You</b></li>
+    <ul class="tabs-bar  pt-2 text-center">
+      <li id="tab1" class="tab tab-active"><b>For You</b></li>
+      <li id="tab2" class="tab"> <b>Near You</b></li>
+  
+    </ul>
+ 
 
-  </ul>
-   
+ 
+    <div class="  feed">
+      <div class="app--feed">
 
   <div class="content-container ">
     <div class="content content-tab1 content-active">
 
-      <div class="ig__phone--feed">
+      
 
      {% for post in posts %}
-     <div class="ig__post pb-5"> 
-      <div class="ml-auto">
+     <div class="post_card pb-5 "> 
+      <div class="ml-auto mt-3">
          <div class="card-action">
      <div class="dropdown">
-     <a href="javascript:void();" class="dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown">
+     <a href="javascript:void();" class="dropdown-toggle-nocaret" data-toggle="dropdown">
       <i class="fa-solid fa-ellipsis"></i>
 
      </a>
       <div class="dropdown-menu dropdown-menu-right">
-      <a class="dropdown-item" href="{% url 'core:delete_post' post.id %}">Delete post</a>
+      <a class="dropdown-item" href="{% url 'delete_post' post.id %}">Delete post</a>
       <a class="dropdown-item" href="javascript:void();">Another action</a>
       <a class="dropdown-item" href="javascript:void();">Something else here</a>
       <div class="dropdown-divider"></div>
@@ -43,7 +45,7 @@
       </div>
      </div>
     </div>
-      <div class="ig__post--brand">
+      <div class="post_card--brand mt-3">
         <div class="brand__logo"><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/4a2f6bdb-b381-4982-ad59-4e7f26ee2028.jpg"/></div>
         <div class="brand__info">
           <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
@@ -51,7 +53,7 @@
           <div class="name-tag ">
 
             <div class=" account-details-hover">
-              <a href="{% url 'core:view_profile' post.posted_by%}">
+              <a href="{% url 'view_profile' post.posted_by%}">
               <div class="account-hover-content p-3">
                 <div class="account-avatar ml-2">
                   <img src="{% static 'img/avatar.jpg'%}" alt="">
@@ -74,41 +76,70 @@
           </div>
         </div>
       </div>
-          <div><p>{{post.about}}.<a href="{% url 'core:post_detail' post.id %}">See more...</a> </p></div>
-
-      <div class="ig__post--creative">
+          <div><p>{{post.about}}.<a href="{% url 'post_detail' post.id %}">See more...</a> </p></div>
+          <a href="{% url 'post_detail' post.id %}">
+      <div class="post_card--creative">
         <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
         </img>
     </div>
-    <div class="ig__post--summary">
-      <a href="https://cumulusfinserv.com/">
-        <div class="ig__post--cta">
-          <span><b>KES {{post.display_price}}</b></span>
-          <span><button class="btn btn-outline-light px-3">Bid</button></span>
+    </a>
+    <div class="post_card--summary">
+      <a href="#">
+        <div class="post_card--cta">
+          <span><b>KES {{post.sale_price}}</b></span>
+          <span><button class="btn btn-danger px-3"> BID <i class="fa-solid fa-plus"></i></button></span>
         </div>
       </a>
-      <div class="ig__post--input">
+      <div class="post_card--input row">
         <!-- DO NOT CHANGE THIS IMAGE -->
-        <div class="ig__post--input--left">
-        <div class="post-icons">
+        <div class="post_card--input--left">
+        <div class="post-icons like mt-1 ml-3">
           <span> 
             {% if request.user in post.likes.all %}
 
               <a name="{{ post.id }}"  class="likin" id="co"><i class="fa-solid fa-heart "  aria-hidden="true"></i></a>
               {% else %}
             
-              <a name="{{ post.id }}"  class="likin" id="co"><i class="fa-solid fa-heart"   aria-hidden="true"></i></a>         
+              <a name="{{ post.id }}"  class="likin" id="co"><i class="fa-solid fa-heart "   aria-hidden="true"></i></a>         
               {% endif %}
           </span>
-          <span class="post-engagement">{{ post.total_likes }}</span>
-          </div>
-        <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>
-        <div class="post-icons ml-3">
-          <i class="fa-regular fa-share-from-square"></i>
+          <span class="post-engagement" id="like_count"> {{ post.total_likes }} </span>
         </div>
+          
+            <div class="post-icons mt-1 ml-3">
+          <i class="fa-regular fa-comment "></i>
+          <span class="post-engagement">{{post.comment_count}}</span>
+        </div>
+        
+        
+          <div class="post-icons mt-1 ml-3">
+            <div class="card-action">
+        <div class="dropdown">
+        <a href="javascript:void();" class=" dropdown-toggle-nocaret" data-toggle="dropdown">
+          <i class="fa fa-circle-plus "></i> 
+          <span class="post-engagement">13</span>
+          </a>
+         <div class=" dropdown-menu dropdown-menu-top">
+         <a class="dropdown-item" href="javascript:void();">Repost</a>
+         <a class="dropdown-item" href="javascript:void();">Resell</a>
+          </div>
+         </div>
+        </div>
+       </div>
+
+       <div class="post-icons mt-1 ml-3">
+        <i class="fa-solid fa-share"></i>
       </div>
-      <div class="ig__post--input--right mt-3">
-        <span class="post-icons "><i class="fa-solid fa-chart-simple"></i></span><span class="post-engagement">3.7k</span>
+
+      </div>
+
+
+      <div class="post_card--input--right  mr-3 mt-2">
+        <a href="{% url 'post_detail' post.id %} " >
+        <span class="post-icons ">
+          <i class="fa-solid fa-chart-simple" ></i>
+        </span><span class="post-engagement">3.7k</span>
+        </a>
       </div>
         <!-- DO NOT CHANGE THIS IMAGE -->
       </div>
@@ -123,53 +154,10 @@
     </div>
     <div class="content content-tab2">
 
-      <div class="ig__phone--feed">
+      <div class="app--feed">
 
     
 
-    <!-- 2nd post -->
-    <div class="ig__post">
-      <div class="ig__post--brand">
-        <div class="brand__logo"><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/4a2f6bdb-b381-4982-ad59-4e7f26ee2028.jpg"/></div>
-        <div class="brand__info">
-          <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
-          <span class="bold"><b>Mercedes Benz</b> @mercedesbenz<span><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/b1eeb5f0-24d4-4393-8620-5af0b174fa38.png" class="badge" /></span></span>
-        </div>
-      </div>
-          <div><p>we’ve got it all. Cumulus offers the posts, services, knowledge, and resources necessary for your financial success.<span class="blue">See more...</span> </p></div>
-
-      <div class="ig__post--creative">
-        <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
-        </img>
-    </div>
-    <div class="ig__post--summary">
-      <a href="">
-        <div class="ig__post--cta">
-          <span><b>KES 13,100,000</b></span>
-          <span><button class="btn btn-light">Make Offer</button></span>
-        </div>
-      </a>
-      <div class="ig__post--input">
-        <!-- DO NOT CHANGE THIS IMAGE -->
-        <div class="ig__post--input--left">
-        <span class="post-icons"><i class="fa-solid fa-heart"></i></span><span class="post-engagement">300</span>
-        <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>
-        <span class="post-icons ml-3"><i class="fa-solid fa-chart-simple"></i></span><span class="post-engagement">3.7k</span>
-      </div>
-      <div class="ig__post--input--right mt-3">
-        <div class="row gem">
-          <div class="gem-icon">
-            <img src="{% static 'img/gem.png'%}" alt="" class="mt-2 ml-2"> 
-          </div>
-          <div class="badge badge-danger mr-auto">4</div>
-        </div>
-      </div>
-        <!-- DO NOT CHANGE THIS IMAGE -->
-      </div>
-     
-    </div>
-  </div>
-  <!-- END FEED-->
 </div>
 
     </div>
@@ -196,8 +184,9 @@
           <hr>
           <div class="container">
             <ul class="form-tabs-bar pt-5 text-center">
-              <li id="tab1" class="form-tab form-tab-active">Sell</li>
-              <li id="tab2" class="form-tab"> Swap</li>
+              <li id="tab1" class="form-tab form-tab-active">Product</li>
+              <li id="tab2" class="form-tab"> Experience</li>
+
             </ul>
              
           

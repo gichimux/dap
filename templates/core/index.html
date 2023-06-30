@@ -1,153 +1,84 @@
-{% extends './base.html' %}
-{% block content %}
+{% load static%}
 
-{% load static %}
+<!DOCTYPE html>
+<html lang="en">
 
-<main>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SC</title>
+    <link rel="stylesheet" href="{% static 'css/style.css'%}">
 
-    <!-- Slider Area Start-->
-    <div class="slider-area ">
-        <div class="slider-active">
-            <div class="single-slider slider-height slider-padding sky-blue d-flex align-items-center">
-                <div class="container">
-                    <div class="row d-flex align-items-center">
-                        <div class="col-lg-6 col-md-9 ">
-                            <div class="hero__caption">
-                                <span data-animation="fadeInUp" data-delay=".4s">App Landing Page</span>
-                                <h1 data-animation="fadeInUp" data-delay=".6s">Get things done<br>with Appco</h1>
-                                <p data-animation="fadeInUp" data-delay=".8s">Dorem ipsum dolor sitamet, consectetur adipiscing elit, sed do eiusm tempor incididunt ulabore et dolore magna aliqua.</p>
-                                <!-- Slider btn -->
-                               <div class="slider-btns">
-                                    <!-- Hero-btn -->
-                                    <a data-animation="fadeInLeft" data-delay="1.0s" href="industries.html" class="btn radius-btn">Join</a>
-                                    <!-- Video Btn -->
-                                    <a data-animation="fadeInRight" data-delay="1.0s" class="popup-video video-btn ani-btn" href="https://www.youtube.com/watch?v=1aP-TXUpNoU"><i class="fas fa-play"></i></a>
-                               </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="hero__img d-none d-lg-block f-right" data-animation="fadeInRight" data-delay="1s">
-                                <img src="assets/img/hero/hero_right.png" alt="">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> 
-            <div class="single-slider slider-height slider-padding sky-blue d-flex align-items-center">
-                <div class="container">
-                    <div class="row d-flex align-items-center">
-                        <div class="col-lg-6 col-md-9 ">
-                            <div class="hero__caption">
-                                <span data-animation="fadeInUp" data-delay=".4s">App Landing Page</span>
-                                <h1 data-animation="fadeInUp" data-delay=".6s">Get things done<br>with Appco</h1>
-                                <p data-animation="fadeInUp" data-delay=".8s">Dorem ipsum dolor sitamet, consectetur adipiscing elit, sed do eiusm tempor incididunt ulabore et dolore magna aliqua.</p>
-                                <!-- Slider btn -->
-                               <div class="slider-btns">
-                                    <!-- Hero-btn -->
-                                    <a data-animation="fadeInLeft" data-delay="1.0s" href="industries.html" class="btn radius-btn">Join</a>
-                                    <!-- Video Btn -->
-                                    <a data-animation="fadeInRight" data-delay="1.0s" class="popup-video video-btn ani-btn" href="https://www.youtube.com/watch?v=1aP-TXUpNoU"><i class="fas fa-play"></i></a>
-                               </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="hero__img d-none d-lg-block f-right" data-animation="fadeInRight" data-delay="1s">
-                                <img src="assets/img/hero/hero_right.png" alt="">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> 
-        </div>
-    </div>
-    <!-- Slider Area End -->
-    
-    <!-- Services Area Start -->
-    <section class="service-area sky-blue section-padding2">
-        <div class="container">
-            <!-- Section Tittle -->
-            <div class="row d-flex justify-content-center">
-                <div class="col-lg-6">
-                    <div class="section-tittle text-center">
-                        <h2>How Can We HelpYour<br>with Appco!</h2>
-                    </div>
-                </div>
+<link rel="mask-icon" sizes="any" href="https://abs.twimg.com/responsive-web/client-web/icon-svg.9e211f65.svg" color="#1da1f2">
+<link rel="shortcut icon" href="https://abs.twimg.com/favicons/twitter.ico" type="image/x-icon">
+<link rel="apple-touch-icon" sizes="192x192" href="https://abs.twimg.com/responsive-web/client-web/icon-ios.8ea219d5.png" />
+</head>
+
+<body>
+    <main>
+        <div class="left">
+            <div class="left-bg">
+                <img src="{% static 'img/landing.png' %}" alt="">
             </div>
-            <!-- Section caption -->
-            <div class="row">
-                <div class="col-xl-4 col-lg-4 col-md-6">
-                    <div class="services-caption text-center mb-30">
-                        <div class="service-icon">
-                            <span class="flaticon-businessman"></span>
-                        </div> 
-                        <div class="service-cap">
-                            <h4><a href="#">Easily Manage</a></h4>
-                            <p>Sorem spsum dolor sit amsectetur adipisclit, seddo eiusmod tempor incididunt ut laborea.</p>
-                        </div>
+            <div class="content">
+                <div class="content-item">
+                    <div class="content-img">
+                        <img src="https://raw.githubusercontent.com/mustafadalga/twitter-ui-clone/master/assets/img/search.svg" alt="">
                     </div>
+                    <span class="content-description">buy and sell
+                    </span>
                 </div>
-                <div class="col-xl-4 col-lg-4 col-md-6">
-                    <div class="services-caption active text-center mb-30">
-                        <div class="service-icon">
-                            <span class="flaticon-pay"></span>
-                        </div> 
-                        <div class="service-cap">
-                            <h4><a href="#">Get Payments Easily</a></h4>
-                            <p>Sorem spsum dolor sit amsectetur adipisclit, seddo eiusmod tempor incididunt ut laborea.</p>
-                        </div>
+                <div class="content-item">
+                    <div class="content-img">
+                        <img src="https://raw.githubusercontent.com/mustafadalga/twitter-ui-clone/master/assets/img/users.svg" alt="">
                     </div>
-                </div> 
-                <div class="col-xl-4 col-lg-4 col-md-6">
-                    <div class="services-caption text-center mb-30">
-                        <div class="service-icon">
-                            <span class="flaticon-plane"></span>
-                        </div> 
-                        <div class="service-cap">
-                            <h4><a href="#">Quick Messaging</a></h4>
-                            <p>Sorem spsum dolor sit amsectetur adipisclit, seddo eiusmod tempor incididunt ut laborea.</p>
-                        </div>
+                    <span class="content-description">Group buying deals
+
+                    </span>
+                </div>
+                <div class="content-item">
+                    <div class="content-img">
+                        <img src="https://raw.githubusercontent.com/mustafadalga/twitter-ui-clone/master/assets/img/comment.svg" alt="">
                     </div>
+                    <span class="content-description">interact with sellers/buyers
+
+                    </span>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- Services Area End -->
-    
+        <div class="right">
+            <div class="content">
+                <div id="logo-landing">
+                    <a href="{% url 'home' %}">
+                      <img src="{% static 'img/logo.png'%}" alt="">
+                    </a>
+                </div>
+                <div class="title ">
+                    Join a thriving social marketplace
+                </div>
+                <br>
+                <form >
+                    <button type="submit" class="register">Get Started</button>
+                    <button type="submit" class="login">Login</button>
+                </form>
+            </div>
+        </div>
+    </main>
   
-    
-  
-    <!-- Available App  Start-->
-    <div class="available-app-area">
+    <footer>
         <div class="container">
-            <div class="row d-flex justify-content-between">
-                <div class="col-xl-5 col-lg-6">
-                    <div class="app-caption">
-                        <div class="section-tittle section-tittle3">
-                            <h2>Our App Available For Any Device Download now</h2>
-                            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore fug.</p>
-                            <div class="app-btn">
-                                <a href="#" class="app-btn1"><img src="assets/img/shape/app_btn1.png" alt=""></a>
-                                <a href="#" class="app-btn2"><img src="assets/img/shape/app_btn2.png" alt=""></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-6 col-lg-6">
-                    <div class="app-img">
-                        <img src="assets/img/shape/available-app.png" alt="">
-                    </div>
-                </div>
-            </div>
+            <ul class="footer-link">
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Terms & Conditions</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+
+                <li><span>© 2023 Socochat, Inc.</span></li>
+            </ul>
         </div>
-        <!-- Shape -->
-        <div class="app-shape">
-            <img src="assets/img/shape/app-shape-top.png" alt="" class="app-shape-top heartbeat d-none d-lg-block">
-            <img src="assets/img/shape/app-shape-left.png" alt="" class="app-shape-left d-none d-xl-block">
-            <!-- <img src="assets/img/shape/app-shape-right.png" alt="" class="app-shape-right bounce-animate "> -->
-        </div>
-    </div>
-    <!-- Available App End-->
-   
- 
-</main>
-{% endblock %}
+
+    </footer>
+</body>
+
+</html>

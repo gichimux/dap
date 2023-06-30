@@ -3,8 +3,24 @@
 
 {% load static %}
 <div class="col">
-  <div class="spacer"></div>
-<section class="profile-card ">
+  <div class="home row">
+<div class=" mr-auto">
+    <div class=" ">
+<div class="go_back">
+      <a class="{% url 'home' %}">
+    <i class="fa fa-arrow-left ml-2 mt-1" style="font-size: 30px;"></i>
+  </a>
+</div>
+  </div>
+</div>
+<div class="ml-auto mt-2 mr-3">
+    <h6> {{ posts_count }} Posts</h6>
+</div>
+
+  
+</div>
+  
+<section class="profile-card mt-3">
 	
 	<div id="container">
     <span class="edit-btn mr-3">
@@ -44,8 +60,8 @@
 </div>
 <div class="icon-info row mt-2 ml-3">
   <p><i class="fa-solid fa-location-dot"></i> {{profile_detail.location}}<b></b></p>
-  <p class="ml-4"><i class="fa-solid fa-cake-candles"></i> 10 10 001</p>
-  <p class="ml-4"> Member Since {{profile_detail.user.date_joined|date:"M, Y" }}</p>
+  <p class="ml-5"><i class="fa-solid fa-store"></i> General</p>
+  <p class="ml-5"> Joined {{profile_detail.user.date_joined|date:"M, Y" }}</p>
 
 </div>
         
@@ -58,7 +74,7 @@
             <p>Posts</p></div>
            
               <div class="col-4">
-                <a href="{% url 'core:follow_list' profile_detail.user.username %}">
+                <a href="{% url 'follow_list' profile_detail.user.username %}">
 
                 <h3>
             <b> {{ profile_detail.followers.count }}</b>
@@ -69,7 +85,7 @@
           
 
         <div class="col-4">
-          <a href="{% url 'core:follow_list' profile_detail.user.username %}">
+          <a href="{% url 'follow_list' profile_detail.user.username %}">
 
             <h3>
             <b> {{ profile_detail.following.count }}</b>
@@ -105,10 +121,10 @@
         <div class="content-container">
           <div class="content content-tab1 content-active">
       
-            <div class="ig__phone--feed">
+            <div class="app--feed">
               
               {% for post in profile_posts %}
-     <div class="ig__post pb-5"> 
+     <div class="post_card pb-5"> 
       <div class="ml-auto">
          <div class="card-action">
      <div class="dropdown">
@@ -117,7 +133,7 @@
 
      </a>
       <div class="dropdown-menu dropdown-menu-right">
-      <a class="dropdown-item" href="{% url 'core:delete_post' post.id %}">Delete post</a>
+      <a class="dropdown-item" href="{% url 'delete_post' post.id %}">Delete post</a>
       <a class="dropdown-item" href="javascript:void();">Another action</a>
       <a class="dropdown-item" href="javascript:void();">Something else here</a>
       <div class="dropdown-divider"></div>
@@ -126,7 +142,7 @@
       </div>
      </div>
     </div>
-      <div class="ig__post--brand">
+      <div class="post_card--brand">
         <div class="brand__logo"><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/4a2f6bdb-b381-4982-ad59-4e7f26ee2028.jpg"/></div>
         <div class="brand__info">
           <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
@@ -138,24 +154,24 @@
           </div>
         </div>
       </div>
-          <div><p>{{post.about}}.<a href="{% url 'core:post_detail' post.id %}">See more...</a> </p></div>
+          <div><p>{{post.about}}.<a href="{% url 'post_detail' post.id %}">See more...</a> </p></div>
 
-      <div class="ig__post--creative">
+      <div class="post_card--creative">
         <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
         </img>
     </div>
-    <div class="ig__post--summary">
+    <div class="post_card--summary">
       <a href="https://cumulusfinserv.com/">
-        <div class="ig__post--cta">
+        <div class="post_card--cta">
           <span><b>KES {{post.display_price}}</b></span>
           <span><button class="btn btn-outline-light px-3">Bid</button></span>
         </div>
       </a>
-      <div class="ig__post--input">
+      <div class="post_card--input">
         <!-- DO NOT CHANGE THIS IMAGE -->
-        <div class="ig__post--input--left">
+        <div class="post_card--input--left">
         <div class="post-icons">
-          <span> <a href="{% url 'core:like_button'  %}"><i class="fa-regular fa-heart"></i></a></span>
+          <span> <a href="{% url 'like_button'  %}"><i class="fa-regular fa-heart"></i></a></span>
           <span class="post-engagement">{{ post.likes.count }}</span>
           </div>
         <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>
@@ -163,7 +179,7 @@
           <i class="fa-regular fa-share-from-square"></i>
         </div>
       </div>
-      <div class="ig__post--input--right mt-3">
+      <div class="post_card--input--right mt-3">
         <span class="post-icons "><i class="fa-solid fa-chart-simple"></i></span><span class="post-engagement">3.7k</span>
       </div>
         <!-- DO NOT CHANGE THIS IMAGE -->
@@ -179,14 +195,14 @@
           </div>
           <div class="content content-tab2">
       
-            <div class="ig__phone--feed">
+            <div class="app--feed">
       
            
       
            
           <!-- 2nd post -->
-          <div class="ig__post">
-            <div class="ig__post--brand">
+          <div class="post_card">
+            <div class="post_card--brand">
               <div class="brand__logo"><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/4a2f6bdb-b381-4982-ad59-4e7f26ee2028.jpg"/></div>
               <div class="brand__info">
                 <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
@@ -195,25 +211,25 @@
             </div>
                 <div><p>we’ve got it all. Cumulus offers the products, services, knowledge, and resources necessary for your financial success.<span class="blue">See more...</span> </p></div>
       
-            <div class="ig__post--creative">
+            <div class="post_card--creative">
               <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
               </img>
           </div>
-          <div class="ig__post--summary">
+          <div class="post_card--summary">
             <a href="https://cumulusfinserv.com/">
-              <div class="ig__post--cta">
+              <div class="post_card--cta">
                 <span><b>KES 13,100,000</b></span>
                 <span><button class="btn btn-light">Make Offer</button></span>
               </div>
             </a>
-            <div class="ig__post--input">
+            <div class="post_card--input">
               <!-- DO NOT CHANGE THIS IMAGE -->
-              <div class="ig__post--input--left">
+              <div class="post_card--input--left">
               <span class="post-icons"><i class="fa-solid fa-heart"></i></span><span class="post-engagement">300</span>
               <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>
               <span class="post-icons ml-3"><i class="fa-solid fa-chart-simple"></i></span><span class="post-engagement">3.7k</span>
             </div>
-            <div class="ig__post--input--right mt-3">
+            <div class="post_card--input--right mt-3">
               <span class="post-icons"><i class="fa-solid fa-square-plus"></i></span>
             </div>
               <!-- DO NOT CHANGE THIS IMAGE -->
@@ -228,14 +244,14 @@
           
           <div class="content content-tab3">
       
-            <div class="ig__phone--feed">
+            <div class="app--feed">
       
            
       
            
           <!-- 2nd post -->
-          <div class="ig__post">
-            <div class="ig__post--brand">
+          <div class="post_card">
+            <div class="post_card--brand">
               <div class="brand__logo"><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/4a2f6bdb-b381-4982-ad59-4e7f26ee2028.jpg"/></div>
               <div class="brand__info">
                 <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
@@ -244,25 +260,25 @@
             </div>
                 <div><p>we’ve got it all. Cumulus offers the products, services, knowledge, and resources necessary for your financial success.<span class="blue">See more...</span> </p></div>
       
-            <div class="ig__post--creative">
+            <div class="post_card--creative">
               <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
               </img>
           </div>
-          <div class="ig__post--summary">
+          <div class="post_card--summary">
             <a href="https://cumulusfinserv.com/">
-              <div class="ig__post--cta">
+              <div class="post_card--cta">
                 <span><b>KES 13,100,000</b></span>
                 <span><button class="btn btn-light">Make Offer</button></span>
               </div>
             </a>
-            <div class="ig__post--input">
+            <div class="post_card--input">
               <!-- DO NOT CHANGE THIS IMAGE -->
-              <div class="ig__post--input--left">
+              <div class="post_card--input--left">
               <span class="post-icons"><i class="fa-solid fa-heart"></i></span><span class="post-engagement">300</span>
               <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>
               <span class="post-icons ml-3"><i class="fa-solid fa-chart-simple"></i></span><span class="post-engagement">3.7k</span>
             </div>
-            <div class="ig__post--input--right mt-3">
+            <div class="post_card--input--right mt-3">
               <span class="post-icons"><i class="fa-solid fa-square-plus"></i></span>
             </div>
               <!-- DO NOT CHANGE THIS IMAGE -->

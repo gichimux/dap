@@ -11,6 +11,8 @@ from accounts.forms import EditProfileForm
 from django.shortcuts import get_object_or_404 
 import json
 from django.http import HttpResponse
+from django.db.models import Q
+
 
 def home(request):
 
@@ -45,7 +47,28 @@ def home(request):
    }
     return render (request, 'app/home.html', context )
 
+def post_search(request):
+    if request.method == 'GET':
+        query= request.GET.get('q')
 
+        submitbutton= request.GET.get('submit')
+
+        if query is not None:
+            lookups= Q(about__icontains=query) | Q(post_location__icontains=query)
+
+            results= Post.objects.filter(lookups).distinct()
+
+            context={'results': results,
+                     'submitbutton': submitbutton}
+
+            return render(request, 'search/search.html', context)
+
+        else:
+            return render(request, 'search/search.html')
+
+    else:
+        return render(request, 'search/search.html')
+    
 @login_required
 def follow_toggle(request, profile_username):
     user_id = User.objects.get(username=profile_username)
@@ -64,21 +87,56 @@ def follow_toggle(request, profile_username):
     return redirect(request.META['HTTP_REFERER'])
 
 @login_required
-def like_toggle(request, post_id):
-    post = Post.objects.get(id=post_id)
-    currentUserObj = User.objects.get(id=request.user.id)
+# def like_toggle(request, post_id):
+#     post = Post.objects.get(id=post_id)
+#     currentUserObj = User.objects.get(id=request.user.id)
     
-    likes = post.likes.all()
+#     likes = post.likes.all()
 
-    # if profile_username != currentUserObj.username:
-    if currentUserObj in likes:
-        post.likes.remove(currentUserObj.id)
+#     # if profile_username != currentUserObj.username:
+#     if currentUserObj in likes:
+#         post.likes.remove(currentUserObj.id)
+#     else:
+#         post.likes.add(currentUserObj.id)
+
+#     return redirect(request.META['HTTP_REFERER'])
+
+# def like_toggle(request, post_id):
+#     if request.method == "POST":
+#         post = Post.objects.get(id=post_id)
+#         currentUserObj = User.objects.get(id=request.user.id)
+#         likes = post.likes.all()
+#         if currentUserObj in likes:
+#             post.likes.remove(currentUserObj.id)
+#             post.save() 
+#             return render( request, 'posts/partials/likes_div.html', context={'post':post})
+#         else:
+#             post.likes.add(currentUserObj.id)
+#             post.save() 
+#             return render( request, 'posts/partials/likes_div.html', context={'post':post})
+        
+def customer_search(request):
+    if request.method == 'GET':
+        query= request.GET.get('q')
+
+        submitbutton= request.GET.get('submit')
+
+        if query is not None:
+            lookups= Q(first_name__icontains=query) | Q(last_name__icontains=query)
+
+            results= UnitTenant.objects.filter(lookups).distinct()
+
+            context={'results': results,
+                     'submitbutton': submitbutton}
+
+            return render(request, 'search/customer_search.html', context)
+
+        else:
+            return render(request, 'search/customer_search.html')
+
     else:
-        post.likes.add(currentUserObj.id)
-
-    return redirect(request.META['HTTP_REFERER'])
-
-
+        return render(request, 'search/customer_search.html')
+    
 def like_button(request):
    if request.method =="POST":
        if request.POST.get("operation") == "like_submit" and request.is_ajax():
@@ -143,12 +201,11 @@ def view_profile(request, profile_username):
 @login_required
 def post_detail(request, id):
     
-
     post_detail = Post.objects.get(id=id)
     post_comments = Comment.objects.filter(related_post=post_detail)
-    
+    comment_counter = post_comments.count()
     if request.method == 'POST':
-        post_comment_form = NewCommentForm(request.New)
+        post_comment_form = NewCommentForm(request.POST)
     
         if post_comment_form.is_valid():
             post_comment_form.instance.comment_by = request.user
@@ -164,9 +221,10 @@ def post_detail(request, id):
      'post_detail': post_detail,
      'post_comments':post_comments,
      'new_comment_form': new_comment_form,
+     'comment_counter':comment_counter,
 
    }
-    return render (request, 'posts/postdetail.html', context )
+    return render (request, 'posts/post_detail.html', context )
 
 @login_required
 def free_store(request):
@@ -194,9 +252,9 @@ def chat_list(request):
     return render (request, 'chats/chatlist.html', context )
 
 def explore(request):
-       
+    posts =  Post.objects.all() 
     context ={
-     
+     'posts': posts,
    }
     return render (request, 'search/explore.html', context )
 
@@ -232,7 +290,7 @@ def landing(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"Welcome, you are now logged in as {username}.")
-                return redirect("core:home")
+                return redirect("home")
             else:
                 messages.error(request,"Invalid username or password.")
         else:

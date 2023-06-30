@@ -63,10 +63,12 @@ class Post(models.Model):
     likes = models.ManyToManyField(
         User, blank=True, related_name="liked_by", symmetrical=False
     )
+    comment_count = models.IntegerField(default=0)
 
     @property
     def total_likes(self):
         return self.likes.count()
+    
     
     # @property
     def poster_full(self):

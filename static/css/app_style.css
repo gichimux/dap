@@ -6,10 +6,15 @@
   
   }
 
+  #dm img{
+    height: 23px;
+    width: auto;
+  }
   .home-feed{
     width: 100%;
     height: auto;
   }
+
 
   h2, p {
     color: rgb(15, 20, 25);
@@ -62,31 +67,32 @@
   .ig__send--icon{
     height: 45px;
   }
-  .ig__phone--feed {
-    width: 100%;
+  .app--feed {
+    width: 93%;
     max-width: 800px;
     background-color: #fff;
     z-index: 0;
     margin: 30px auto 0 auto;
   }
-  .ig__phone--feed::-webkit-scrollbar {
+  .app--feed::-webkit-scrollbar {
     display: none;
   }
-  .ig__phone--feed .ig__post {
+  .app--feed .post_card {
     display: flex;
     flex-direction: column;
     height: 100%;
     max-height: 725px;
     width: 100%;
     background-color: #fff;
+    border-top: 1px solid #8C8C8C;
   }
-  .ig__post .ig__post--brand {
+  .post_card .post_card--brand {
     display: flex;
     justify-content: start;
     align-items: center;
     background-color: #fff;
   }
-  .ig__post .ig__post--brand .brand__logo {
+  .post_card .post_card--brand .brand__logo {
     height: 50px;
     width: 50px;
     background-color: #fff;
@@ -95,7 +101,7 @@
     align-items: center;
     margin: 7px;
   }
-  .ig__post .ig__post--brand .brand__logo img {
+  .post_card .post_card--brand .brand__logo img {
     object-fit: contain;
     border-radius: 100%;
     top: 50%;
@@ -104,66 +110,67 @@
     width: 45px;
     height: 45px;
   }
-  .ig__post .ig__post--brand .brand__info {
+  
+  .post_card .post_card--brand brand__info {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    -ms-flex-direction: row-reverse;
   }
-  .ig__post .ig__post--creative {
+  .post_card .post_card--creative {
     height: 350px;
     width: 100%;
     background-color: #fff;
     flex-grow: 1;
   }
-  .ig__post .ig__post--creative img {
+  .post_card .post_card--creative img {
     object-fit: cover;
     object-position: center;
     height: inherit;
     width: inherit;
   }
-  .ig__post .ig__post--summary .ig__post--cta {
+  .post_card .post_card--summary .post_card--cta {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 15px;
-    background-color: #000;
-    border-bottom: 1px solid #f3f3f3;
+    background-color: #fff;
+    border: 1px solid #000;
     transition: all 300ms ease-in;
-    color: #fff;
+    color: #000;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
   }
-  .ig__post .ig__post--summary .ig__post--cta:hover {
-    /* color: #000; */
-    background-color: #505050;
-    border-bottom: 1px solid #f3f3f3;
+
+  .reply-stats {
+    font-size: 14px;
   }
-  .ig__post .ig__post--summary .ig__post--input{
+  
+  .post_card .post_card--summary .post_card--input{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    border-bottom: 1px solid #8e8e8e;
+    margin-top: 5px;
   }
-  .ig__post .ig__post--summary .ig__post--input img{
+  .post_card .post_card--summary .post_card--input img{
     width: 100%;
     max-height: 50px;
     pointer-events: none;
   }
-  .ig__post--input--left {
+  .post_card--input--left {
      display: flex;
     flex-direction: row;
   }
-  .ig__post--input--right {}
-  .ig__post .ig__post--summary .ig__post--input .input--icon {
+  .post_card .post_card--summary .post_card--input .input--icon {
     margin-right: 10px;
   }
-  .ig__post .ig__post--summary .ig__post--input .input--icon:last-child {
+  .post_card .post_card--summary .post_card--input .input--icon:last-child {
     margin-right: 0px;
   }
-  .ig__post .ig__post--summary .ig__post--copy {
+  .post_card .post_card--summary .post_card--copy {
     max-height: 150px;
     padding: 0 15px 20px 15px;
   }
-  .ig__post .ig__post--summary .ig__post--copy p {
+  .post_card .post_card--summary .post_card--copy p {
     padding: 0;
     margin-bottom: 0;
     margin-top: 10px;
@@ -183,6 +190,23 @@
     align-items: center;
     margin-bottom: 25px;
   }
+
+.home {
+  padding: 10px;
+  height: 50px;
+}
+
+.home .go_back:hover {
+  height: 40px;
+  width: 40px;
+  background-color: #a0a0a0;
+  border-radius: 50%;
+color: #962d22;
+}
+
+.go_back i {
+
+}
   .account__avatar {
     display: flex;
     align-items: center;
@@ -386,7 +410,16 @@
     width: 35px;
     margin-bottom: 10px;
   }
+
+  #logo img{
+    width: 64px;
+    margin-top: -20px;
+  }
   
+  
+  
+  
+
   .sidebar__link {
     margin-top: 10px;
     display: flex;
@@ -510,7 +543,6 @@
    .follow-block {
     /* border: 1px solid #555; */
     border-radius: 10px;
-    box-shadow: rgba(0, 0, 0, 0.25) 5px 3px 15px 7px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.03) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 
   }
 
@@ -588,6 +620,10 @@
 .profile-link a:hover {
   text-decoration: none;
 }
+.profile-link p {
+  font-size: 14px;
+}
+
 
 .search-input {
   border: 1px solid #000;
@@ -599,6 +635,7 @@
   display: block;
   border-bottom: 1px solid #999;
   padding-left: 5px;
+  position: sticky;
 }
 
 .tabs-bar .tab{
@@ -667,7 +704,7 @@
 
 
 
-.ig__post--creative img {
+.post_card--creative img {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
@@ -734,6 +771,14 @@ background-color: #bebebe;
 .comment-card {
   padding: 10px;
 }
+.reply-card {
+  padding: 6px;
+}
+.reply-card img {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+}
 .name {
 	font-size: 120%;
 }
@@ -761,13 +806,24 @@ font-size: 18px;
   width: 55px;
   border-radius: 50%;
 }
-
-
+.reply_to {
+  float:right;
+}
+.like{
+  margin-top: -2px;
+}
 
 .post-icons {
-  font-size: 23px;
-  margin-top: 8px;
+  font-size: 18px;
   padding: 5px;
+}
+
+.post-icons:hover{
+  color: #962d22;
+}
+
+.post-icons a:hover{
+  color: #962d22;
 }
 
 .edit-btn {
@@ -793,6 +849,7 @@ font-size: 18px;
 }
 .post-engagement {
   margin-top: 20px;
+  font-size: 15px;
 }
 
 .trending-title {
@@ -826,8 +883,8 @@ font-size: 18px;
   padding: 10px;
   list-style: none;
   position: absolute;
+  text-decoration: none;
 }
-
 
 
 
@@ -849,27 +906,33 @@ a:hover, a:focus{
   border: none;
 }
 .panel-heading a{
-  color:#fff !important;
   display: block;
   border:none;
   padding:20px 35px 20px;
   font-size: 20px;
-  background-color:rgb(236, 87, 102);
+  background-color:orange;
   font-weight:600;
   position: relative;
-  color:#fff;
+  color:#000;
   box-shadow:none;
   transition:all 0.1s ease 0;
+  width: 93%;
+  margin: auto;
 }
+
+.profile-card .icon-info {
+font-size: 14px;
+}
+
 .panel-heading a:after, .panel-heading a.collapsed:after{
-  content: "\f068";
+  content: "\f06e";
   font-family: fontawesome;
   text-align: center;
   position: absolute;
   left:-20px;
   top: 10px;
   color:#fff;
-  background-color:rgb(236, 87, 102);
+  background-color:rgb(2, 2, 2);
   border: 5px solid #fff;
   font-size: 15px;
   width: 40px;
@@ -878,19 +941,16 @@ a:hover, a:focus{
   border-radius: 50%;
   transition:all 0.3s ease 0s;
 }
-.panel-heading:hover a:after,
-.panel-heading:hover a.collapsed:after{
-  transform:rotate(360deg);
-}
+
 .panel-heading a.collapsed:after{
-  content: "\f067";
+  content: "\f068";
 }
 #accordion .panel-body{
   background-color:#Fff;
   color:#8C8C8C;
   line-height: 25px;
-  padding: 10px 25px 20px 35px ;
-  border-top:none;
+  padding: 0px 15px 0px 15px ;
+  margin-top:-7px;
   font-size:14px;
   position: relative;
 }
@@ -1002,9 +1062,9 @@ display: none;
 
 
 /* RESPONSIVE MAIN DIVS */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 950px) {
 
-  .left__rail ,.follow-block {
+  .left__rail  {
     display: none;
   }
 
@@ -1026,4 +1086,20 @@ display: none;
   .right__rail, .left__rail {
     display: none;
   }
+
+  #logo img{
+    width: 50px;
+    margin-top: -20px;
+  }
+  .tabs-bar {
+    margin-top: 30px;
+  }
+  .tabs-bar li {
+    font-
+  }
+  .main-cta img {
+    width: 33px;
+    height: auto;
+  }
+
 }

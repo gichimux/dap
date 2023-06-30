@@ -1,0 +1,9 @@
+[DONE]
+[DONE]
+[DONE]
+[DONE]
+
+    ajax/async comment form
+    async post form
+    async follow
+    upload media

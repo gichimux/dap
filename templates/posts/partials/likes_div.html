@@ -1,3 +1,4 @@
+
 <div id="likesarea">
     <button hx-post="{% url 'like_toggle' post.id %}" id="like-button" 
           hx-target="#likesarea" hx-swap="outerHTML">
@@ -7,5 +8,15 @@
           <i class="fa-regular fa-heart"></i>
           {% endif %}
         </button>
-    <span class="post-engagement">{{ post.likes.count }}</span>
+    <span class="post-engagement">{{ post.total_likes }}</span>
 </div>
+
+{% block scripts %}
+
+<script>
+    
+    document.body.addEventListener('htmx:configRequest', (e) => {
+      e.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';
+      })
+  </script>
+{%endblock%}

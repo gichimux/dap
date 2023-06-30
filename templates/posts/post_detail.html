@@ -1,0 +1,225 @@
+{% extends '../app/post_base.html' %}
+
+{% block content %} 
+     
+
+{% load static %}
+
+ <!-- Feed Starts -->
+  
+ <div class="col">
+  
+  <div class="home">
+
+    <div class="ml-auto">
+<div class="go_back">
+      <a class="{% url 'home' %}">
+    <i class="fa fa-arrow-left ml-2 mt-1" style="font-size: 30px;"></i>
+  </a>
+</div>
+  </div>
+  </div>
+
+  <div class=" feed">
+  
+ 
+
+      <div class="app--feed">
+
+    
+      <!-- 1st post -->
+      <div class="post_card "> 
+        <span class="ml-auto mt-3">
+          <i class="fa-solid fa-ellipsis"></i>
+
+         
+
+        </span>
+        <div class="row pt-3">
+        <span class="grey mr-auto ml-3">
+          <p>{{post_detail.whenpublished}}</p>
+        </span> 
+        <span class="grey ml-auto mr-3">
+          <p><i class="fa-solid fa-location-dot"></i> 3Km</p>
+        </span> 
+      </div>
+        <div class="post_card--brand">
+          <div class="brand__info row">
+            <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
+            
+           
+
+          </div>
+        </div>
+            <div><p>{{ post_detail.about}} </p></div>
+
+            <div class="row">
+              <div class="col">
+                  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                      <div class="panel panel-default">
+                          <div class="panel-heading" role="tab" id="headingOne">
+                              <h4 class="panel-title">
+                                  <a class="first" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                      Product Details
+                                      <span> </span>
+                                  </a>
+                              </h4>
+                          </div>
+                          <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                              <div class="panel-body">
+
+
+                                <table class="table table-hover table-dark">
+                              
+                                  <tbody>
+                                  
+                                    <tr>
+                                      <td><i class="fa fa-home"></i></td>
+                                      <td colspan="2">loem ipsum solot do</td>
+                                    </tr>
+                                    <tr>
+                                      <td >Larry the Bird</td>
+                                      <td colspan="2" >@twitter</td>
+                                    </tr>
+                                    <tr>
+                                      <td colspan="2" >@twitter</td>
+                                    </tr>
+                                  </tbody>
+                                </table>                              </div>
+                          </div>
+                      </div>
+      
+                    
+      
+                  
+                  </div>
+              </div>
+          </div>
+        
+            <div class="post_card--creative">
+          <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
+          </img>
+      </div>
+      <div class="post_card--summary">
+        <a href="#">
+          <div class="post_card--cta">
+            <span><b>KES {{post_detail.sale_price}}</b></span>
+            <span><button class="btn btn-outline-success px-3">Send Offer </button></span>
+          </div>
+        </a>
+        <div class="post_card--input">
+          <!-- DO NOT CHANGE THIS IMAGE -->
+          <div class="post_card--input--left">
+          <div class="post-icons like">
+            <span> 
+              {% if request.user in post.likes.all %}
+  
+                <a name="{{ post.id }}"  class="likin" id="co"><i class="fa-solid fa-heart "  aria-hidden="true"></i></a>
+                {% else %}
+              
+                <a name="{{ post.id }}"  class="likin" id="co"><i class="fa-solid fa-heart "   aria-hidden="true"></i></a>         
+                {% endif %}
+            </span>
+            <span class="post-engagement" id="like_count"> {{ post_detail.total_likes }} </span>
+          </div>
+            
+              <div class="mt-1">
+                
+          <span class="post-icons ml-3 ">
+            <i class="fa-regular fa-comment "></i>
+            <span class="post-engagement">{{comment_counter }}</span>
+          </span>
+          <span class="post-icons ml-3  ">
+            <i class="fa fa-circle-plus "></i>
+          </span>
+       
+        </div>
+        </div>
+  
+  
+        <div class="post_card--input--right  ml-3 mt-1">
+         
+          <span class="post-icons ">
+            <i class="fa-solid fa-chart-simple" ></i>
+          </span><span class="post-engagement">3.7k</span>
+        
+        </div>
+          <!-- DO NOT CHANGE THIS IMAGE -->
+        </div>
+       
+      </div>
+      
+     
+   
+    </div>
+    <div class="mt-4"></div>
+    <div class="engagement pt-5">
+    <div class="comment-form ">
+      <form method="POST" class="text-center ">
+        {% csrf_token %}
+        <div class="col-12">
+        <span class="ml-3">          
+          {{ new_comment_form.comment}}
+        </span>
+        <button type="submit" class="btn btn-dark "><i class="fa fa-arrow-right"></i></button>
+      </div>
+      </form>
+      </div>
+
+      {% for comment in post_comments %}
+      <div class=" reply-card  ml-3 mt-5 mr-3">
+          <div class="  ml-2 row">
+            <div class="row ml-2">
+              <img src="{% static 'img/avatar.jpg'%}" alt="">
+              <p class="ml-3 ">
+                <b>{{comment.poster_full}}</b>  
+                <span class=" ml-4 comment-time"> {{comment.whenpublished}}</span> 
+                <br>
+                <span class="blue"><i class=" fa-solid fa-arrow-turn-up fa-rotate-90"></i> replying to @{{comment.related_poster}} 
+                </span>
+              </p>
+
+            </div>
+        
+            
+          </div> 
+
+        <div class="row ml-2  ">
+          <p>{{comment.comment}} </p>
+        </div>
+        
+        <div class="row reply-buttons ml-2">
+          <span class="post-icons">
+            <i class="fa-solid fa-heart"></i>
+            <span class=" reply-stats ">300</span>
+          </span>
+         
+          <span class="post-icons ml-3">
+            <i class="fa-regular fa-comment"></i>
+            <span class=" reply-stats">40</span>
+
+          </span>
+
+          <span class="post-icons ml-3  ">
+            <i class="fa fa-circle-plus "></i>
+            <span class=" reply-stats">9</span>
+          </span>
+         
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  <!-- END FEED-->
+
+
+    
+  </div>
+    
+  
+    
+
+</div>
+</div>
+{%endblock%}
+
+<!-- Feed Ends -->
