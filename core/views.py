@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate 
-from django.contrib import messages
 from posts.models import *
 from posts.forms import *
 from django.contrib.auth.forms import AuthenticationForm 
@@ -10,42 +9,69 @@ from django.contrib.auth.decorators import login_required
 from accounts.forms import EditProfileForm
 from django.shortcuts import get_object_or_404 
 import json
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.db.models import Q
-
+from accounts.forms import NewUserForm
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.views import APIView
+from django.views.decorators.csrf import csrf_exempt
 
 def home(request):
-
     my_profile = Profile.objects.get(user=request.user)
     posts = Post.objects.all()
-    
+    res = {'success': True, 'message': 'Your post has posted'}
+
     if request.method == 'POST':
-        sell_form = NewSellForm(request.POST)
-        swap_form = NewSwapForm(request.POST)
-
-        if sell_form.is_valid():
-            sell_form.instance.posted_by = request.user
-            sell_form.save()
-            messages.success(request, 'Your post has been posted')
-            return redirect(request.META['HTTP_REFERER'])
-
-        if swap_form.is_valid():
-            swap_form.instance.posted_by = request.user
-            swap_form.save()
-            messages.success(request, 'Your post has been posted')
-            return redirect(request.META['HTTP_REFERER'])
-
+        post_form = PostForm(request.POST, request.FILES)  # Include request.FILES here
+        if post_form.is_valid():
+            try:
+                # Attempt to get the logged-in user's profile
+                my_profile = Profile.objects.get(user=request.user)
+            except ObjectDoesNotExist:
+                pass  # Handle this case if necessary
+            
+            post = post_form.save(commit=False)  # Don't commit the post yet
+            post.posted_by = request.user
+            post.save()
+            
+            return JsonResponse(res)
+        else:
+            res = {'success': False, 'message': 'Form data is invalid.'}
+            return JsonResponse(res)
     else:
-        sell_form = NewSellForm(request.POST)
-        swap_form = NewSwapForm(request.POST)
+        post_form = PostForm()
 
-    context ={
-     'sell_form': sell_form,
-     'swap_form': swap_form,
-     'posts' : posts,
-     'my_profile': my_profile,
-   }
-    return render (request, 'app/home.html', context )
+    context = {
+        'post_form': post_form,
+        'posts': posts,
+        'my_profile': my_profile,
+    }
+    return render(request, 'app/home.html', context)
+
+
+def uploadData(request):
+    res = {'error': True, 'msg': "Something went wrong."}
+    allowed_files = ["jpg", "jpeg", "png"]
+    posted_by = request.user
+    if request.method == "POST" :
+        headline = request.POST['headline']
+        body = request.POST['body']
+        post_image = request.FILES['post_image']
+
+        ErrorF = {'error': False, "msg": ""}
+        if headline and body  and post_image:
+             
+            if not ErrorF['error']:
+                u = Post.objects.create(posted_by=posted_by, headline=headline, body=body, post_image=post_image)
+                u.save()
+                res = {'error': False, 'msg': "Successfully Submited."}
+            elif ErrorF['error']:
+                res = ErrorF
+            else:
+                res = {'error': True, 'msg': "Form not submitted. Try with a refresh."}
+        else:
+            res = {'error': True, 'msg': "Fill all required fields."}
+        return JsonResponse(res)
 
 def post_search(request):
     if request.method == 'GET':
@@ -70,22 +96,33 @@ def post_search(request):
         return render(request, 'search/search.html')
     
 @login_required
-def follow_toggle(request, profile_username):
-    user_id = User.objects.get(username=profile_username)
-    profile_user = Profile.objects.get(user=user_id)
+def follow_user(request, profile_username):
+    if request.is_ajax():
+        profile_user = Profile.objects.get(user__username=profile_username)
+        current_user_profile = request.user.profile
+
+        if current_user_profile not in profile_user.followers.all():
+            profile_user.followers.add(current_user_profile)
+            response_data = {'success': True, 'action': 'follow'}
+        else:
+            response_data = {'success': False, 'message': 'You are already following this user.'}
+
+        return JsonResponse(response_data)
+
+@login_required
+def unfollow_user(request, profile_username):
+    if request.is_ajax():
+        profile_user = Profile.objects.get(user__username=profile_username)
+        current_user_profile = request.user.profile
+
+        if current_user_profile in profile_user.followers.all():
+            profile_user.followers.remove(current_user_profile)
+            response_data = {'success': True, 'action': 'unfollow'}
+        else:
+            response_data = {'success': False, 'message': 'You are not following this user.'}
+
+        return JsonResponse(response_data)
     
-    authorObj = User.objects.get(id=user_id.id)
-    currentUserObj = User.objects.get(id=request.user.id)
-    following = profile_user.following.all()
-
-    # if profile_username != currentUserObj.username:
-    if currentUserObj.profile in following:
-        profile_user.following.remove(currentUserObj.id)
-    else:
-        profile_user.following.add(currentUserObj.id)
-
-    return redirect(request.META['HTTP_REFERER'])
-
 @login_required
 # def like_toggle(request, post_id):
 #     post = Post.objects.get(id=post_id)
@@ -114,7 +151,41 @@ def follow_toggle(request, profile_username):
 #             post.likes.add(currentUserObj.id)
 #             post.save() 
 #             return render( request, 'posts/partials/likes_div.html', context={'post':post})
+
+@csrf_exempt
+def bookmark_toggle(request):
+    if request.method == 'POST':
+        user = request.user
+        post_id = request.POST.get('post_id')
         
+        post = get_object_or_404(Post, id=post_id)
+        
+        try:
+            bookmark = Bookmark.objects.get(user=user, post=post)
+            bookmark.delete()
+            message = 'Bookmark removed successfully'
+        except Bookmark.DoesNotExist:
+            bookmark = Bookmark.objects.create(user=user, post=post)
+            message = 'Bookmark added successfully'
+
+        return JsonResponse({'message': message}, status=200)
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+@login_required
+def bookmark_list (request):
+    my_profile = Profile.objects.get(user=request.user)
+
+    user = request.user
+    bookmarked_posts = Bookmark.objects.filter(user=user)
+    context ={
+     'bookmarked_posts': bookmarked_posts,
+     'my_profile': my_profile,
+    }
+    
+    return render (request, 'posts/bookmark_list.html', context )
+
+    
 def customer_search(request):
     if request.method == 'GET':
         query= request.GET.get('q')
@@ -137,20 +208,19 @@ def customer_search(request):
     else:
         return render(request, 'search/customer_search.html')
     
-def like_button(request):
-   if request.method =="POST":
-       if request.POST.get("operation") == "like_submit" and request.is_ajax():
-         post_id=request.POST.get("post_id",None)
-         post=get_object_or_404(Post,pk=post_id)
-         if post.likes.filter(id=request.user.id): #already liked the post
-            post.likes.remove(request.user) #remove user from likes 
-            liked=False
-         else:
-             post.likes.add(request.user) 
-             liked=True
-         ctx={"likes_count":post.total_likes,"liked":liked,"post_id":post_id}
-         return HttpResponse(json.dumps(ctx), content_type='application/json')
-   
+def upvote_post(request, post_id):
+    post = Post.objects.get(pk=post_id)
+    if request.user.is_authenticated:
+        post.upvote(request.user)
+        return JsonResponse({'success': True, 'vote_count': post.vote_count})
+    return JsonResponse({'success': False})
+
+def downvote_post(request, post_id):
+    post = Post.objects.get(pk=post_id)
+    if request.user.is_authenticated:
+        post.downvote(request.user)
+        return JsonResponse({'success': True, 'vote_count': post.vote_count})
+    return JsonResponse({'success': False})
   
 
    
@@ -202,7 +272,7 @@ def view_profile(request, profile_username):
 def post_detail(request, id):
     
     post_detail = Post.objects.get(id=id)
-    post_comments = Comment.objects.filter(related_post=post_detail)
+    post_comments = Comment.objects.filter(parent_post=post_detail)
     comment_counter = post_comments.count()
     if request.method == 'POST':
         post_comment_form = NewCommentForm(request.POST)
@@ -227,13 +297,25 @@ def post_detail(request, id):
     return render (request, 'posts/post_detail.html', context )
 
 @login_required
-def free_store(request):
+def view_post(request):
+    
+    post_detail = Post.objects.filter(posted_by=request.user).last()
+   
+    context ={
+     'post_detail': post_detail,
+     
+   }
+    return render (request, 'posts/view_post.html', context )
+
+
+@login_required
+def my_tokens(request):
        
     context ={
      
    }
-    return render (request, 'markets/freestore.html', context )
-
+    return render (request, 'tokens/my_tokens.html', context )
+ 
 @login_required
 def baraza(request):
        
@@ -281,8 +363,15 @@ def settings_list(request):
 def landing(request):
 		
     form = AuthenticationForm(request, data=request.POST)
-
+    signup_form = NewUserForm(request.POST)
     if request.method == "POST":
+        if signup_form.is_valid():
+            user = signup_form.save()
+            login(request, user)
+            messages.success(request, "Registration successful." )
+            return redirect(view_profile)
+        messages.error(request, "Unsuccessful registration. Invalid information.")
+
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
@@ -296,8 +385,10 @@ def landing(request):
         else:
             messages.error(request,"Invalid username or password.")
     form = AuthenticationForm()
+    signup_form = NewUserForm()
     context ={
         "login_form": form,
+        "signup_form": signup_form,
     }
     return render (request, 'core/index.html', context )
 

@@ -40,12 +40,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'crispy_bootstrap4',
+    'rest_framework',
     'core',
     'accounts',
     'posts',
     'notifications',
-    'chats',
-    'markets',
+    'forums',
+    'config',
+    'moderation',
+    'shop',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -79,15 +82,9 @@ TEMPLATES = [
     },
 ]
 
-ASGI_APPLICATION = "config.asgi.application" 
-# WSGI_APPLICATION = 'config.wsgi.application'
+# ASGI_APPLICATION = "config.asgi.application" 
+WSGI_APPLICATION = 'config.wsgi.application'
 
-CHANNEL_LAYERS =  {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
-        
-        },
-    }
 
 
 # Database

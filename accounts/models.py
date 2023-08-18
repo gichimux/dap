@@ -2,7 +2,7 @@ import imp
 from pyexpat import model
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-import time
+from datetime import date
 from django.db import models
 from django.core.validators import RegexValidator
 from django.db.models.signals import post_save
@@ -25,8 +25,10 @@ class Profile(models.Model):
     phone_regex = RegexValidator(regex=r'^\+\d{8,15}$', message="Phone number must be entered in the format: '+254722123456'. Up to 15 digits allowed.")
     name = models.CharField(max_length=50)
     location = models.CharField(max_length=50)
+    birthday = models.DateField(default=date.today)
     phone_number = models.CharField(validators=[phone_regex], max_length=16, blank=True)
     bio = models.TextField(max_length=150)
+    user_tokens = models.IntegerField(default=50)
     following = models.ManyToManyField(
         "self", blank=True, related_name="followers", symmetrical=False
     )

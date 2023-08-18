@@ -2,27 +2,26 @@ from ast import Mod
 from dataclasses import field
 from django import forms
 from .models import *
-from django.forms import ModelForm
+from django.forms import ModelForm, TextInput, Textarea
 
-class NewSellForm(ModelForm):
+class PostForm(ModelForm):
     class Meta:
         model = Post
-        fields = ( 'post_location', 'product_condition', 'about', 'sale_price',  'product_pick_up', 'payment_method')
+        fields = ( 'headline', 'body',  'post_image')
+       
 
-class NewSwapForm(ModelForm):
-    class Meta:
-        model = Post
-        fields = ( 'post_location', 'product_condition', 'about', 'gold_price', 'product_pick_up', 'payment_method')
-
-
+ 
 class NewCommentForm(ModelForm):
     class Meta:
         model = Comment
-        fields = ('comment', )
+        fields = ('body', )
 
 
 class NewReplyForm(ModelForm):
     class Meta:
         model = Reply
-        fields = ('comment', )
+        fields = ('body', )
 
+
+class BookmarkForm(forms.Form):
+    post_id = forms.IntegerField()

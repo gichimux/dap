@@ -1,9 +1,28 @@
-[DONE]
-[DONE]
-[DONE]
-[DONE]
+    ajax/async reply form
+[DONE] create post models
+    create post forms
+    upload media form feature
+[DONE] create tag pages
+[DONE] create order Model
+[DONE] create token model
+    activate token 
+    crate order & token modal
+    create chat feature
+[DONE] create bid offer model
+[DONE] create gig apply model
+    create bid & apply to post forms
+    trends feature
+    async follow 
+    notifications feature
+    explore/search feature
+    login form
+    signup form + email activation
+    terms & EULA
+    geolocate bids & gigs
+    feed algo
+    repost feature
+    highlight comment feature
+[DONE] create review model 
+    create review forms
+    display review
 
-    ajax/async comment form
-    async post form
-    async follow
-    upload media

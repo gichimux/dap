@@ -2,7 +2,7 @@ from django.db import models
 from accounts.models import Profile
 from django.utils import timezone
 import math
-
+# from forums.models import Forum
 from django.conf import settings
 User = settings.AUTH_USER_MODEL
 
@@ -14,60 +14,45 @@ class Condition(models.TextChoices):
         USED = 'Used', "USED"
         SCRAP = 'Scrap', "SCRAP"
         
-class Pick_Up(models.TextChoices):
-        MEETUP = 'Meetup', "MEETUP"
-        ON_PREMISE = 'On Premise', "ON_PREMISE"
+class HashTag(models.Model):
+    name = models.URLField(max_length=100)
 
-class Post_Type(models.TextChoices):
-        SELL = 'Sell', "SELL"
-        SWAP = 'Swap', "SWAP"
-
-class Payment_Method(models.TextChoices):
-        MPESA = 'Mpesa ', "MPESA"
-        CASH = 'Cash', "CASH"        
-
- 
-
-class Feed(models.Model):
-    pass
-
+   
 class Post(models.Model):
-
+    post_image = models.ImageField(upload_to='images/', null=True, blank=True,)
     posted_by = models.ForeignKey(
         User, related_name="posted_by", on_delete=models.CASCADE, null=True
     )     
-    post_location = models.CharField(max_length=100, default="Mombasa")
-
-    
-    timestamp = models.DateTimeField(auto_now_add=True)
-    product_condition = models.CharField(max_length=50,
-        choices=Condition.choices,
-        default=Condition.NEW
-        )
-    post_type = models.CharField(max_length=50,
-        choices=Post_Type.choices,
-        default=Post_Type.SELL
-        )
-    about = models.CharField(max_length=100)
-    sale_price = models.IntegerField(default=0)
-    gold_price = models.IntegerField(default=0)
-
-    product_pick_up = models.CharField(max_length=50,
-        choices=Pick_Up.choices,
-        default=Pick_Up.MEETUP
-        )
-    payment_method = models.CharField(max_length=50,
-        choices=Payment_Method.choices,
-        default=Payment_Method.MPESA
-        )
-    likes = models.ManyToManyField(
-        User, blank=True, related_name="liked_by", symmetrical=False
+    hashtag = models.ManyToManyField(
+        HashTag, blank=True, related_name="hash_tag"
     )
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    likes = models.ManyToManyField(User, blank=True, related_name="liked_posts", symmetrical=False)
+    dislikes = models.ManyToManyField(User, blank=True, related_name="disliked_posts", symmetrical=False)
     comment_count = models.IntegerField(default=0)
+    
+    headline = models.CharField(max_length=100, blank=True)
+    
+    body = models.TextField() 
+
+
+    def upvote(self, user):
+        self.likes.add(user)
+        self.dislikes.remove(user)
+        self.save()
+
+    def downvote(self, user):
+        self.likes.remove(user)
+        self.dislikes.add(user)
+        self.save()
 
     @property
-    def total_likes(self):
-        return self.likes.count()
+    def vote_count(self):
+        likes = self.likes.count()
+        dislikes = self.dislikes.count()
+        votes = likes - dislikes
+        return votes
     
     
     # @property
@@ -90,10 +75,10 @@ class Post(models.Model):
             seconds= diff.seconds
             
             if seconds == 1:
-                return str(seconds) +  "second ago"
+                return str(seconds) +  "s"
             
             else:
-                return str(seconds) + " seconds ago"
+                return str(seconds) + " s"
 
             
 
@@ -101,10 +86,10 @@ class Post(models.Model):
             minutes= math.floor(diff.seconds/60)
 
             if minutes == 1:
-                return str(minutes) + " minute ago"
+                return str(minutes) + "m"
             
             else:
-                return str(minutes) + " minutes ago"
+                return str(minutes) + "m"
 
 
 
@@ -112,50 +97,51 @@ class Post(models.Model):
             hours= math.floor(diff.seconds/3600)
 
             if hours == 1:
-                return str(hours) + " hour ago"
+                return str(hours) + "h"
 
             else:
-                return str(hours) + " hours ago"
+                return str(hours) + "h"
 
         # 1 day to 30 days
         if diff.days >= 1 and diff.days < 30:
             days= diff.days
         
             if days == 1:
-                return str(days) + " day ago"
+                return str(days) + "d"
 
             else:
-                return str(days) + " days ago"
+                return str(days) + "d"
 
         if diff.days >= 30 and diff.days < 365:
             months= math.floor(diff.days/30)
             
 
             if months == 1:
-                return str(months) + " month ago"
+                return str(months) + "mo"
 
             else:
-                return str(months) + " months ago"
+                return str(months) + "mo"
 
 
         if diff.days >= 365:
             years= math.floor(diff.days/365)
 
             if years == 1:
-                return str(years) + " year ago"
+                return str(years) + "yr"
 
             else:
-                return str(years) + " years ago"
+                return str(years) + "yrs"
 
 
 
     class Meta:
         ordering = ["timestamp"]
 
-    def __str__(self):
-        return self.post_location
+    def __int__(self):
+        return self.id
 
-   
+
+
 class Like(models.Model):
     post = models.ForeignKey(
         Post, related_name="post_likes", on_delete=models.CASCADE
@@ -172,11 +158,11 @@ class Comment(models.Model):
     comment_by = models.ForeignKey(
         User, related_name="comment_by", on_delete=models.CASCADE, null=True
     )
-    related_post = models.ForeignKey(
-        Post, related_name="post_comment", on_delete=models.CASCADE
+    parent_post = models.ForeignKey(
+        Post, related_name="parent_post", on_delete=models.CASCADE
     )
 
-    comment = models.CharField(max_length=300)
+    body = models.CharField(max_length=500)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def poster_full(self):
@@ -204,10 +190,10 @@ class Comment(models.Model):
             seconds= diff.seconds
             
             if seconds == 1:
-                return str(seconds) +  "second ago"
+                return str(seconds) +  "s"
             
             else:
-                return str(seconds) + " seconds ago"
+                return str(seconds) + " s"
 
             
 
@@ -215,10 +201,10 @@ class Comment(models.Model):
             minutes= math.floor(diff.seconds/60)
 
             if minutes == 1:
-                return str(minutes) + " minute ago"
+                return str(minutes) + "m"
             
             else:
-                return str(minutes) + " minutes ago"
+                return str(minutes) + "m"
 
 
 
@@ -226,40 +212,40 @@ class Comment(models.Model):
             hours= math.floor(diff.seconds/3600)
 
             if hours == 1:
-                return str(hours) + " hour ago"
+                return str(hours) + "h"
 
             else:
-                return str(hours) + " hours ago"
+                return str(hours) + "h"
 
         # 1 day to 30 days
         if diff.days >= 1 and diff.days < 30:
             days= diff.days
         
             if days == 1:
-                return str(days) + " day ago"
+                return str(days) + "d"
 
             else:
-                return str(days) + " days ago"
+                return str(days) + "d"
 
         if diff.days >= 30 and diff.days < 365:
             months= math.floor(diff.days/30)
             
 
             if months == 1:
-                return str(months) + " month ago"
+                return str(months) + "mo"
 
             else:
-                return str(months) + " months ago"
+                return str(months) + "mo"
 
 
         if diff.days >= 365:
             years= math.floor(diff.days/365)
 
             if years == 1:
-                return str(years) + " year ago"
+                return str(years) + "yr"
 
             else:
-                return str(years) + " years ago"
+                return str(years) + "yrs"
 
     class Meta:
         ordering = ["timestamp"]
@@ -269,13 +255,13 @@ class Comment(models.Model):
 
 class Reply(models.Model):
     reply_by = models.ForeignKey(
-        Profile, related_name="reply_by", on_delete=models.CASCADE, null=True
+        User, related_name="reply_by", on_delete=models.CASCADE, null=True
     )
     related_comment = models.ForeignKey(
         Comment, related_name="post_comment_reply", on_delete=models.CASCADE
     )
 
-    comment = models.CharField(max_length=300)
+    body = models.CharField(max_length=300)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def whenpublished(self):
@@ -287,10 +273,10 @@ class Reply(models.Model):
             seconds= diff.seconds
             
             if seconds == 1:
-                return str(seconds) +  "second ago"
+                return str(seconds) +  "s"
             
             else:
-                return str(seconds) + " seconds ago"
+                return str(seconds) + " s"
 
             
 
@@ -298,10 +284,10 @@ class Reply(models.Model):
             minutes= math.floor(diff.seconds/60)
 
             if minutes == 1:
-                return str(minutes) + " minute ago"
+                return str(minutes) + "m"
             
             else:
-                return str(minutes) + " minutes ago"
+                return str(minutes) + "m"
 
 
 
@@ -309,40 +295,40 @@ class Reply(models.Model):
             hours= math.floor(diff.seconds/3600)
 
             if hours == 1:
-                return str(hours) + " hour ago"
+                return str(hours) + "h"
 
             else:
-                return str(hours) + " hours ago"
+                return str(hours) + "h"
 
         # 1 day to 30 days
         if diff.days >= 1 and diff.days < 30:
             days= diff.days
         
             if days == 1:
-                return str(days) + " day ago"
+                return str(days) + "d"
 
             else:
-                return str(days) + " days ago"
+                return str(days) + "d"
 
         if diff.days >= 30 and diff.days < 365:
             months= math.floor(diff.days/30)
             
 
             if months == 1:
-                return str(months) + " month ago"
+                return str(months) + "mo"
 
             else:
-                return str(months) + " months ago"
+                return str(months) + "mo"
 
 
         if diff.days >= 365:
             years= math.floor(diff.days/365)
 
             if years == 1:
-                return str(years) + " year ago"
+                return str(years) + "yr"
 
             else:
-                return str(years) + " years ago"
+                return str(years) + "yrs"
 
     class Meta:
         ordering = ["timestamp"]
@@ -352,7 +338,7 @@ class Reply(models.Model):
 
 class RePost(models.Model):
     reposted_by = models.ForeignKey(
-        Profile, related_name="profile_repost", on_delete=models.CASCADE, null=True
+        User, related_name="profile_repost", on_delete=models.CASCADE, null=True
     )
     original_post = models.ForeignKey(
         Post, related_name="original_post", on_delete=models.CASCADE, null=True
@@ -368,10 +354,10 @@ class RePost(models.Model):
             seconds= diff.seconds
             
             if seconds == 1:
-                return str(seconds) +  "second ago"
+                return str(seconds) +  "s"
             
             else:
-                return str(seconds) + " seconds ago"
+                return str(seconds) + " s"
 
             
 
@@ -379,10 +365,10 @@ class RePost(models.Model):
             minutes= math.floor(diff.seconds/60)
 
             if minutes == 1:
-                return str(minutes) + " minute ago"
+                return str(minutes) + "m"
             
             else:
-                return str(minutes) + " minutes ago"
+                return str(minutes) + "m"
 
 
 
@@ -390,51 +376,47 @@ class RePost(models.Model):
             hours= math.floor(diff.seconds/3600)
 
             if hours == 1:
-                return str(hours) + " hour ago"
+                return str(hours) + "h"
 
             else:
-                return str(hours) + " hours ago"
+                return str(hours) + "h"
 
         # 1 day to 30 days
         if diff.days >= 1 and diff.days < 30:
             days= diff.days
         
             if days == 1:
-                return str(days) + " day ago"
+                return str(days) + "d"
 
             else:
-                return str(days) + " days ago"
+                return str(days) + "d"
 
         if diff.days >= 30 and diff.days < 365:
             months= math.floor(diff.days/30)
             
 
             if months == 1:
-                return str(months) + " month ago"
+                return str(months) + "mo"
 
             else:
-                return str(months) + " months ago"
+                return str(months) + "mo"
 
 
         if diff.days >= 365:
             years= math.floor(diff.days/365)
 
             if years == 1:
-                return str(years) + " year ago"
+                return str(years) + "yr"
 
             else:
-                return str(years) + " years ago"
+                return str(years) + "yrs"
+            
     def __str__(self):
         return self.original_post
-    
-class PostImage(models.Model):
-    img_name = models.CharField(max_length=255, null=True)
-    post = models.ForeignKey(
-        Post, related_name="for_product", on_delete=models.CASCADE
-        )
-    image = models.ImageField(upload_to='images/')
-    default = models.BooleanField(default=False)
+
+class Bookmark(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.img_name
-
+        return self.user

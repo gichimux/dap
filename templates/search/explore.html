@@ -10,10 +10,11 @@
   
  <div class="col feed">
 
-  <div class="container">
-  <ul class="tabs-bar pt-3">
-    <li id="tab1" class="tab tab-active"><b>For You</b></li>
-    <li id="tab2" class="tab"> <b>Near You</b></li>
+  <div class="container ">
+  <ul class="tabs-bar text-center pt-3">
+    <li id="tab1" class="tab tab-active"><b>Bids</b></li>
+    <li id="tab2" class="tab"> <b>Gigs</b></li>
+    <li id="tab2" class="tab"> <b>Threads</b></li>
 
   </ul>
    
@@ -33,98 +34,8 @@
 
       <div class="app--feed">
 
-     {% for post in posts %}
-        <div class="post_card pb-5"> 
-         <div class="ml-auto">
-            <div class="card-action">
-        <div class="dropdown">
-        <a href="javascript:void();" class="dropdown-toggle dropdown-toggle-nocaret" data-toggle="dropdown">
-         <i class="fa-solid fa-ellipsis"></i>
-   
-        </a>
-         <div class="dropdown-menu dropdown-menu-right">
-         <a class="dropdown-item" href="{% url 'delete_post' post.id %}">Delete post</a>
-         <a class="dropdown-item" href="javascript:void();">Another action</a>
-         <a class="dropdown-item" href="javascript:void();">Something else here</a>
-         <div class="dropdown-divider"></div>
-         <a class="dropdown-item" href="javascript:void();">Separated link</a>
-          </div>
-         </div>
-        </div>
-       </div>
-         <div class="post_card--brand">
-           <div class="brand__logo"><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/4a2f6bdb-b381-4982-ad59-4e7f26ee2028.jpg"/></div>
-           <div class="brand__info">
-             <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
-         
-             <div class="name-tag ">
-   
-               <div class=" account-details-hover">
-                 <a href="{% url 'view_profile' post.posted_by%}">
-                 <div class="account-hover-content p-3">
-                   <div class="account-avatar ml-2">
-                     <img src="{% static 'img/avatar.jpg'%}" alt="">
-                   </div>
-                   <div class="account-name-tag row ml-2">
-                     <p><b>{{post.poster_full}} </b> <br> @{{post.posted_by}} </p>
-                     
-                     
-                   </div>
-                   <div><p>{{post.poster_bio |truncatechars:50 }}</p></div>
-   
-                  
-                   
-                 </div>
-               </a>
-               </div>
-               
-             <span class="bold"><b>{{post.poster_full}}</b> @{{post.posted_by}} <span><img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/b1eeb5f0-24d4-4393-8620-5af0b174fa38.png" class="badge" /></span></span> <span>
-             <span class="grey"><br>{{post.whenpublished}}</span> 
-             </div>
-           </div>
-         </div>
-             <div><p>{{post.about}}.<a href="{% url 'post_detail' post.id %}">See more...</a> </p></div>
-   
-         <div class="post_card--creative">
-           <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
-           </img>
-       </div>
-       <div class="post_card--summary">
-         <a href="https://cumulusfinserv.com/">
-           <div class="post_card--cta">
-             <span><b>KES {{post.display_price}}</b></span>
-             <span><button class="btn btn-outline-light px-3">Bid</button></span>
-           </div>
-         </a>
-         <div class="post_card--input">
-           <!-- DO NOT CHANGE THIS IMAGE -->
-           <div class="post_card--input--left">
-           <div class="post-icons like">
-             <span> 
-               {% if request.user in post.likes.all %}
-   
-                 <a name="{{ post.id }}"  class="likin" id="co"><i class="fa-solid fa-heart "  aria-hidden="true"></i></a>
-                 {% else %}
-               
-                 <a name="{{ post.id }}"  class="likin" id="co"><i class="fa-regular fa-heart "   aria-hidden="true"></i></a>         
-                 {% endif %}
-             </span>
-             <span id="like_count"> {{ post.total_likes }} </span>
-             </div>
-           <span class="post-icons ml-3"><i class="fa-regular fa-comment"></i></span><span class="post-engagement">40</span>
-           <div class="post-icons ml-3">
-             <i class="fa-regular fa-share-from-square"></i>
-           </div>
-         </div>
-         <div class="post_card--input--right mt-3">
-           <span class="post-icons "><i class="fa-solid fa-chart-simple"></i></span><span class="post-engagement">3.7k</span>
-         </div>
-           <!-- DO NOT CHANGE THIS IMAGE -->
-         </div>
-        
-       </div>
-         </div>
-        {% endfor %}
+      
+
 
   <!-- END FEED-->
 </div>

@@ -12,6 +12,15 @@ $(".form-tab").click(function(){
     $(".form-content-" + this.id).show();
 })
 
+$('.file-input').on('change', function() {
+    var fileName = $(this).val().split('\\').pop();
+    $(this).next('.file-label').html('<span class="icon">📷</span> ' + fileName);
+});
+
+
+
+
+
 
 
 

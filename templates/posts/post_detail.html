@@ -1,4 +1,4 @@
-{% extends '../app/post_base.html' %}
+{% extends '../app/base.html' %}
 
 {% block content %} 
      
@@ -9,18 +9,9 @@
   
  <div class="col">
   
-  <div class="home">
+ 
 
-    <div class="ml-auto">
-<div class="go_back">
-      <a class="{% url 'home' %}">
-    <i class="fa fa-arrow-left ml-2 mt-1" style="font-size: 30px;"></i>
-  </a>
-</div>
-  </div>
-  </div>
-
-  <div class=" feed">
+  <div class=" feed details__feed">
   
  
 
@@ -28,131 +19,169 @@
 
     
       <!-- 1st post -->
-      <div class="post_card "> 
-        <span class="ml-auto mt-3">
-          <i class="fa-solid fa-ellipsis"></i>
+      <div class="row ">
 
-         
-
-        </span>
-        <div class="row pt-3">
-        <span class="grey mr-auto ml-3">
-          <p>{{post_detail.whenpublished}}</p>
-        </span> 
-        <span class="grey ml-auto mr-3">
-          <p><i class="fa-solid fa-location-dot"></i> 3Km</p>
-        </span> 
-      </div>
-        <div class="post_card--brand">
-          <div class="brand__info row">
-            <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
-            
-           
-
-          </div>
+        
+        
+       <div class="post_card  mb-3 col-12"> 
+         <div class="row">
+       
+        <div class="ml-auto mr-3 mb-2">
+           <div class="card-action">
+       <div class="dropdown">
+       <a href="javascript:void();" class="dropdown-toggle-nocaret" data-toggle="dropdown">
+        <i class="fa-solid fa-ellipsis"></i>
+  
+       </a>
+        <div class="dropdown-menu dropdown-menu-right">
+        <a class="dropdown-item" href="#"><i class="fa-solid fa-trash-can red"></i> Delete </a>
+        <a class="dropdown-item" href="javascript:void();"><i class="fa-solid fa-triangle-exclamation red"></i> Report </a>
+        <a class="dropdown-item" href="javascript:void();"> <i class="fa-solid fa-share"></i> Share</a>
+  
+  
+         </div>
         </div>
-            <div><p>{{ post_detail.about}} </p></div>
-
-            <div class="row">
-              <div class="col">
-                  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                      <div class="panel panel-default">
-                          <div class="panel-heading" role="tab" id="headingOne">
-                              <h4 class="panel-title">
-                                  <a class="first" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                      Product Details
-                                      <span> </span>
-                                  </a>
-                              </h4>
-                          </div>
-                          <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-                              <div class="panel-body">
-
-
-                                <table class="table table-hover table-dark">
-                              
-                                  <tbody>
-                                  
-                                    <tr>
-                                      <td><i class="fa fa-home"></i></td>
-                                      <td colspan="2">loem ipsum solot do</td>
-                                    </tr>
-                                    <tr>
-                                      <td >Larry the Bird</td>
-                                      <td colspan="2" >@twitter</td>
-                                    </tr>
-                                    <tr>
-                                      <td colspan="2" >@twitter</td>
-                                    </tr>
-                                  </tbody>
-                                </table>                              </div>
-                          </div>
-                      </div>
       
-                    
+       </div>
+      </div>
+    </div>
+     
+
+    {% if post_detail.post_image %}
+             
+    <div class="post_card--creative mt-2">
+
+      <img src="{{ post_detail.post_image.url }}">
+     
       
-                  
+  </div>
+
+  {% endif %}
+  <div class="mt-4"><h5>{{post_detail.headline}} </h5>
+   <div class="row ml-1"><small>posted by @{{post_detail.posted_by}}  </small> <p class="ml-auto mr-3"><i class="fa-regular fa-clock red"></i> . {{post_detail.whenpublished}} </p></div>
+    </div>  
+          
+             
+    
+      
+        </div>
+        
+        </div>
+        <div class="detail__content">
+          <div class="row">
+            <div class="col-2 col-lg-1 col-md-1 col-sm-1 ">
+              <div class="votes-detail text-center">
+              <div class="post-icons like ">
+                <span> 
+                  {% if user.is_authenticated %}
+      
+                  <form action="{% url 'upvote_post' post_detail.id %}" method="post">
+                    {% csrf_token %}
+                  <span class="post-icons mb-2"> 
+                      <button  class="btn btn-light upvote-button {% if user in post.likes.all or post_detail.id in clicked_buttons %} clicked-button{% endif %}" data-post-id="{{ post_detail.id }}"> <i class="fa-regular fa-thumbs-up"></i> </button>         
+                  </span>
+                  </form>
+                  <span class="  mx-auto" id="vote-count-{{ post_detail.id }}" > {{ post_detail.vote_count }} </span>
+
+                  <form action="{% url 'downvote_post' post_detail.id %}" method="post">
+                    {% csrf_token %}
+                  <span class="post-icons mt-2">
+                    <button  class="btn btn-light downvote-button {% if user in post.dislikes.all %} clicked-button{% endif %}" data-post-id="{{ post_detail.id }}"> <i class="fa-regular fa-thumbs-up fa-rotate-180"></i> </button>
+                  </span>
+                  </form>
+
+                  {% endif %}
+                </span>
+              </div>
+  
+            </div>
+            </div>
+            <div class=" col-10 col-lg-11 col-md-11 col-sm-11">
+          
+          <div class="mt-1"><p>{{post_detail.body}} </p></div>
+          <div class="post_card--brand mt-4">
+            <div class="brand__info">
+              <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
+          
+              <div class="name-tag ">
+  
+                
+                <div class="follow-card ml-3 mt-3">
+                  <div class="row">
+                  <div class="account-avatar">
+                    <img src="{% static 'img/avatar.jpg'%}" c alt="">
+                  </div>
+                  <div class="user-details ml-2">
+                    <p><b>{{post_detail.poster_full}}</b><br>
+                    <small class="">{{ post_detail.posted_by.following.count }} Followers</small></p>
+                  </div>
+                  <div class="follow-btn ml-5">
+                    <button class="btn btn-dark btn-rounded px-3 ml-2">Follow</button>
                   </div>
               </div>
-          </div>
-        
-            <div class="post_card--creative">
-          <img src="https://image.s4.sfmc-content.com/lib/fe32117276640474721671/m/1/db182ecd-6028-4104-ad8d-245b2b42d3ce.jpg">
-          </img>
-      </div>
-      <div class="post_card--summary">
-        <a href="#">
-          <div class="post_card--cta">
-            <span><b>KES {{post_detail.sale_price}}</b></span>
-            <span><button class="btn btn-outline-success px-3">Send Offer </button></span>
-          </div>
-        </a>
-        <div class="post_card--input">
-          <!-- DO NOT CHANGE THIS IMAGE -->
-          <div class="post_card--input--left">
-          <div class="post-icons like">
-            <span> 
-              {% if request.user in post.likes.all %}
-  
-                <a name="{{ post.id }}"  class="likin" id="co"><i class="fa-solid fa-heart "  aria-hidden="true"></i></a>
-                {% else %}
+                  
+              </div>
+    
               
-                <a name="{{ post.id }}"  class="likin" id="co"><i class="fa-solid fa-heart "   aria-hidden="true"></i></a>         
-                {% endif %}
-            </span>
-            <span class="post-engagement" id="like_count"> {{ post_detail.total_likes }} </span>
+              </div>
+            </div>
           </div>
-            
-              <div class="mt-1">
-                
-          <span class="post-icons ml-3 ">
-            <i class="fa-regular fa-comment "></i>
-            <span class="post-engagement">{{comment_counter }}</span>
-          </span>
-          <span class="post-icons ml-3  ">
-            <i class="fa fa-circle-plus "></i>
-          </span>
-       
-        </div>
-        </div>
-  
-  
-        <div class="post_card--input--right  ml-3 mt-1">
-         
-          <span class="post-icons ">
-            <i class="fa-solid fa-chart-simple" ></i>
-          </span><span class="post-engagement">3.7k</span>
-        
-        </div>
-          <!-- DO NOT CHANGE THIS IMAGE -->
-        </div>
-       
-      </div>
+          
+          <div class="post_card--summary">
+            <!-- <a href="#">
+              <div class="post_card--cta">
+                <div class="price mr-2">
+                <span>
+                  <b>Tip Creator</b>
+                </span>
+              </div>
+                <span><button class="btn btn-outline-danger btn-rounded px-"> TIP </button></span>
+              </div>
+            </a> -->
+            <div class="post_card--input row ">
+              <!-- DO NOT CHANGE THIS IMAGE -->
+              <div class="post_card--input--left ">
+             
+                 <div class="post-icons  ml-4">
+                  <div class="card-action">
+              <div class="dropdown">
+              <a href="javascript:void();" class=" dropdown-toggle-nocaret" data-toggle="dropdown">
+                <i class="fa-solid fa-share"></i>
+                <span class="post-engagement">13</span>
+                </a>
+               <div class=" dropdown-menu dropdown-menu-top">
+               <a class="dropdown-item" href="javascript:void();"><i class="fa-solid fa-square-plus "></i>  Repost</a>
+               <a class="dropdown-item" href="javascript:void();"><i class="fa-solid fa-quote-right"></i>  Quote</a>
+                </div>
+               </div>
+              </div>
+             </div>
       
-     
-   
-    </div>
-    <div class="mt-4"></div>
+                  <div class="post-icons  ml-4">
+                <i class="fa-regular fa-comment "></i>
+                <span class="post-engagement">{{post.comment_count}}</span>
+              </div>
+            
+      
+             <div class="post-icons ml-4">
+              <i class="fa-regular fa-bookmark"></i>
+              <span class="post-engagement"></span>
+            </div>
+      
+            
+      
+              <!-- DO NOT CHANGE THIS IMAGE -->
+            </div>
+           
+            
+           
+          </div>
+          
+            </div>
+          </div>
+        </div>
+        </div>
+
     <div class="engagement pt-5">
     <div class="comment-form ">
       <form method="POST" class="text-center ">
@@ -201,7 +230,7 @@
           </span>
 
           <span class="post-icons ml-3  ">
-            <i class="fa fa-circle-plus "></i>
+            <i class="fa-solid fa-circle-plus "></i>
             <span class=" reply-stats">9</span>
           </span>
          

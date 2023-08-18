@@ -1,0 +1,194 @@
+{% extends '../app/base.html' %}
+{% block content %}
+
+{% load static %}
+
+<div class="col">
+    <div class="spacer"></div>
+    <h2 class="text-center">Your Bookmarks</h2>
+	
+    {% for post in bookmarked_posts %}
+     <div class="row mt-2">
+
+     
+      
+     <div class="post_card  mb-2 col-12 "> 
+       <div class="row">
+     
+      <div class="ml-auto  mr-3 mt-5">
+         <div class="card-action">
+     <div class="dropdown">
+     <a href="javascript:void();" class="dropdown-toggle-nocaret" data-toggle="dropdown">
+      <i class="fa-solid fa-ellipsis"></i>
+
+     </a>
+      <div class="dropdown-menu dropdown-menu-right">
+      <a class="dropdown-item" href="{% url 'delete_post' post.id %}"><i class="fa-solid fa-trash-can red"></i> Delete </a>
+      <a class="dropdown-item" href="javascript:void();"><i class="fa-regular fa-flag red"></i> Report </a>
+      <a class="dropdown-item" href="javascript:void();"> <i class="fa-solid fa-share"></i> Share</a>
+
+
+       </div>
+      </div>
+    
+     </div>
+    </div>
+  </div>
+   
+
+      <div class="post_card--brand ">
+        <div class="brand__info">
+          <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
+      
+          <div class="name-tag ">
+
+            <div class=" account-details-hover">
+             
+              <div class="account-hover-content p-3">
+                <div class="account-avatar ml-2 row">
+                 <div class="">
+                  <img src="{% static 'img/avatar.jpg'%}" alt="">
+                </div>
+               
+                <div class="ml-auto">
+                  {% if request.user != post.posted_by %}
+                  <button class="follow-button px-3 mr-2 btn btn-rounded" data-profile-username="{{ post.posted_by }}"
+                          data-initial-state="{% if request.user.username in post.posted_by.following.all %}unfollow{% else %}follow{% endif %}">
+                      {% if request.user.username in post.posted_by.following.all %}
+                          Following
+                      {% else %}
+                          Follow
+                      {% endif %}
+                  </button>
+
+                  {% endif %}
+              </div>
+
+              </div>
+              
+              <a href="{% url 'view_profile' post.posted_by%}">
+              <div class="  ml-2">
+                
+                <p><span><b>{{post.poster_full}} </b></span> 
+                  <span><img src="{% static 'img/icons/verified.png'%}"  style="width: 18px;height: auto; margin-bottom: 3px;"></span> <br> @{{post.posted_by}} </p>
+              </div>
+
+                <div class="ml-2"><p>{{post.poster_bio |truncatechars:50 }}</p></div>
+
+              </a>               
+                
+              </div>
+            
+            </div>
+            
+            <div class="follow-account ">
+              <div class="account-avatar">
+                <img src="{% static 'img/avatar.jpg'%}" c alt="">
+              </div>
+              <div class="user-details ">
+                <p><b>{{post.poster_full}} </b> <img src="{% static 'img/icons/verified.png'%}"  style="width: 18px;height: auto; margin-bottom: 3px;" id="verified-icon">  . {{post.whenpublished}} </p>
+                <p class="blue">@{{post.posted_by}}</p>
+              </div>
+            
+          </div>
+
+          
+          </div>
+        </div>
+      </div>
+      
+    
+      <a href="{% url 'post_detail' post.id %}">
+          <div class=""><h5>{{post.headline}} </h5></div>
+        
+            {% if post.post_image %}
+           
+      <div class="post_card--creative mt-2">
+
+        <img src="{{ post.post_image.url }}">
+       
+        
+    </div>
+  
+    {% endif %}
+      
+      </a>
+    <div class="post_card--summary">
+      <!-- <a href="#">
+        <div class="post_card--cta">
+          <div class="price mr-2">
+          <span>
+            <b>Tip Creator</b>
+          </span>
+        </div>
+          <span><button class="btn btn-outline-danger btn-rounded px-"> TIP </button></span>
+        </div>
+      </a> -->
+      <div class="post_card--input row ">
+        <!-- DO NOT CHANGE THIS IMAGE -->
+        <div class="post_card--input--left ">
+            <div class="post-icons like row ml-4 ">
+              {% if user.is_authenticated %}
+              
+              <form action="{% url 'upvote_post' post.id %}" method="post">
+                {% csrf_token %}
+              <span class="post-icons"> 
+                  <button  class="btn btn-light upvote-button {% if user in post.likes.all or post.id in clicked_buttons %} clicked-button{% endif %}" data-post-id="{{ post.id }}"> <i class="fa-regular fa-thumbs-up"></i> </button>         
+              </span>
+              </form>
+            
+            <span class="ml-2 mt-1" id="vote-count-{{ post.id }}" > {{ post.vote_count }} </span>
+    
+            <form action="{% url 'downvote_post' post.id %}" method="post">
+              {% csrf_token %}
+            <span class="post-icons ml-2">
+              <button  class="btn btn-light downvote-button {% if user in post.dislikes.all %} clicked-button{% endif %}" data-post-id="{{ post.id }}"> <i class="fa-regular fa-thumbs-up fa-rotate-180"></i> </button>
+            </span>
+            </form>
+            {% endif %}
+            </div>
+           <div class="post-icons  ml-5">
+            <div class="card-action">
+        <div class="dropdown">
+        <a href="javascript:void();" class=" dropdown-toggle-nocaret" data-toggle="dropdown">
+          <i class="fa-solid fa-retweet"></i> 
+          <span class="post-engagement">13</span>
+          </a>
+         <div class=" dropdown-menu dropdown-menu-top">
+         <a class="dropdown-item" href="javascript:void();"><i class="fa-solid fa-circle-plus "></i>  Repost</a>
+         <a class="dropdown-item" href="javascript:void();"><i class="fa-solid fa-share"></i>  Share</a>
+
+          </div>
+         </div>
+        </div>
+       </div>
+
+            <div class="post-icons  ml-4">
+          <i class="fa-regular fa-comment "></i>
+          <span class="post-engagement">{{post.comment_count}}</span>
+        </div>
+      
+
+       <div class="post-icons ml-4">
+        <button class="bookmark-button btn btn-light" data-post-id="{{ post.id }}"><i class="fa-regular fa-bookmark"></i></button>
+        
+        <span class="post-engagement"></span>
+      </div>
+
+  
+
+        <!-- DO NOT CHANGE THIS IMAGE -->
+      </div>
+     
+      
+     
+    </div>
+    
+      </div>
+      </div>
+      
+      </div>
+     {% endfor %}
+
+</div>
+{%endblock%}

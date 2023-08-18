@@ -22,25 +22,10 @@
 
   </head>
   
-  <div class="sticky-top currency-bar mt-3">
-    <!-- Menu -->
-
-    <div class="btn-toolbar " role="toolbar" aria-label="Toolbar with button groups">
-        
-        <div class="btn-group  ml-auto" role="group" aria-label="Actions group">
-            <button type="button" class="btn btn-success"><img src="{% static 'img/gold.png'%}" alt="" class=""></button>
-            <button type="button" class="btn btn-warning"><img src="{% static 'img/order.png'%}" alt="" class=""></button>
-     </div>
-
-    </div>
-
-</div>  
-  <body>
-    <!-- Main Body Starts -->
-
+  <nav class="navbar navbar-expand-lg navbar-light  bg-light">
     <div class="container">
-    
-      <div class="ml-5 mb-2">
+    <a class="navbar-brand" href="#">
+      <div class="mt-3 mr-auto ">
         <div id="logo">
           <a href="{% url 'home' %}">
             <img src="{% static 'img/logo.png'%}" alt="">
@@ -48,6 +33,37 @@
       </div>
   
       </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main_nav">
+      <!-- <span class="navbar-toggler-icon"></span> -->
+    </button>
+    <div class="collapse navbar-collapse" id="main_nav">
+    
+    
+    </div> <!-- navbar-collapse.// -->
+  </div><!-- container //  -->
+  </nav>
+
+  <div class="sticky-top currency-bar mb-5  ml-5">
+    <!-- Menu -->
+
+    <div class="btn-toolbar " role="toolbar" aria-label="Toolbar with button groups">
+        
+        <div class="btn-group  ml-auto" role="group" aria-label="Actions group">
+            <button type="button" class="btn btn-dark token-btn donate-cta" href="javascript:void();" data-toggle="modal" data-target="#TokenModal">
+               <img src="{% static 'img/token.png'%}" alt="" >
+              </button>
+     </div>
+
+    </div>
+
+</div> 
+
+  <body>
+    <!-- Main Body Starts -->
+
+    <div class="container">
+  
     
     <div class="row">
       <!-- Sidebar Starts -->
@@ -63,47 +79,81 @@
           
           </div>
         </a>
-          <a href="{% url 'chat_list'%}"><div class="sidebar__link">
-            <span class="sidebar-icons"><img src="{% static 'img/icons/chats.png'%}"/></span>
-          <span class="pt-2"><h2>Chats</h2></span>
-          </div>
-        </a>
-        
         <a href="{% url 'explore'%}"><div class="sidebar__link">
           <span class="sidebar-icons"><img src="{% static 'img/icons/explore.png'%}"/></span>
         <span class="pt-2"><h2>Explore</h2></span>
         </div>
       </a>
+          <a href="{% url 'chat_list'%}"><div class="sidebar__link">
+            <span class="sidebar-icons"><img src="{% static 'img/icons/bookmark.png'%}"/></span>
+          <span class="pt-2"><h2>Bookmarks</h2></span>
+          </div>
+        </a>
         
-        <a href="{% url 'free_store'%}"><div class="sidebar__link">
-            <span class="sidebar-icons"><img src="{% static 'img/coin.png'%}"/></span>
-          <span class="pt-2"><h2>Gold Store</h2></span>
-          </div></a>
           <a href="{% url 'notification_list'%}"><div class="sidebar__link">
             <span class="sidebar-icons"><img src="{% static 'img/icons/notification.png'%}"/></span>
-          <span class="pt-2"><h2>Alerts</h2></span>
+          <span class="pt-2"><h2>Notifications</h2></span>
           </div></a>
-          <div class="sidebar__link">
-            <span class="sidebar-icons"><img src="{% static 'img/icons/more.png'%}"/></span>
-          <span class="pt-2"><h2>More</h2></span>
-          </div>
-          <div class="mx-auto mt-2 mb-2 post-cta " >
-             <button class="btn btn-large btn-dark btn-post px-5" data-toggle="modal" data-target="#postModal"><b>POST</b></button>
-          </div>
+          <a href="{% url 'view_profile' user.username %}"><div class="sidebar__link">
+            <span class="sidebar-icons"><img src="{% static 'img/icons/shop.png'%}"/></span>
+          <span class="pt-2"><h2>Shop</h2></span>
+          </div></a>
+          <a href="{% url 'view_profile' user.username %}"><div class="sidebar__link">
+            <span class="sidebar-icons"><img src="{% static 'img/icons/profile.png'%}"/></span>
+          <span class="pt-2"><h2>My Profile</h2></span>
+          </div></a>
+          <div class="card-action">
+            <div class="dropdown">
+            <a href="javascript:void();" class=" dropdown-toggle-nocaret" data-toggle="dropdown">
+              <div class="sidebar__link">
+
+              <span class="sidebar-icons"><img src="{% static 'img/icons/more.png'%}"/></span>
+              <span class="pt-2"><h2>More</h2></span>
+            </div>
+
+            </a>
+            
+             <div class="dropdown-menu more-dropdown dropdown-menu-right">
+              <!-- <a class="dropdown-item" href="javascript:void();"><i class="fa-solid fa-droplet mr-2"></i> My Tokens</a> -->
+             <a class="dropdown-item" href="javascript:void();"><i class="fa-solid fa-gear mr-2 "></i> Settings</a>
+             <a class="dropdown-item" href="javascript:void();"><i class="fa-solid fa-circle-info mr-2 "></i> Support</a>
+             <a class="dropdown-item" href="javascript:void();"><i class="fa-solid fa-arrow-right-from-bracket mr-2 "></i> Logout</a>
+
+              </div>
+             </div>
+            </div>
+
+          <div class="mx-auto  post-cta " >
+                <button class="btn btn-dark btn-post px-5 "  data-toggle="modal" data-target="#StoryModal">
+
+                <span class="text-light"><b>POST</b></span>
+              </button>
+
+  
+               </div>
          
          
        
-          <div class=" mt-3 profile-link">
-            <a href="{% url 'view_profile' user.username %}">
+          <div class=" mt-5 profile-link">
             <div class="account">
+              
+
               <div class="account-avatar">
-                <img src="{% static 'img/avatar.jpg'%}" c alt="">
+                <a href="{% url 'view_profile' user.username %}">
+                <img src="{% static 'img/avatar.jpg'%}" c alt=""></a>
               </div>
-              <div class="user-details mr-auto">
-                <p ><b>{{my_profile.name}}</b></p>
-                <p class="blue ">@{{user.username}}</p>
+
+              <div class="user-details ml-1 text-left">
+                <a href="{% url 'view_profile' user.username %}">
+
+                <p ><b>{{my_profile.name}}</b> <br> </p>
+                <p class="blue">@{{user.username}}</p>
+                </a>
               </div>
-                <i class="fa-solid fa-ellipsis"></i>
+              <div>
+                
+
+              </div>
              
             </div>
           </a>
@@ -127,7 +177,7 @@
 
 
       <div class="featured__sticky pt-3">
-        <h3 class=""><b>Posted by </b></h3>
+        <h3 class=""><b>Related Users  </b></h3>
 
         <div class="follow-card ml-3 pt-3">
             <div class="row">
@@ -139,8 +189,8 @@
               <span class="blue">@{{post_detail.posted_by}}</span></p>
             </div>
             <div class="follow-btn ml-5">
-                <button class="btn btn-warning px-3"><i class="fa fa-star"></i> 60% </button>
-              </div>
+              <button class="btn btn-dark btn-rounded px-3 ml-2">Follow</button>
+            </div>
         </div>
             
         </div>
@@ -149,31 +199,33 @@
             <p>{{post_detail.poster_bio |truncatechars:50 }}</p>
           </div>
         <div class="follow-btn ">
-          <button class="btn btn-outline-success  px-3" id="dm"><img src="{% static 'img/icons/chats.png'%}"/> </button>
-          <button class="btn btn-dark px-3 ml-2">Follow</button>
 
         </div>
             
         </div>
-        <div class="trending-block pb-3 mb-4 pt-5">
+        <div class="trending-block pb-3 mb-4 pt-1">
 
-          <div class="trending-title">
-            <span class="baraza ml-4 pt-3"> 
-              <img  src="{% static 'img/baraza.png'%}">
-            </span>
-          <span ><h3 class="ml-3 pt-3"><b> <a href="{% url 'baraza'%}">Trends</a> </b> </h3> </span>
-          
+          <div class="trending-block  mb-4">
+            <div class="trending-title">
+              <!-- <span class="baraza ml-4 pt-3"> 
+                <img  src="{% static 'img/baraza.png'%}">
+              </span> -->
+            <span ><h4 class="ml-3 pt-3 pb-1"><b> <a href="{% url 'baraza'%}">Communities</a> </b> </h4> </span>
+            
+          </div>
+          <div class="">
+            <ul class=" forum-list ">
+            <li ><span class="red"><i class="fa-solid fa-circle-notch red"></i> </span>Cars  </li> 
+            <li ><span class="red"><i class="fa-solid fa-circle-notch red"></i> </span>Politics  </li>
+            <li ><span class="red"><i class="fa-solid fa-circle-notch red"></i> </span>Football  </li>
+            <li ><span class="red"><i class="fa-solid fa-circle-notch red"></i> </span>Music </li>
+          </ul>
+          </div>
+          <p class="ml-5"><b>see more</b></p>
+          </div>
         </div>
-        <div class="pb-3">
-          <p class="ml-4 pt-3  "><span class="grey">Trending in Kenya </span> <br> <span class="blue"> Phones & tablets </span> <br> <span class="grey"> 5678 Deals</span> </p>
-          <p class="ml-4 pt-3  "><span class="grey">Trending in Kenya </span> <br> <span class="blue"> cars </span> <br> <span class="grey"> 8765 Deals</span> </p>
-          <p class="ml-4 pt-3  "><span class="grey">Trending in Kenya </span> <br> <span class="blue"> Sneakers </span> <br> <span class="grey"> 7341 Deals</span> </p>
-          <p class="ml-4 pt-3  "><span class="grey">Trending in Kenya </span> <br> <span class="blue"> Furniture </span> <br> <span class="grey"> 7341 Deals</span> </p>
-
-        </div>
-        </div>
-        <div class="follow-block pt-3 mb-5">
-          <h3 class="ml-4 "><b>Who to Follow </b></h3>
+        <div class="follow-block ">
+          <h4 class="ml-4 "><b>Who to Follow </b></h4>
 
             <div class="follow-account ml-3 mt-3">
               <div class="account-avatar">
@@ -184,7 +236,7 @@
                 <p class="blue">@johnsmith</p>
               </div>
               <div class="follow-btn ml-3">
-                <button class="btn btn-dark px-3">Follow</button>
+                <button class="btn btn-dark px-3 btn-rounded">Follow</button>
               </div>
             </div>
          
@@ -197,22 +249,20 @@
                 <p class="blue">@johnsmith</p>
               </div>
               <div class="follow-btn ml-3">
-                <button class="btn btn-dark px-3">Follow</button>
+                <button class="btn btn-dark px-3 btn-rounded">Follow</button>
               </div>
           </div>
-         
-         <br>
+          <p class="ml-5"><b>see more</b></p>
 
        
           </div>
-        
       
 
         </div>
 
 
         <div class="footer">
-          Terms of Service - Privacy Policy - Cookie Policy - Accessibility - @ 2022 Social, Inc.
+          Terms of Service - Privacy Policy - Cookie Policy - Accessibility - @ 2022 Soconey.
         </div>
       </div>
     </div> 
@@ -242,7 +292,7 @@
         </span>
         <h6 class="mt-1">Chats</h6>
       </a>
-      <a href="{% url 'free_store'%}" title="" class="fixed-bottom-menu__a">
+      <a href="#" title="" class="fixed-bottom-menu__a">
         <span class="">
           <img src="{% static 'img/coin.png'%}"/>
         </span>

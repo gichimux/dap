@@ -53,7 +53,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgb(246, 250, 248);
+    background-color: rgb(255, 255, 255);
     position: relative;
     overflow: hidden;
     z-index: 0;
@@ -123,46 +123,46 @@ main {
     margin-bottom: 0.8rem;
 }
 
-.right form {
+.right .cta-btns {
     display: flex;
     flex-direction: column;
 }
 
 .right .register {
-    background-color: rgb(29, 161, 242);
+    background-color: #000;
     color: #fff;
     margin-bottom: 1rem;
 }
 
 .right .login {
     background-color: #fff;
-    border: 1px solid rgb(29, 161, 242);
-    color: rgb(29, 161, 242);
+    border: 1px solid #ff0000;
+    color: #000;
 }
 
-section.form {
+section.cta-btns {
     width: 90%;
     margin: 3rem auto;
     display: none;
 }
 
-section.form .container {
+section.cta-btns .container {
     display: flex;
     justify-content: center;
 }
 
-section.form .container button {
+section.cta-btns .container button {
     flex: 1;
     max-width: 180px;
 }
 
-section.form .container .register {
+section.cta-btns .container .register {
     background-color: rgb(29, 161, 242);
     color: #fff;
     margin-right: 2em;
 }
 
-section.form .container .login {
+section.cta-btns .container .login {
     background-color: #fff;
     border: 1px solid rgb(29, 161, 242);
     color: rgb(29, 161, 242);
@@ -235,7 +235,7 @@ footer .container {
         user-select: none;
         z-index: -1;
     }
-    section.form {
+    section.cta-btns {
         display: block;
     }
     footer .container {
