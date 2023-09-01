@@ -15,9 +15,33 @@ from accounts.forms import NewUserForm
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.views import APIView
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 def home(request):
+    # if request.user.is_authenticated:
     my_profile = Profile.objects.get(user=request.user)
+    # my_profile = "" 
+    
+    #filters
+    gen_c = Post.objects.filter(topic="general").count()
+    sci_c = Post.objects.filter(topic="science & technology").count()   
+    cul_c = Post.objects.filter(topic="culture").count()   
+    rel_c = Post.objects.filter(topic="faith & religion").count()   
+    pol_c = Post.objects.filter(topic="politics").count()   
+    spo_c = Post.objects.filter(topic="sports").count()   
+    bus_c = Post.objects.filter(topic="business & finance").count()   
+    new_c = Post.objects.filter(topic="news").count()   
+    mus_c = Post.objects.filter(topic="music").count()   
+    his_c = Post.objects.filter(topic="history").count()
+    phi_c = Post.objects.filter(topic="philosophy").count()   
+    fic_c = Post.objects.filter(topic="fiction").count()   
+    hea_c = Post.objects.filter(topic="health & wellness").count()   
+    art_c = Post.objects.filter(topic="art").count()   
+    des_c = Post.objects.filter(topic="design").count()   
+    edu_c = Post.objects.filter(topic="education").count()   
+    hum_c = Post.objects.filter(topic="humor").count()   
+    lit_c = Post.objects.filter(topic="literature").count()   
+
     posts = Post.objects.all()
     res = {'success': True, 'message': 'Your post has posted'}
 
@@ -42,36 +66,30 @@ def home(request):
         post_form = PostForm()
 
     context = {
+        'gen_c': gen_c,
+        'pol_c': pol_c,
+        'sci_c': sci_c,
+        'bus_c': bus_c,
+        'art_c': art_c,
+        'new_c': new_c,
+        'cul_c': cul_c,
+        'spo_c': spo_c,
+        'mus_c': mus_c,
+        'his_c': his_c,
+        'phi_c': phi_c,
+        'fic_c': fic_c,
+        'rel_c': rel_c,
+        'hea_c': hea_c,
+        'des_c': des_c,
+        'edu_c': edu_c,
+        'hum_c': hum_c,
+        'lit_c': lit_c,
         'post_form': post_form,
         'posts': posts,
         'my_profile': my_profile,
     }
     return render(request, 'app/home.html', context)
 
-
-def uploadData(request):
-    res = {'error': True, 'msg': "Something went wrong."}
-    allowed_files = ["jpg", "jpeg", "png"]
-    posted_by = request.user
-    if request.method == "POST" :
-        headline = request.POST['headline']
-        body = request.POST['body']
-        post_image = request.FILES['post_image']
-
-        ErrorF = {'error': False, "msg": ""}
-        if headline and body  and post_image:
-             
-            if not ErrorF['error']:
-                u = Post.objects.create(posted_by=posted_by, headline=headline, body=body, post_image=post_image)
-                u.save()
-                res = {'error': False, 'msg': "Successfully Submited."}
-            elif ErrorF['error']:
-                res = ErrorF
-            else:
-                res = {'error': True, 'msg': "Form not submitted. Try with a refresh."}
-        else:
-            res = {'error': True, 'msg': "Fill all required fields."}
-        return JsonResponse(res)
 
 def post_search(request):
     if request.method == 'GET':
@@ -123,69 +141,39 @@ def unfollow_user(request, profile_username):
 
         return JsonResponse(response_data)
     
-@login_required
-# def like_toggle(request, post_id):
-#     post = Post.objects.get(id=post_id)
-#     currentUserObj = User.objects.get(id=request.user.id)
-    
-#     likes = post.likes.all()
 
-#     # if profile_username != currentUserObj.username:
-#     if currentUserObj in likes:
-#         post.likes.remove(currentUserObj.id)
-#     else:
-#         post.likes.add(currentUserObj.id)
+def toggle_bookmark(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
 
-#     return redirect(request.META['HTTP_REFERER'])
+    if request.user in post.bookmarked_users.all():
+        post.bookmarked_users.remove(request.user)
+    else:
+        post.bookmarked_users.add(request.user)
 
-# def like_toggle(request, post_id):
-#     if request.method == "POST":
-#         post = Post.objects.get(id=post_id)
-#         currentUserObj = User.objects.get(id=request.user.id)
-#         likes = post.likes.all()
-#         if currentUserObj in likes:
-#             post.likes.remove(currentUserObj.id)
-#             post.save() 
-#             return render( request, 'posts/partials/likes_div.html', context={'post':post})
-#         else:
-#             post.likes.add(currentUserObj.id)
-#             post.save() 
-#             return render( request, 'posts/partials/likes_div.html', context={'post':post})
-
-@csrf_exempt
-def bookmark_toggle(request):
-    if request.method == 'POST':
-        user = request.user
-        post_id = request.POST.get('post_id')
-        
-        post = get_object_or_404(Post, id=post_id)
-        
-        try:
-            bookmark = Bookmark.objects.get(user=user, post=post)
-            bookmark.delete()
-            message = 'Bookmark removed successfully'
-        except Bookmark.DoesNotExist:
-            bookmark = Bookmark.objects.create(user=user, post=post)
-            message = 'Bookmark added successfully'
-
-        return JsonResponse({'message': message}, status=200)
-    
-    return JsonResponse({'error': 'Invalid request method'}, status=405)
+    return JsonResponse({'success': True})
 
 @login_required
-def bookmark_list (request):
-    my_profile = Profile.objects.get(user=request.user)
-
-    user = request.user
-    bookmarked_posts = Bookmark.objects.filter(user=user)
-    context ={
-     'bookmarked_posts': bookmarked_posts,
-     'my_profile': my_profile,
+def bookmark_list(request):
+    bookmarked_posts = request.user.bookmarked_posts.all()
+    context = {
+        'bookmarked_posts': bookmarked_posts,
     }
-    
-    return render (request, 'posts/bookmark_list.html', context )
+    return render(request, 'posts/bookmark_list.html', context)
 
-    
+@login_required
+def toggle_repost(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    try:
+        repost = Repost.objects.get(post=post, reposted_by=request.user)
+        repost.delete()
+        is_reposted = False
+    except Repost.DoesNotExist:
+        Repost.objects.create(post=post, reposted_by=request.user)
+        is_reposted = True
+
+    return JsonResponse({'success': True, 'is_reposted': is_reposted})
+   
 def customer_search(request):
     if request.method == 'GET':
         query= request.GET.get('q')
@@ -267,6 +255,29 @@ def view_profile(request, profile_username):
     return render (request, 'profiles/userprofile.html', context )
 
 
+@require_POST
+def add_comment(request, post_id):
+    post = Post.objects.get(id=post_id)
+    comment_text = request.POST.get('comment')
+
+    if comment_text:
+        comment = Comment.objects.create(
+            comment_by=request.user,
+            parent_post=post,
+            body=comment_text
+        )
+        post.comment_count += 1
+        post.save()
+
+        return JsonResponse({'message': 'Comment added successfully'})
+    else:
+        
+        return JsonResponse({'error': 'Comment text is required'}, status=400)
+
+def get_comment_count(request, post_id):
+    post = Post.objects.get(id=post_id)
+    comment_count = Comment.objects.filter(parent_post=post).count()
+    return JsonResponse({'comment_count': comment_count})
 
 @login_required
 def post_detail(request, id):
@@ -323,6 +334,14 @@ def baraza(request):
      
    }
     return render (request, 'posts/baraza.html', context )
+
+def topic_filter(request, topic):
+    filtered_posts = Post.objects.filter(topic=topic)
+    context ={
+        'filtered_posts': filtered_posts,
+        'topic': topic
+        }
+    return render(request, 'topics/topic_posts.html', context)
 
 
 @login_required

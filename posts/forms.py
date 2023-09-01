@@ -4,13 +4,13 @@ from django import forms
 from .models import *
 from django.forms import ModelForm, TextInput, Textarea
 
-class PostForm(ModelForm):
+class PostForm(forms.ModelForm):
+    topic = forms.ChoiceField(choices=Topics.choices, label="Topic")
+
     class Meta:
         model = Post
-        fields = ( 'headline', 'body',  'post_image')
-       
-
- 
+        fields = ('topic', 'body', 'post_image')
+        
 class NewCommentForm(ModelForm):
     class Meta:
         model = Comment

@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'forums',
     'config',
     'moderation',
-    'shop',
+    'shops',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

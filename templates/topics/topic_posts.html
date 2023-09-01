@@ -1,0 +1,305 @@
+{% extends '../app/base.html' %}
+{% block content %}
+
+{% load static %}
+
+ <!-- Feed Starts -->
+
+ 
+ 
+  
+ <div class="col feed mt-5">
+    <h5  class="mt-5 text-center">Posts on {{ topic }}</h5>
+    
+    {% for post in filtered_posts %}
+
+    <div class="row mt-2">
+
+     
+      
+        <div class="post_card  mb-2 col-12 "> 
+          <div class="row">
+        
+         <div class="ml-auto  mr-3 mt-5">
+            <div class="card-action">
+        <div class="dropdown">
+        <a href="javascript:void();" class="dropdown-toggle-nocaret" data-toggle="dropdown">
+         <i class="fa-solid fa-ellipsis"></i>
+   
+        </a>
+         <div class="dropdown-menu dropdown-menu-right">
+         <a class="dropdown-item" href="{% url 'delete_post' post.id %}"><i class="fa-solid fa-trash-can  mr-2"></i> Delete </a>
+         <a class="dropdown-item" href="javascript:void();"><i class="fa-regular fa-flag  mr-2"></i> Report post</a>
+         <button class="dropdown-item btn btn-light copy-url-button" data-url="{{ post.get_absolute_url }}" ><i class="fa-solid fa-link mr-1"></i> Copy link</button>
+        
+   
+   
+          </div>
+         </div>
+       
+        </div>
+       </div>
+     </div>
+      
+   
+         <div class="post_card--brand ">
+           <div class="brand__info">
+             <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
+   
+             <div class="name-tag ">
+   
+               <div class=" account-details-hover">
+                
+                 <div class="account-hover-content p-3">
+                   <div class="account-avatar ml-2 row">
+                    <div class="">
+                     <img src="{% static 'img/avatar.jpg'%}" alt="">
+                   </div>
+                  
+                   <div class="ml-auto">
+                     {% if request.user != post.posted_by %}
+                     <button class="follow-button px-3 mr-2 btn btn-rounded" data-profile-username="{{ post.posted_by }}"
+                             data-initial-state="{% if request.user.username in post.posted_by.following.all %}unfollow{% else %}follow{% endif %}">
+                         {% if request.user.username in post.posted_by.following.all %}
+                             Following
+                         {% else %}
+                             Follow
+                         {% endif %}
+                     </button>
+   
+                     {% endif %}
+                 </div>
+   
+                 </div>
+                 
+                 <a href="{% url 'view_profile' post.posted_by%}">
+                 <div class="  ml-2">
+                   
+                   <p><span><b>{{post.poster_full}} </b></span> 
+                     <span><i class="fa-solid fa-circle-check blue "></i></span> <br> @{{post.posted_by}} </p>
+                 </div>
+   
+                   <div class="ml-2"><p>{{post.poster_bio |truncatechars:50 }}</p></div>
+   
+                 </a>               
+                   
+                 </div>
+               
+               </div>
+               
+               <div class="follow-account ">
+                 <div class="account-avatar">
+                   <img src="{% static 'img/avatar.jpg'%}" c alt="">
+                 </div>
+                 <div class="user-details ">
+                   <p><b>{{post.poster_full}} </b> <i class="fa-solid fa-circle-check blue"></i>  . {{post.whenpublished}} </p>
+                   <p class="blue">@{{post.posted_by}}</p>
+                 </div>
+               
+             </div>
+   
+             
+             </div>
+           </div>
+         </div>
+         
+         <!-- <div class=" ml-auto topic_badge">
+           <a href="{% url 'topic_'|add:post.topic %}" class="badge badge-pill badge-primary topic_badge mr-2">{{post.topic|title}}</a> 
+   
+         </div> -->
+
+        <div class="container mt-2">
+     
+   
+         <div class="post-body">
+           <p class="short-body">
+             <a href="{% url 'post_detail' post.id %}" id="post-body" >
+             {{ post.body|slice:":144" }}{% if post.body|length > 50 %}...{% endif %}
+           </a>
+           </p>
+             
+           <p class="full-body">
+             <a href="{% url 'post_detail' post.id %}" id="post-body" >
+   
+             {{ post.body }}</a> </p>
+           {% if post.body|length > 50 %}
+               <a class="show-more-link">Show more</a>
+           {% endif %}
+           <a class="show-less-link blue" style="display: none; ">Show less</a>
+   
+       </div>
+           
+               {% if post.post_image %}
+               <a href="{% url 'post_detail' post.id %}">
+         <div class="post_card--creative mt-2">
+   
+           <img src="{{ post.post_image.url }}">
+          
+           
+       </div> </a>
+     
+       {% endif %}
+         
+        
+       <div class="post_card--summary">
+         <!-- <a href="#">
+           <div class="post_card--cta">
+             <div class="price mr-2">
+             <span>
+               <b>Tip Creator</b>
+             </span>
+           </div>
+             <span><button class="btn btn-outline-danger btn-rounded px-"> TIP </button></span>
+           </div>
+         </a> -->
+           <!-- DO NOT CHANGE THIS IMAGE -->
+           <div class="post_card--input--left mt-2 ">
+   
+             <div class="post-icons">
+               <button class="comment-button btn btn-light" data-post-id="{{ post.id }}">
+                 <i class="fa-regular fa-comment"></i>
+                 <span class="post-engagement ml-2" id="comment-count-{{ post.id }}">{{ post.comment_count }}</span>
+   
+               </button>
+             </div>
+   
+               <div class=" like row ">
+                 {% if user.is_authenticated %}
+                 
+                 <form action="{% url 'upvote_post' post.id %}" method="post">
+                   {% csrf_token %}
+                 <span class=" ml-2"> 
+                     <button  class="btn btn-light upvote-button {% if user in post.likes.all or post.id in clicked_buttons %} clicked-button{% endif %}" data-post-id="{{ post.id }}"> <i class="fa-regular fa-thumbs-up"></i> </button>         
+                 </span>
+                 </form>
+               
+               <span class="ml-2 mt-2" id="vote-count-{{ post.id }}" > {{ post.vote_count }} </span>
+       
+               <form action="{% url 'downvote_post' post.id %}" method="post">
+                 {% csrf_token %}
+               <span class=" ml-2">
+                 <button  class="btn btn-light downvote-button {% if user in post.dislikes.all %} clicked-button{% endif %}" data-post-id="{{ post.id }}"> <i class="fa-regular fa-thumbs-up fa-rotate-180"></i> </button>
+               </span>
+               </form>
+               {% endif %}
+               </div>
+   
+   
+              <div class="post-icons  mr-3">
+               <button class="repost-button btn btn-light" data-post-id="{{ post.id }}" >
+                 <i class="fa-solid fa-retweet"></i> 
+                 <span class="post-engagement">13</span>
+                 </button>
+             </div>
+   
+         
+   
+           
+           
+         
+   
+     
+   
+           <!-- DO NOT CHANGE THIS IMAGE -->
+         </div>
+        
+         
+        
+       
+         </div>
+         <form class="comment-form mt-3" data-post-id="{{ post.id }}">
+           {% csrf_token %}
+   
+           <div class="row " id="comment_form">
+             <div class="col-11">
+           <textarea name="comment" placeholder="Add a comment"></textarea>
+         </div>
+         <div class="col-1 actions">
+           <button type="submit" class="btn btn-primary "><i class="fa-solid fa-share"></i></button>
+           <!-- <button type="button" class="cancel-comment btn btn-light"><i class="fa-solid fa-xmark red"></i></button> -->
+           </div>
+           </div>
+         </form>
+         </div>
+   
+         
+   
+         </div>
+         </div>
+
+    {% endfor %}
+  
+</div>
+    
+    
+
+<div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body mx-auto">
+          <p>Post 1 </p>
+          <hr>
+          <form method="POST" class="text-center ">
+            {% csrf_token %}
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Describe your product</label><br>
+              
+              {{ sell_form.about}}
+            </div>
+          
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Display price</label><br>
+              
+              {{ sell_form.display_price}}
+            </div>
+
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Price limit</label><br>
+              
+              {{ sell_form.price_limit}}
+            </div>
+
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Product location</label><br>
+              
+              {{ sell_form.product_location}}
+            </div>
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Product condition</label><br>
+              
+              {{ sell_form.product_condition}}
+            </div>
+
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Pick up</label><br>
+              
+              {{ sell_form.product_pick_up}}
+            </div>
+
+            <div class="col-lg-12 text-center">
+              <label class=" col-form-label form-control-label">Payment method</label><br>
+              
+              {{ sell_form.payment_method}}
+            </div>
+
+          <br>
+          
+           <button type="submit" class="btn btn-dark px-5 ">Post</button>
+            
+         
+          
+           </form>        </div>
+      <div class="modal-footer">
+      
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Feed Ends -->
+{% endblock %}

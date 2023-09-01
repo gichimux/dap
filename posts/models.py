@@ -6,37 +6,55 @@ import math
 from django.conf import settings
 User = settings.AUTH_USER_MODEL
 
-# Create your models here.
+class Topics(models.TextChoices):
+    GENERAL = 'general', 'General'
+    SCIENCE_TECHNOLOGY = 'science_technology', 'Science & Technology'
+    CULTURE = 'culture', 'Culture'
+    FAITH_RELIGION = 'faith_religion', 'Faith & Religion'
+    POLITICS = 'politics', 'Politics'
+    SPORTS = 'sports', 'Sports'
+    BUSINESS_FINANCE = 'business_finance', 'Business & Finance'
+    NEWS = 'news', 'News'
+    MUSIC = 'music', 'Music'
+    HISTORY = 'history', 'History'
+    PHILOSOPHY = 'philosophy', 'Philosophy'
+    FICTION = 'fiction', 'Fiction'
+    HEALTH_WELLNESS = 'health_wellness', 'Health & Wellness'
+    ART = 'art', 'Art'
+    DESIGN = 'design', 'Design'
+    EDUCATION = 'education', 'Education'
+    HUMOUR = 'humour', 'Humour'
+    LITERATURE = 'literature', 'Literature'
 
-class Condition(models.TextChoices):
-        NEW = 'New', "NEW"
-        WELL_USED = 'Well used', "WELL_USED"
-        USED = 'Used', "USED"
-        SCRAP = 'Scrap', "SCRAP"
-        
-class HashTag(models.Model):
-    name = models.URLField(max_length=100)
 
-   
+
+
+
+
+    
+  
 class Post(models.Model):
     post_image = models.ImageField(upload_to='images/', null=True, blank=True,)
     posted_by = models.ForeignKey(
         User, related_name="posted_by", on_delete=models.CASCADE, null=True
     )     
-    hashtag = models.ManyToManyField(
-        HashTag, blank=True, related_name="hash_tag"
-    )
+    topic = models.CharField(
+        max_length=50,
+        choices=Topics.choices,
+        default=Topics.GENERAL
+    )  
     timestamp = models.DateTimeField(auto_now_add=True)
-
+    
     likes = models.ManyToManyField(User, blank=True, related_name="liked_posts", symmetrical=False)
     dislikes = models.ManyToManyField(User, blank=True, related_name="disliked_posts", symmetrical=False)
     comment_count = models.IntegerField(default=0)
-    
-    headline = models.CharField(max_length=100, blank=True)
-    
-    body = models.TextField() 
+    bookmarked_users = models.ManyToManyField(User, blank=True, related_name="bookmarked_posts")
 
+    # headline = models.CharField(max_length=100, blank=True)
+    
+    body = models.TextField(max_length=1000) 
 
+    
     def upvote(self, user):
         self.likes.add(user)
         self.dislikes.remove(user)
@@ -54,7 +72,7 @@ class Post(models.Model):
         votes = likes - dislikes
         return votes
     
-    
+   
     # @property
     def poster_full(self):
         le_profile = Profile.objects.get(user=self.posted_by)
@@ -162,11 +180,11 @@ class Comment(models.Model):
         Post, related_name="parent_post", on_delete=models.CASCADE
     )
 
-    body = models.CharField(max_length=500)
+    body = models.TextField(max_length=500)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def poster_full(self):
-        related = self.related_post.posted_by
+        related = self.parent_post.posted_by
         le_profile = Profile.objects.get(user=related)
         name = le_profile.name
         return name
@@ -177,7 +195,7 @@ class Comment(models.Model):
         return bio
 
     def related_poster(self):
-        related = self.related_post.posted_by
+        related = self.parent_post.posted_by
         le_profile = Profile.objects.get(user=related)
         return le_profile
     
@@ -248,7 +266,7 @@ class Comment(models.Model):
                 return str(years) + "yrs"
 
     class Meta:
-        ordering = ["timestamp"]
+        ordering = ["-timestamp"]
 
     def __str__(self):
         return self.related_post
@@ -331,17 +349,17 @@ class Reply(models.Model):
                 return str(years) + "yrs"
 
     class Meta:
-        ordering = ["timestamp"]
+        ordering = ["-timestamp"]
 
     def __str__(self):
         return self.related_comment
 
-class RePost(models.Model):
+class Repost(models.Model):
     reposted_by = models.ForeignKey(
         User, related_name="profile_repost", on_delete=models.CASCADE, null=True
     )
-    original_post = models.ForeignKey(
-        Post, related_name="original_post", on_delete=models.CASCADE, null=True
+    post = models.ForeignKey(
+        Post, related_name="post", on_delete=models.CASCADE, null=True
     )
     timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -410,13 +428,20 @@ class RePost(models.Model):
 
             else:
                 return str(years) + "yrs"
-            
+    class Meta:
+        ordering = ["-timestamp"]
+
     def __str__(self):
         return self.original_post
 
 class Bookmark(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
+
+    class Meta:
+        ordering = ["-timestamp"]
+        
     def __str__(self):
         return self.user

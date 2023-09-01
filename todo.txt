@@ -1,28 +1,42 @@
     ajax/async reply form
 [DONE] create post models
-    create post forms
-    upload media form feature
+[DONE] create post form
+[DONE] upload media form feature
 [DONE] create tag pages
 [DONE] create order Model
 [DONE] create token model
-    activate token 
-    crate order & token modal
-    create chat feature
 [DONE] create bid offer model
 [DONE] create gig apply model
     create bid & apply to post forms
-    trends feature
-    async follow 
-    notifications feature
+[DONE] async follow 
     explore/search feature
-    login form
+[DONE] login form
     signup form + email activation
     terms & EULA
     geolocate bids & gigs
-    feed algo
-    repost feature
+    feed algo --- popularity
+[DONE] repost feature
     highlight comment feature
 [DONE] create review model 
     create review forms
     display review
 
+TODAY:
+
+[DONE] dynamic comment form 
+[DONE] count comments
+[DONE] bookmark feature
+[DONE] repost/share feature
+[DONE] subject feature
+
+    list who to follow
+    create chat feature
+
+    secondary forms
+        edit profile
+        post sells
+        
+    filter in explore - products/services
+    user can create shop & profile
+    
+    create notifications on events

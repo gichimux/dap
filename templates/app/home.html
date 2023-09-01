@@ -8,8 +8,9 @@
  
  
   <div class="col">
+    <div class="alert alert-danger resmessage" style="display:none;"></div>
+
     <div class="container">
-      <div class="alert alert-danger resmessage" style="display:none;"></div>
     <ul class="tabs-bar  text-center">
       <li id="tab1" class="tab tab-active"><b>For You</b></li>
       <li id="tab2" class="tab"> <b>Following</b></li>
@@ -42,9 +43,10 @@
 
      </a>
       <div class="dropdown-menu dropdown-menu-right">
-      <a class="dropdown-item" href="{% url 'delete_post' post.id %}"><i class="fa-solid fa-trash-can red"></i> Delete </a>
-      <a class="dropdown-item" href="javascript:void();"><i class="fa-regular fa-flag red"></i> Report </a>
-      <a class="dropdown-item" href="javascript:void();"> <i class="fa-solid fa-share"></i> Share</a>
+      <a class="dropdown-item" href="{% url 'delete_post' post.id %}"><i class="fa-solid fa-trash-can  mr-2"></i> Delete </a>
+      <a class="dropdown-item" href="javascript:void();"><i class="fa-regular fa-flag  mr-2"></i> Report post</a>
+      <button class="dropdown-item btn btn-light copy-url-button" data-url="{{ post.get_absolute_url }}" ><i class="fa-solid fa-link mr-1"></i> Copy link</button>
+     
 
 
        </div>
@@ -58,7 +60,7 @@
       <div class="post_card--brand ">
         <div class="brand__info">
           <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
-      
+
           <div class="name-tag ">
 
             <div class=" account-details-hover">
@@ -89,7 +91,7 @@
               <div class="  ml-2">
                 
                 <p><span><b>{{post.poster_full}} </b></span> 
-                  <span><img src="{% static 'img/icons/verified.png'%}"  style="width: 18px;height: auto; margin-bottom: 3px;"></span> <br> @{{post.posted_by}} </p>
+                  <span><i class="fa-solid fa-circle-check blue "></i></span> <br> @{{post.posted_by}} </p>
               </div>
 
                 <div class="ml-2"><p>{{post.poster_bio |truncatechars:50 }}</p></div>
@@ -105,7 +107,7 @@
                 <img src="{% static 'img/avatar.jpg'%}" c alt="">
               </div>
               <div class="user-details ">
-                <p><b>{{post.poster_full}} </b> <img src="{% static 'img/icons/verified.png'%}"  style="width: 18px;height: auto; margin-bottom: 3px;" id="verified-icon">  . {{post.whenpublished}} </p>
+                <p><b>{{post.poster_full}} </b> <i class="fa-solid fa-circle-check blue"></i>  . {{post.whenpublished}} </p>
                 <p class="blue">@{{post.posted_by}}</p>
               </div>
             
@@ -116,22 +118,43 @@
         </div>
       </div>
       
-    
-      <a href="{% url 'post_detail' post.id %}">
-          <div class=""><h5>{{post.headline}} </h5></div>
+      <div class=" ml-auto topic_badge">
+        <a href="{% url 'topic_'|add:post.topic %}" class="badge badge-pill badge-primary topic_badge mr-2">{{post.topic|title}}</a> 
+
+      </div>
+     <div class="container mt-2">
+  
+
+      <div class="post-body">
+        <p class="short-body">
+          <a href="{% url 'post_detail' post.id %}" id="post-body" >
+          {{ post.body|slice:":144" }}{% if post.body|length > 50 %}...{% endif %}
+        </a>
+        </p>
+          
+        <p class="full-body">
+          <a href="{% url 'post_detail' post.id %}" id="post-body" >
+
+          {{ post.body }}</a> </p>
+        {% if post.body|length > 50 %}
+            <a class="show-more-link">Show more</a>
+        {% endif %}
+        <a class="show-less-link blue" style="display: none; ">Show less</a>
+
+    </div>
         
             {% if post.post_image %}
-           
+            <a href="{% url 'post_detail' post.id %}">
       <div class="post_card--creative mt-2">
 
         <img src="{{ post.post_image.url }}">
        
         
-    </div>
+    </div> </a>
   
     {% endif %}
       
-      </a>
+     
     <div class="post_card--summary">
       <!-- <a href="#">
         <div class="post_card--cta">
@@ -143,60 +166,50 @@
           <span><button class="btn btn-outline-danger btn-rounded px-"> TIP </button></span>
         </div>
       </a> -->
-      <div class="post_card--input row ">
         <!-- DO NOT CHANGE THIS IMAGE -->
-        <div class="post_card--input--left ">
-            <div class="post-icons like row ml-4 ">
+        <div class="post_card--input--left mt-2 ">
+
+          <div class="post-icons">
+            <button class="comment-button btn btn-light" data-post-id="{{ post.id }}">
+              <i class="fa-regular fa-comment"></i>
+              <span class="post-engagement ml-2" id="comment-count-{{ post.id }}">{{ post.comment_count }}</span>
+
+            </button>
+          </div>
+
+            <div class=" like row ">
               {% if user.is_authenticated %}
               
               <form action="{% url 'upvote_post' post.id %}" method="post">
                 {% csrf_token %}
-              <span class="post-icons"> 
+              <span class=" ml-2"> 
                   <button  class="btn btn-light upvote-button {% if user in post.likes.all or post.id in clicked_buttons %} clicked-button{% endif %}" data-post-id="{{ post.id }}"> <i class="fa-regular fa-thumbs-up"></i> </button>         
               </span>
               </form>
             
-            <span class="ml-2 mt-1" id="vote-count-{{ post.id }}" > {{ post.vote_count }} </span>
+            <span class="ml-2 mt-2" id="vote-count-{{ post.id }}" > {{ post.vote_count }} </span>
     
             <form action="{% url 'downvote_post' post.id %}" method="post">
               {% csrf_token %}
-            <span class="post-icons ml-2">
+            <span class=" ml-2">
               <button  class="btn btn-light downvote-button {% if user in post.dislikes.all %} clicked-button{% endif %}" data-post-id="{{ post.id }}"> <i class="fa-regular fa-thumbs-up fa-rotate-180"></i> </button>
             </span>
             </form>
             {% endif %}
             </div>
-           <div class="post-icons  ml-5">
-            <div class="card-action">
-        <div class="dropdown">
-        <a href="javascript:void();" class=" dropdown-toggle-nocaret" data-toggle="dropdown">
-          <i class="fa-solid fa-retweet"></i> 
-          <span class="post-engagement">13</span>
-          </a>
-         <div class=" dropdown-menu dropdown-menu-top">
-         <a class="dropdown-item" href="javascript:void();"><i class="fa-solid fa-circle-plus "></i>  Repost</a>
-         <a class="dropdown-item" href="javascript:void();"><i class="fa-solid fa-share"></i>  Share</a>
 
+
+           <div class="post-icons  mr-3">
+            <button class="repost-button btn btn-light" data-post-id="{{ post.id }}" >
+              <i class="fa-solid fa-retweet"></i> 
+              <span class="post-engagement">13</span>
+              </button>
           </div>
-         </div>
-        </div>
-       </div>
 
-            <div class="post-icons  ml-4">
-          <i class="fa-regular fa-comment "></i>
-          <span class="post-engagement">{{post.comment_count}}</span>
-        </div>
       
 
         
-        <div class="post-icons ml-4">
-          {% if request.user != post.posted_by %}
-          {% csrf_token %}
-          <input type="hidden" name="post_id" value="{{ post.id }}">
-          <button class="bookmark-button btn btn-light"><i class="fa-regular fa-bookmark"></i></button>
-          <span class="post-engagement"></span>
-          {% endif %}
-      </div>
+        
       
 
   
@@ -206,11 +219,26 @@
      
       
      
-    </div>
     
       </div>
+      <form class="comment-form mt-3" data-post-id="{{ post.id }}">
+        {% csrf_token %}
+
+        <div class="row " id="comment_form">
+          <div class="col-11">
+        <textarea name="comment" placeholder="Add a comment"></textarea>
       </div>
+      <div class="col-1 actions">
+        <button type="submit" class="btn btn-primary "><i class="fa-solid fa-share"></i></button>
+        <!-- <button type="button" class="cancel-comment btn btn-light"><i class="fa-solid fa-xmark red"></i></button> -->
+        </div>
+        </div>
+      </form>
+      </div>
+
       
+
+      </div>
       </div>
      {% endfor %}
 
@@ -218,15 +246,17 @@
 </div>
 
     </div>
+    <div class="content-container ">
     <div class="content content-tab2">
 
       <div class="app--feed">
 
-    
+    hhhhhhhhhhhhhhhhhh
 
 </div>
 
     </div>
+  </div>
     
   </div>
 </div>
@@ -248,21 +278,40 @@
         </button>
       </div>
 
-      <div class="modal-body">
           <div class="container">
 
-             
+            <ul class="form-tabs-bar  text-center">
+              <li id="tab1" class="form-tab form-tab-active"><b>Thread</b></li>
+              <li id="tab2" class="form-tab"> <b>More</b></li>
+          
+            </ul>
 
-               
+            <div class="modal-body">
+
+            <div class="form-content-container ">
+              <div class="form-content form-content-tab1 form-content-active">
 
                  <form class="post_form" accept-charset="UTF-8" action="" method="POST" enctype="multipart/form-data" id="post-form">
                   {% csrf_token %}
                   {{ form.as_p }}
-                  <div class="form-group">
-                    <input type="text" name="headline" class="form-control" id="headline" placeholder="Post Headline">
+                 
+                  
+                  <div class="form-group ml-2 topics">
+                    <label for="{{ form.topic.id_for_label }}" class="mr-2">Topic: </label>
+                    {{ post_form.topic }}
+                </div>
+
+                
+                <div class="word-count-progress ml-3 mt-2 mb-2">
+                  <div class="progress">
+                      <div class="progress-bar bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
+                  <p class="text-center mt-1"><span class="word-count">0/144 words</span></p>
+              </div>
+
                   <div class="form-group">
-                    <textarea type="text" name="body" class="form-control" id="body"  placeholder="Write something here ..." style="height: 180px;"></textarea>
+                   
+                    <textarea type="text" name="body" class="form-control"  placeholder="Write something here ..." style="height: 180px;" id="post-form-body"></textarea>
                   </div>
                   
                   <div class="col-12  ">
@@ -277,22 +326,173 @@
                     </label>
                 </div>                       
                   </div>
+
+                  <div class="thumbnail-container">
+                    <button class=" btn btn-light  clear-image-button" type="button"><i class="fa-solid fa-times"></i></button>
+                    <img id="thumbnail" src="" alt="Thumbnail" style="max-width: 100%; height: 144px;">
+
+                </div>
+
                   </div>
                   <div id="uploaded_files"></div>
                  <div class="alert alert-danger resmessage" style="display:none;"></div>
                   <button type="submit" name="submit" class="btn btn-rounded btnClick mt-3">Post</button>
                 </form>
+              </div>
+            </div>
+
+            <div class="form-content-container ">
+              <div class="form-content form-content-tab2 ">
+
+                <div class="row">
+                  <div class="col-6">
+                    <div class="sell-card">
+                      <div class="text-center">
+                        <img src="{% static 'img/icons/real_estate.png'%}"/>
+                      </div>
+                      <div class="text-center mt-2">
+                        <p>Real Estate</p>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="sell-card ">
+                      <div class="text-center">
+                        <img src="{% static 'img/icons/cars.png'%}"/>
+                      </div>
+                      <div class="text-center mt-2">
+                        <p>Automotive</p>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+                <div class="row mt-2">
+                  <div class="col-6">
+                    <div class="sell-card">
+                      <div class="text-center">
+                        <img src="{% static 'img/icons/gigs.png'%}"/>
+                      </div>
+                      <div class="text-center mt-2">
+                        <p>Jobs & Gigs</p>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="sell-card ">
+                      <div class="text-center">
+                        <img src="{% static 'img/icons/fashion.png'%}"/>
+                      </div>
+                      <div class="text-center mt-2">
+                        <p>Fashion</p>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="row mt-2">
+                  <div class="col-6">
+                    <div class="sell-card">
+                      <div class="text-center">
+                        <img src="{% static 'img/icons/art.png'%}"/>
+                      </div>
+                      <div class="text-center mt-2">
+                        <p>Art & Collectibles</p>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="sell-card ">
+                      <div class="text-center">
+                        <img src="{% static 'img/icons/furniture.png'%}"/>
+                      </div>
+                      <div class="text-center mt-2">
+                        <p>Furniture</p>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="row mt-2">
+                  <div class="col-6">
+                    <div class="sell-card">
+                      <div class="text-center">
+                        <img src="{% static 'img/icons/phone.png'%}"/>
+                      </div>
+                      <div class="text-center mt-2">
+                        <p>Electronics</p>
+                      </div>
+
+                    </div>
+                  </div>
+
+
+                  <div class="col-6">
+                    <div class="sell-card ">
+                      <div class="text-center">
+                        <img src="{% static 'img/icons/toys.png'%}"/>
+                      </div>
+                      <div class="text-center mt-2">
+                        <p>Toys & Accesories</p>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="row mt-2">
+
+                  <div class="col-6">
+                    <div class="sell-card">
+                      <div class="text-center">
+                        <img src="{% static 'img/icons/groceries.png'%}"/>
+                      </div>
+                      <div class="text-center mt-2">
+                        <p>Groceries</p>
+                      </div>
+
+                    </div>
+                  </div>
+                  
+                  <div class="col-6">
+                    <div class="sell-card ">
+                      <div class="text-center">
+                        <img src="{% static 'img/icons/beauty.png'%}"/>
+                      </div>
+                      <div class="text-center mt-2">
+                        <p>Health & Beauty</p>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+                </div>
                 </div>
 
       <div class="modal-footer">
       
       </div>
-    </div>
   </div>
 </div>
 </div>
 
-<div class="modal fade" id="TokenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="AuthModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document" >
     <div class="modal-content" id="token-modal">
       <div class="modal-header">
@@ -302,21 +502,23 @@
       </div>
 
       <div class="modal-body ">
-        <div class="text-center">
-          <img src="{% static 'img/icons/tea.png'%}"/>
-        </div>
+        
           <div class="container text-center ">
+            <ul class="tabs-bar  text-center">
+              <li id="tab1" class="tab tab-active"><b>Login</b></li>
+              <li id="tab2" class="tab"> <b>Sign Up</b></li>
+          
+            </ul>
+
+            <div class="content content-tab1 content-active">
+              kkk
+            </div>
             
-            <p></p>
-            <p><small>Invite a friend or buy some actual tea from our shop</small> </p>
-            
-                </div>
-                <div class=" row mb-3">
-                  <div class="mx-auto">
-                  <button class="btn btn btn-outline-dark ">Friend +</button>
-                <button class="btn btn btn-outline-dark ml-3">Tea +</button>
-              </div>
-              </div>
+            <div class="content content-tab2">
+              jjj
+            </div>
+          </div>
+              
       <div class="modal-footer">
       
       </div>
@@ -324,6 +526,7 @@
   </div>
 </div>
 </div>
+
 
 
 <div class="modal" id="successModal" tabindex="-1" role="dialog">
@@ -336,7 +539,7 @@
       </div>
             <div class="modal-body">
                 <p id="successMessage" class="text-center">Your post was successful. </p>
-                <div class="text-center"> <button class="btn btn-outline-dark "  > <a href="{% url 'view_post' %}" >View post</a>  </button></div>
+                <div class="text-center"> <button class="btn btn-outline-danger "  > <a href="{% url 'view_post' %}" >View post</a>  </button></div>
 
             </div>
             <div class="modal-footer mx-auto">

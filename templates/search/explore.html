@@ -11,22 +11,14 @@
  <div class="col feed">
 
   <div class="container ">
-  <ul class="tabs-bar text-center pt-3">
-    <li id="tab1" class="tab tab-active"><b>Bids</b></li>
-    <li id="tab2" class="tab"> <b>Gigs</b></li>
-    <li id="tab2" class="tab"> <b>Threads</b></li>
+  <ul class="tabs-bar text-center pt-2">
+    <li id="tab1" class="tab tab-active"><b>Categories</b></li>
+    <li id="tab2" class="tab"> <b>Popular</b></li>
 
   </ul>
    
-  <div class="input-group main-search mt-4 pb-3">
-    
-    <form action="{% url 'search_results' %}" method="GET" value="{{request.GET.q}}" >
-        
-      <div class="input-group col-12">
-          <input type="search" class="form-control search-input rounded " placeholder="Search in app" aria-label="Search" aria-describedby="search-addon" name="q" value="{{request.GET.q}}" />
-          <button name="submit" type="submit" class="btn btn-light "><i class="fa fa-search"></i></button>
-        </div>
-      </form>
+  <div class="input-group main-search mt-1 ">
+
 
   </div>
   <div class="content-container">
@@ -34,7 +26,165 @@
 
       <div class="app--feed">
 
-      
+        <div class="container pb-4">
+
+          <div class="row">
+            <div class="col-6 ">
+              <div class="explore-card">
+                <div class="text-center mt-2">
+                  <img src="{% static 'img/icons/real_estate.png'%}"/>
+                </div>
+                <div class="text-center mt-2">
+                  <p>Real Estate</p>
+                </div>
+                <div class="text-center mt-2 mb-3">
+                  <small>33 posts</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 ">
+              <div class="explore-card ">
+                <div class="text-center mt-2">
+                  <img src="{% static 'img/icons/cars.png'%}"/>
+                </div>
+                <div class="text-center mt-2">
+                  <p>Automotive</p>
+                </div>
+                <div class="text-center mt-2 mb-3">
+                  <small>33 posts</small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="row mt-2">
+            <div class="col-6">
+              <div class="explore-card">
+                <div class="text-center mt-2">
+                  <img src="{% static 'img/icons/gigs.png'%}"/>
+                </div>
+                <div class="text-center mt-2">
+                  <p>Jobs & Gigs</p>
+                </div>
+                <div class="text-center mt-2 mb-3">
+                  <small>33 posts</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="explore-card ">
+                <div class="text-center mt-2">
+                  <img src="{% static 'img/icons/fashion.png'%}"/>
+                </div>
+                <div class="text-center mt-2">
+                  <p>Fashion</p>
+                </div>
+                <div class="text-center mt-2 mb-3">
+                  <small>33 posts</small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row mt-2">
+            <div class="col-6">
+              <div class="explore-card">
+                <div class="text-center mt-2">
+                  <img src="{% static 'img/icons/art.png'%}"/>
+                </div>
+                <div class="text-center mt-2">
+                  <p>Art & Collectibles</p>
+                </div>
+                <div class="text-center mt-2 mb-3">
+                  <small>33 posts</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="explore-card ">
+                <div class="text-center mt-2">
+                  <img src="{% static 'img/icons/furniture.png'%}"/>
+                </div>
+                <div class="text-center mt-2">
+                  <p>Furniture</p>
+                </div>
+                <div class="text-center mt-2 mb-3">
+                  <small>33 posts</small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row mt-2">
+            <div class="col-6">
+              <div class="explore-card">
+                <div class="text-center mt-2">
+                  <img src="{% static 'img/icons/phone.png'%}"/>
+                </div>
+                <div class="text-center mt-2">
+                  <p>Electronics</p>
+                </div>
+                <div class="text-center mt-2 mb-3">
+                  <small>33 posts</small>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-6">
+              <div class="explore-card ">
+                <div class="text-center mt-2">
+                  <img src="{% static 'img/icons/toys.png'%}"/>
+                </div>
+                <div class="text-center mt-2">
+                  <p>Toys & Accesories</p>
+                </div>
+                <div class="text-center mt-2 mb-3">
+                  <small>33 posts</small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row mt-2">
+
+            <div class="col-6">
+              <div class="explore-card">
+                <div class="text-center mt-2">
+                  <img src="{% static 'img/icons/groceries.png'%}"/>
+                </div>
+                <div class="text-center mt-2">
+                  <p>Food Stuff</p>
+                </div>
+                <div class="text-center mt-2 mb-3">
+                  <small>33 posts</small>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-6">
+              <div class="explore-card ">
+                <div class="text-center mt-2">
+                  <img src="{% static 'img/icons/beauty.png'%}"/>
+                </div>
+                <div class="text-center mt-2">
+                  <p>Health & Beauty</p>
+                </div>
+                <div class="text-center mt-2 mb-3">
+                  <small>33 posts</small>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
 
 
   <!-- END FEED-->
