@@ -118,8 +118,8 @@
         </div>
       </div>
       
-      <div class=" ml-auto topic_badge">
-        <a href="{% url 'topic_'|add:post.topic %}" class="badge badge-pill badge-primary topic_badge mr-2">{{post.topic|title}}</a> 
+      <div class=" ml-auto category_badge">
+        <a href="{% url 'category_'|add:post.category %}" class="badge badge-pill badge-primary category_badge mr-2">{{post.category|title}}</a> 
 
       </div>
      <div class="container mt-2">
@@ -280,11 +280,11 @@
 
           <div class="container">
 
-            <ul class="form-tabs-bar  text-center">
+            <!-- <ul class="form-tabs-bar  text-center">
               <li id="tab1" class="form-tab form-tab-active"><b>Thread</b></li>
               <li id="tab2" class="form-tab"> <b>More</b></li>
           
-            </ul>
+            </ul> -->
 
             <div class="modal-body">
 
@@ -296,9 +296,9 @@
                   {{ form.as_p }}
                  
                   
-                  <div class="form-group ml-2 topics">
-                    <label for="{{ form.topic.id_for_label }}" class="mr-2">Topic: </label>
-                    {{ post_form.topic }}
+                  <div class="form-group ml-2 category">
+                    <label for="{{ form.topic.id_for_label }}" class="mr-2">Category: </label>
+                    {{ post_form.category }}
                 </div>
 
                 
@@ -344,143 +344,10 @@
             <div class="form-content-container ">
               <div class="form-content form-content-tab2 ">
 
-                <div class="row">
-                  <div class="col-6">
-                    <div class="sell-card">
-                      <div class="text-center">
-                        <img src="{% static 'img/icons/real_estate.png'%}"/>
-                      </div>
-                      <div class="text-center mt-2">
-                        <p>Real Estate</p>
-                      </div>
-
-                    </div>
-                  </div>
-
-                  <div class="col-6">
-                    <div class="sell-card ">
-                      <div class="text-center">
-                        <img src="{% static 'img/icons/cars.png'%}"/>
-                      </div>
-                      <div class="text-center mt-2">
-                        <p>Automotive</p>
-                      </div>
-
-                    </div>
-                  </div>
-
-                </div>
-                <div class="row mt-2">
-                  <div class="col-6">
-                    <div class="sell-card">
-                      <div class="text-center">
-                        <img src="{% static 'img/icons/gigs.png'%}"/>
-                      </div>
-                      <div class="text-center mt-2">
-                        <p>Jobs & Gigs</p>
-                      </div>
-
-                    </div>
-                  </div>
-
-                  <div class="col-6">
-                    <div class="sell-card ">
-                      <div class="text-center">
-                        <img src="{% static 'img/icons/fashion.png'%}"/>
-                      </div>
-                      <div class="text-center mt-2">
-                        <p>Fashion</p>
-                      </div>
-
-                    </div>
-                  </div>
+               
 
                 </div>
 
-                <div class="row mt-2">
-                  <div class="col-6">
-                    <div class="sell-card">
-                      <div class="text-center">
-                        <img src="{% static 'img/icons/art.png'%}"/>
-                      </div>
-                      <div class="text-center mt-2">
-                        <p>Art & Collectibles</p>
-                      </div>
-
-                    </div>
-                  </div>
-
-                  <div class="col-6">
-                    <div class="sell-card ">
-                      <div class="text-center">
-                        <img src="{% static 'img/icons/furniture.png'%}"/>
-                      </div>
-                      <div class="text-center mt-2">
-                        <p>Furniture</p>
-                      </div>
-
-                    </div>
-                  </div>
-
-                </div>
-
-                <div class="row mt-2">
-                  <div class="col-6">
-                    <div class="sell-card">
-                      <div class="text-center">
-                        <img src="{% static 'img/icons/phone.png'%}"/>
-                      </div>
-                      <div class="text-center mt-2">
-                        <p>Electronics</p>
-                      </div>
-
-                    </div>
-                  </div>
-
-
-                  <div class="col-6">
-                    <div class="sell-card ">
-                      <div class="text-center">
-                        <img src="{% static 'img/icons/toys.png'%}"/>
-                      </div>
-                      <div class="text-center mt-2">
-                        <p>Toys & Accesories</p>
-                      </div>
-
-                    </div>
-                  </div>
-
-                </div>
-
-                <div class="row mt-2">
-
-                  <div class="col-6">
-                    <div class="sell-card">
-                      <div class="text-center">
-                        <img src="{% static 'img/icons/groceries.png'%}"/>
-                      </div>
-                      <div class="text-center mt-2">
-                        <p>Groceries</p>
-                      </div>
-
-                    </div>
-                  </div>
-                  
-                  <div class="col-6">
-                    <div class="sell-card ">
-                      <div class="text-center">
-                        <img src="{% static 'img/icons/beauty.png'%}"/>
-                      </div>
-                      <div class="text-center mt-2">
-                        <p>Health & Beauty</p>
-                      </div>
-
-                    </div>
-                  </div>
-
-                </div>
-
-              </div>
             </div>
                 </div>
                 </div>

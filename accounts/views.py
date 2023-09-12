@@ -1,10 +1,10 @@
 from django.shortcuts import  render, redirect
-from .forms import NewUserForm
+from .forms import *
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth import login, authenticate 
 from django.contrib.auth.forms import AuthenticationForm 
-from core.views  import  home
+from core.views  import  home, edit_profile
 from .models import Profile
 from django.contrib.auth.decorators import login_required
 
@@ -16,15 +16,15 @@ def register_request(request):
 			user = form.save()
 			login(request, user)
 			messages.success(request, "Registration successful." )
-			return redirect(home)
+			return redirect(edit_profile)
 		messages.error(request, "Unsuccessful registration. Invalid information.")
 	form = NewUserForm()
-	return render (request=request, template_name="auth/index.html", context={"register_form":form})
+	return render (request=request, template_name="core/index.html", context={"signup_form":form})
 
 
 def login_request(request):
 	if request.method == "POST":
-		form = AuthenticationForm(request, data=request.POST)
+		form = LoginForm(request, data=request.POST)
 		if form.is_valid():
 			username = form.cleaned_data.get('username')
 			password = form.cleaned_data.get('password')
@@ -37,7 +37,7 @@ def login_request(request):
 				messages.error(request,"Invalid username or password.")
 		else:
 			messages.error(request,"Invalid username or password.")
-	form = AuthenticationForm()
+	form = LoginForm()
 	return render(request=request, template_name="auth/login.html", context={"login_form":form})
 
 

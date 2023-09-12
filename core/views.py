@@ -2,11 +2,15 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate 
 from posts.models import *
 from posts.forms import *
+from chats.models import *
+from random import sample
+from datetime import datetime
+from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm 
 from accounts.models import User, Profile 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from accounts.forms import EditProfileForm
+from accounts.forms import *
 from django.shortcuts import get_object_or_404 
 import json
 from django.http import HttpResponse, JsonResponse
@@ -23,27 +27,31 @@ def home(request):
     # my_profile = "" 
     
     #filters
-    gen_c = Post.objects.filter(topic="general").count()
-    sci_c = Post.objects.filter(topic="science & technology").count()   
-    cul_c = Post.objects.filter(topic="culture").count()   
-    rel_c = Post.objects.filter(topic="faith & religion").count()   
-    pol_c = Post.objects.filter(topic="politics").count()   
-    spo_c = Post.objects.filter(topic="sports").count()   
-    bus_c = Post.objects.filter(topic="business & finance").count()   
-    new_c = Post.objects.filter(topic="news").count()   
-    mus_c = Post.objects.filter(topic="music").count()   
-    his_c = Post.objects.filter(topic="history").count()
-    phi_c = Post.objects.filter(topic="philosophy").count()   
-    fic_c = Post.objects.filter(topic="fiction").count()   
-    hea_c = Post.objects.filter(topic="health & wellness").count()   
-    art_c = Post.objects.filter(topic="art").count()   
-    des_c = Post.objects.filter(topic="design").count()   
-    edu_c = Post.objects.filter(topic="education").count()   
-    hum_c = Post.objects.filter(topic="humor").count()   
-    lit_c = Post.objects.filter(topic="literature").count()   
+    car_c = Post.objects.filter(category="cars").count()
+    mot_c = Post.objects.filter(category="motorbikes").count()   
+    bik_c = Post.objects.filter(category="bicycles").count()   
+    fas_c = Post.objects.filter(category="fashion").count()   
+    gig_c = Post.objects.filter(category="gigs").count()   
+    hir_c = Post.objects.filter(category="hiring").count()   
+    ele_c = Post.objects.filter(category="electronics").count()   
+    acc_c = Post.objects.filter(category="accessories").count()
+    lux_c = Post.objects.filter(category="luxury").count()   
+    rea_c = Post.objects.filter(category="real estate").count()   
+    art_c = Post.objects.filter(category="art").count()   
+    foo_c = Post.objects.filter(category="food and drinks").count()   
+    hea_c = Post.objects.filter(category="health and beauty").count()   
+    fur_c = Post.objects.filter(category="furniture").count()   
 
     posts = Post.objects.all()
     res = {'success': True, 'message': 'Your post has posted'}
+
+    current_user = request.user
+    following_users = current_user.profile.followers.all()
+    # Get users the current user is not following (excluding themselves)
+    not_following_users = User.objects.exclude(id=current_user.id).exclude(id__in=following_users)
+
+    # Randomly select two users to display
+    random_users = sample(list(not_following_users), 2)
 
     if request.method == 'POST':
         post_form = PostForm(request.POST, request.FILES)  # Include request.FILES here
@@ -52,7 +60,7 @@ def home(request):
                 # Attempt to get the logged-in user's profile
                 my_profile = Profile.objects.get(user=request.user)
             except ObjectDoesNotExist:
-                pass  # Handle this case if necessary
+                pass  # Handle tacc case if necessary
             
             post = post_form.save(commit=False)  # Don't commit the post yet
             post.posted_by = request.user
@@ -66,24 +74,22 @@ def home(request):
         post_form = PostForm()
 
     context = {
-        'gen_c': gen_c,
-        'pol_c': pol_c,
-        'sci_c': sci_c,
-        'bus_c': bus_c,
+        'gen_c':car_c,
+        'mot_c': mot_c,
+        'gig_c': gig_c,
         'art_c': art_c,
-        'new_c': new_c,
-        'cul_c': cul_c,
-        'spo_c': spo_c,
-        'mus_c': mus_c,
-        'his_c': his_c,
-        'phi_c': phi_c,
-        'fic_c': fic_c,
-        'rel_c': rel_c,
+        'hir_c': hir_c,
+        'bik_c': bik_c,
+        'ele_c': ele_c,
+        'acc_c': acc_c,
+        'art_c': art_c,
+        'lux_c': lux_c,
+        'fas_c': fas_c,
+        'rea_c': rea_c,
+        'foo_c': foo_c,
         'hea_c': hea_c,
-        'des_c': des_c,
-        'edu_c': edu_c,
-        'hum_c': hum_c,
-        'lit_c': lit_c,
+        'fur_c': fur_c,
+        'random_users': random_users,
         'post_form': post_form,
         'posts': posts,
         'my_profile': my_profile,
@@ -91,6 +97,32 @@ def home(request):
     return render(request, 'app/home.html', context)
 
 
+def upload_avatar(request):
+    if request.method == 'POST' and request.FILES['avatar']:
+        avatar = request.FILES['avatar']
+        request.user.profile.avatar = avatar
+        request.user.profile.save()
+        return JsonResponse({'avatar_url': request.user.profile.avatar.url})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+def upload_images(request):
+    if request.method == 'POST':
+        # Handle the uploaded cover image
+        if 'cover_image' in request.FILES:
+            cover_image = request.FILES['cover_image']
+            request.user.profile.cover_image = cover_image
+            request.user.profile.save()
+
+        # Handle the uploaded avatar image
+        if 'avatar' in request.FILES:
+            avatar = request.FILES['avatar']
+            request.user.profile.avatar = avatar
+            request.user.profile.save()
+
+        return JsonResponse({'message': 'Images uploaded successfully.'})
+
+    return JsonResponse({'error': 'Invalid request method.'}, status=400)
+    
 def post_search(request):
     if request.method == 'GET':
         query= request.GET.get('q')
@@ -112,7 +144,35 @@ def post_search(request):
 
     else:
         return render(request, 'search/search.html')
-    
+
+@login_required
+def follow_user(request):
+    if request.method == 'POST':
+        username_to_follow = request.POST.get('username')
+        try:
+            user_to_follow = User.objects.get(username=username_to_follow)
+            request.user.profile.following.add(user_to_follow)
+            return JsonResponse({'success': True})
+        except User.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'User not found'})
+    return JsonResponse({'success': False, 'message': 'Invalid request'})
+
+@login_required
+def who_to_follow(request):
+    current_user = request.user
+    following_users = current_user.profile.followers.all()
+    # Get users the current user is not following (excluding themselves)
+    not_following_users = User.objects.exclude(id=current_user.id).exclude(id__in=following_users)
+
+    # Randomly select two users to display
+    random_users = sample(list(not_following_users), 2)
+
+    context = {
+        'random_users': random_users,
+    }
+
+    return render(request, 'who_to_follow.html', context)
+ 
 @login_required
 def follow_user(request, profile_username):
     if request.is_ajax():
@@ -203,6 +263,14 @@ def upvote_post(request, post_id):
         return JsonResponse({'success': True, 'vote_count': post.vote_count})
     return JsonResponse({'success': False})
 
+@login_required
+def private_chat_view(request, other_user_id):
+    other_user = get_object_or_404(User, id=other_user_id)
+    # Create or retrieve a chat room between the current user and the other user
+    chat_room, created = ChatRoom.objects.get_or_create(user1=request.user, user2=other_user)
+    return render(request, 'private_chat_room.html', {'chat_room': chat_room})
+
+
 def downvote_post(request, post_id):
     post = Post.objects.get(pk=post_id)
     if request.user.is_authenticated:
@@ -211,7 +279,23 @@ def downvote_post(request, post_id):
     return JsonResponse({'success': False})
   
 
-   
+def toggle_follow(request, username):
+    user_to_follow = get_object_or_404(User, username=username)
+    profile_to_follow = user_to_follow.profile
+    user_profile = request.user.profile
+
+    if user_profile != profile_to_follow:
+        if user_profile.following.filter(id=profile_to_follow.id).exists():
+            user_profile.following.remove(profile_to_follow)
+            followed = False
+        else:
+            user_profile.following.add(profile_to_follow)
+            followed = True
+
+        return JsonResponse({'followed': followed})
+    else:
+        return JsonResponse({'error': 'You cannot follow yourself'})
+       
    
 def follow_list(request, profile_username):
     user_id = User.objects.get(username=profile_username)
@@ -231,29 +315,41 @@ def follow_list(request, profile_username):
 
 
 def view_profile(request, profile_username):
-    profile_user = User.objects.get(username=profile_username)
+    profile_user = get_object_or_404(User, username=profile_username)
     profile_detail = Profile.objects.get(user=profile_user)
     profile_posts = Post.objects.filter(posted_by=profile_user)
     posts_count = profile_posts.count()
+    profile = request.user.profile
 
-    edit_profile_form = EditProfileForm(request.POST, instance=profile_detail)
+    # Check if the logged-in user follows the profile_user
+    follows = request.user.profile.following.filter(user=profile_user).exists()
 
-    if edit_profile_form.is_valid():
+    # Check if the profile_user follows the logged-in user
+    followed_by = profile_user.profile.following.filter(user=request.user).exists()
+
+    if request.method == 'POST':
+        edit_profile_form = EditProfileForm(request.POST, request.FILES, instance=profile)
+
+        if edit_profile_form.is_valid():
             edit_profile_form.save()
             messages.success(request, 'Your profile has been updated successfully')
             return redirect(request.META['HTTP_REFERER'])
     else:
-        edit_profile_form = EditProfileForm(instance=profile_detail)
+        edit_profile_form = EditProfileForm(instance=profile)
 
-    context ={
-     'posts_count': posts_count,
-     'profile_posts': profile_posts,
-     'profile_detail': profile_detail,
-     'edit_profile_form': edit_profile_form,
+        messages.error(request, 'Profile update failed. Please check the form.')
+
+    context = {
+        'profile_user': profile_user,
+        'profile_detail': profile_detail,
+        'profile_posts': profile_posts,
+        'posts_count': posts_count,
+        'edit_profile_form': edit_profile_form,
+        'follows': follows,  # Pass the follows information to the template
+        'followed_by': followed_by,  # Pass the followed_by information to the template
     }
     
-    return render (request, 'profiles/userprofile.html', context )
-
+    return render(request, 'profiles/userprofile.html', context)
 
 @require_POST
 def add_comment(request, post_id):
@@ -335,13 +431,13 @@ def baraza(request):
    }
     return render (request, 'posts/baraza.html', context )
 
-def topic_filter(request, topic):
-    filtered_posts = Post.objects.filter(topic=topic)
+def category_filter(request, category):
+    filtered_posts = Post.objects.filter(category=category)
     context ={
         'filtered_posts': filtered_posts,
-        'topic': topic
+        'categories': category
         }
-    return render(request, 'topics/topic_posts.html', context)
+    return render(request, 'category/category_posts.html', context)
 
 
 @login_required
@@ -376,19 +472,46 @@ def settings_list(request):
    }
     return render (request, 'settings/settingslist.html', context )
 
+@login_required
+def edit_profile(request):
+
+        # Retrieve the current user's profile
+    profile = request.user.profile
+
+    if request.method == 'POST':
+        # Create a form instance and populate it with data from the request
+        form = EditProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+
+            form.save()
+            profile_url = reverse('view_profile', args=[request.user.username])
+
+            return redirect(profile_url)  # Redirect to the edit profile page after a successful update
+    else:
+        # Create a form instance and populate it with the current profile data
+        form = EditProfileForm(instance=profile)
+
+    context = {
+        'form': form,
+    }
+       
+
+    return render (request, 'profiles/edit_profile.html', context )
+
+
 
 
 
 def landing(request):
 		
-    form = AuthenticationForm(request, data=request.POST)
+    form = LoginForm(request, data=request.POST)
     signup_form = NewUserForm(request.POST)
     if request.method == "POST":
         if signup_form.is_valid():
             user = signup_form.save()
             login(request, user)
             messages.success(request, "Registration successful." )
-            return redirect(view_profile)
+            return redirect(edit_profile)
         messages.error(request, "Unsuccessful registration. Invalid information.")
 
         if form.is_valid():
@@ -403,7 +526,7 @@ def landing(request):
                 messages.error(request,"Invalid username or password.")
         else:
             messages.error(request,"Invalid username or password.")
-    form = AuthenticationForm()
+    form = LoginForm()
     signup_form = NewUserForm()
     context ={
         "login_form": form,

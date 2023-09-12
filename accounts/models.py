@@ -32,9 +32,15 @@ class Profile(models.Model):
     following = models.ManyToManyField(
         "self", blank=True, related_name="followers", symmetrical=False
     )
-    avatar = models.FileField(
-        max_length=1000, upload_to="profile_pics/", null=True, blank=True
+    avatar = models.ImageField(
+         upload_to="profile_pics/", 
+         default='profile_pics/default_avatar.jpg',
+         null=True, 
+         blank=True
     )   
+    cover_image = models.ImageField(
+         upload_to="cover_image/", null=True, blank=True
+    )
     website = models.URLField(max_length=200, blank=True)
  
     

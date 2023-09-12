@@ -68,9 +68,9 @@ $('.show-less-link').click(function () {
     $(this).siblings('.show-more-link').show();
 });
 
-$('.topic-button').click(function() {
-  const topic = $(this).data('topic');
-  window.location.href = `/topics/${topic}/`; // Redirect to the topic URL
+$('.category-button').click(function() {
+  const category = $(this).data('category');
+  window.location.href = `/category/${category}/`; // Redirect to the category URL
 });
 
 $('.copy-url-button').click(function () {
@@ -84,6 +84,31 @@ $('.copy-url-button').click(function () {
       .catch((error) => {
           console.error('Error copying URL:', error);
       });
+});
+
+$('#follow-button').click(function () {
+  const username = $(this).data('username');
+  const button = $(this);
+  const csrfToken = $('input[name=csrfmiddlewaretoken]').val(); // Get the CSRF token value
+
+  $.ajax({
+    url: `/toggle_follow/${username}/`,
+    type: 'POST',
+    data: {},
+    headers: {
+      'X-CSRFToken': csrfToken, // Include the CSRF token in the request headers
+    },
+    success: function (data) {
+      if (data.followed) {
+        button.text('Unfollow');
+      } else {
+        button.text('Follow');
+      }
+    },
+    error: function (error) {
+      console.error('Error toggling follow status');
+    }
+  });
 });
 
 // Select all comment textareas

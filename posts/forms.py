@@ -5,11 +5,11 @@ from .models import *
 from django.forms import ModelForm, TextInput, Textarea
 
 class PostForm(forms.ModelForm):
-    topic = forms.ChoiceField(choices=Topics.choices, label="Topic")
+    category= forms.ChoiceField(choices=Categories.choices, label="Category")
 
     class Meta:
         model = Post
-        fields = ('topic', 'body', 'post_image')
+        fields = ('category', 'body')
         
 class NewCommentForm(ModelForm):
     class Meta:

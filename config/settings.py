@@ -32,6 +32,7 @@ SESSION_COOKIE_AGE = 86400
 
 INSTALLED_APPS = [
     'channels',
+    'chats',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,11 +50,19 @@ INSTALLED_APPS = [
     'config',
     'moderation',
     'shops',
+    # 'listings',
+    
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer', 
+    },
+}
 
 MIDDLEWARE = [
+    # 'channels.middleware.WebSocketMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -82,7 +91,7 @@ TEMPLATES = [
     },
 ]
 
-# ASGI_APPLICATION = "config.asgi.application" 
+# ASGI_APPLICATION = 'config.asgi.application'
 WSGI_APPLICATION = 'config.wsgi.application'
 
 

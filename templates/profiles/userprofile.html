@@ -3,64 +3,83 @@
 
 {% load static %}
 <div class="col">
-  <div class="home row">
-<div class=" mr-auto">
-    <div class=" ">
-<div class="go_back">
-      <a class="{% url 'home' %}">
-    <i class="fa fa-arrow-left ml-2 mt-1" style="font-size: 30px;"></i>
-  </a>
-</div>
-  </div>
+  <div class="container">
+  <div class="home-top row mt-5">
+
+
+<div class="go_back mr-auto mt-1 ml-3">
+  <a href="{% url 'home' %}" >
+<i class="fa fa-arrow-left  " style="font-size: 30px;"></i>
+</a>
 </div>
 <div class="ml-auto mt-2 mr-3">
     <h6> {{ posts_count }} Posts</h6>
 </div>
-
   
 </div>
   
-<section class="profile-card mt-3">
 	
-	<div id="container">
-    <span class="edit-btn mr-3">
-      {% if profile_detail.user == user %}
-      <button class="btn btn-outline-dark px-3"  data-toggle="modal" data-target="#ProfileEditModal"><i class="fa-solid fa-user-pen"></i> Edit </button>
-      {% else %}
-      <button class="btn btn-outline-dark "><i class="fa-regular fa-comment"></i> </button>
-      {% endif %}
-       
-      {% if profile_detail.user != user %}
-      
-      {% if user.profile in profile_detail.following.all %}
-        <a href="{% url 'follow_toggle' profile_detail.user.username  %}" class="btn btn-outline-danger px-3">Unfollow</a>
+	
 
-        {% else %}
-        
-        <a  href="{% url 'follow_toggle' profile_detail.user.username  %}" class="btn btn-outline-dark px-3"> Follow </a>
-      {% endif %}
-      
-      {% endif %}
+    <div class="profile-cover">
+      {% if profile_detail.cover_image %}
+      <img src="{{ profile_detail.cover_image.url }}" alt="User Avatar" id="user-main-cover">
+  {% else %}
+      <img src="{% static 'img/4.png' %}" alt="Default Avatar" id="user-main-cover">
+  {% endif %}
+  
+    </div>
 
-    </span>
+
     
-    <div class="mx-auto profile-bg">
+    <div class="mx-auto profile-bg ">
+
+
 		<div class="profile-image mb-1">
-      <img src="{% static 'img/avatar.jpg' %}">
+      {% if profile_detail.avatar %}
+            <img src="{{ profile_detail.avatar.url }}" alt="User Avatar" id="user-main-avatar">
+        {% else %}
+            <img src="{% static 'img/default_avatar.jpg' %}" alt="Default Avatar" id="user-main-avatar">
+        {% endif %}
 		</div>
 
-    <div>
-      <h4 class="user-name-tag ml-3 pt-4 "><b>{{profile_detail.name}}</b> <br> <span class="blue" >@{{profile_detail.user.username}} </span></h4>
+    <div class="row">
+      <div class="mr-auto pt-3  ml-4">
+      <p class="user-name-tag "><b>{{profile_detail.name}}</b>  <span class="blue ml-2 " >@{{profile_detail.user.username}} </span></p>
+    </div>
+
+    <div class="edit-btn ml-auto mr-3 pt-2">
+      {% if profile_detail.user == user %}
+      <button class="btn btn-outline-dark px-3"  data-toggle="modal" data-target="#ProfileEditModal"><i class="fa-solid fa-user-pen"></i> Edit </button>
+      {% endif %}
+
+      {% if follows and followed_by %}
+      <a href="{% url 'private_chat' other_user_id=user.id %}" class="btn btn-outline-dark" id="chat-button"><i class="fa-regular fa-comment"></i></a>
+
+      {% endif %}
+       
+      {% if request.user != profile_user %}
+  <button id="follow-button" data-username="{{ profile_user.username }}" class="btn btn-primary">
+    {% if follows %}
+      Unfollow
+    {% else %}
+      Follow
+    {% endif %}
+  </button>
+{% endif %}
+
+    </div>
     </div>
   </div>
-  
+  <div id="container">
   <div class="social-stats row social-bio mt-2 ml-2 ">
                 
     <p> {{profile_detail.bio}} </p>
 </div>
 <div class="icon-info row mt-2 ml-3">
   <p><i class="fa-solid fa-location-dot"></i> {{profile_detail.location}}<b></b></p>
-  <p class="ml-5"><i class="fa-solid fa-store"></i> General</p>
+  <p class="ml-5"><i class="fa-solid fa-globe"></i>  <a href="{{ profile_detail.website }}" target="_blank">{{ profile_detail.website }}</a>
+  </p>
   <p class="ml-5"> Joined {{profile_detail.user.date_joined|date:"M, Y" }}</p>
 
 </div>
@@ -103,13 +122,11 @@
     
 
 
-</section>
-<section class="profile-posts">
 
     <div class=" feed">
 
-        <div class="container">
-        <ul class="tabs-bar pt-5 text-center">
+        
+        <ul class="tabs-bar text-center">
           <li id="tab1" class="tab tab-active">My Posts</li>
           <li id="tab2" class="tab">Replies</li>
           <li id="tab3" class="tab">Likes</li>
@@ -122,7 +139,7 @@
           <div class="content content-tab1 content-active">
       
             <div class="app--feed">
-              
+              {% if posts %}
               {% for post in profile_posts %}
               <div class="row mt-2">
 
@@ -139,9 +156,10 @@
            
                 </a>
                  <div class="dropdown-menu dropdown-menu-right">
-                 <a class="dropdown-item" href="{% url 'delete_post' post.id %}"><i class="fa-solid fa-trash-can red"></i> Delete </a>
-                 <a class="dropdown-item" href="javascript:void();"><i class="fa-regular fa-flag red"></i> Report </a>
-                 <a class="dropdown-item" href="javascript:void();"> <i class="fa-solid fa-share"></i> Share</a>
+                 <a class="dropdown-item" href="{% url 'delete_post' post.id %}"><i class="fa-solid fa-trash-can  mr-2"></i> Delete </a>
+                 <a class="dropdown-item" href="javascript:void();"><i class="fa-regular fa-flag  mr-2"></i> Report post</a>
+                 <button class="dropdown-item btn btn-light copy-url-button" data-url="{{ post.get_absolute_url }}" ><i class="fa-solid fa-link mr-1"></i> Copy link</button>
+                
            
            
                   </div>
@@ -155,7 +173,7 @@
                  <div class="post_card--brand ">
                    <div class="brand__info">
                      <!-- Post Company Name (Cumulus by default) and Sponsored or Organic post (remove Sponsored if Organic Post) -->
-                 
+           
                      <div class="name-tag ">
            
                        <div class=" account-details-hover">
@@ -186,7 +204,7 @@
                          <div class="  ml-2">
                            
                            <p><span><b>{{post.poster_full}} </b></span> 
-                             <span><img src="{% static 'img/icons/verified.png'%}"  style="width: 18px;height: auto; margin-bottom: 3px;"></span> <br> @{{post.posted_by}} </p>
+                             <span><i class="fa-solid fa-circle-check blue "></i></span> <br> @{{post.posted_by}} </p>
                          </div>
            
                            <div class="ml-2"><p>{{post.poster_bio |truncatechars:50 }}</p></div>
@@ -202,7 +220,7 @@
                            <img src="{% static 'img/avatar.jpg'%}" c alt="">
                          </div>
                          <div class="user-details ">
-                           <p><b>{{post.poster_full}} </b> <img src="{% static 'img/icons/verified.png'%}"  style="width: 18px;height: auto; margin-bottom: 3px;" id="verified-icon">  . {{post.whenpublished}} </p>
+                           <p><b>{{post.poster_full}} </b> <i class="fa-solid fa-circle-check blue"></i>  . {{post.whenpublished}} </p>
                            <p class="blue">@{{post.posted_by}}</p>
                          </div>
                        
@@ -213,22 +231,43 @@
                    </div>
                  </div>
                  
-               
-                 <a href="{% url 'post_detail' post.id %}">
-                     <div class=""><h5>{{post.headline}} </h5></div>
+                 <div class=" ml-auto topic_badge">
+                   <a href="{% url 'topic_'|add:post.topic %}" class="badge badge-pill badge-primary topic_badge mr-2">{{post.topic|title}}</a> 
+           
+                 </div>
+                <div class="container mt-2">
+             
+           
+                 <div class="post-body">
+                   <p class="short-body">
+                     <a href="{% url 'post_detail' post.id %}" id="post-body" >
+                     {{ post.body|slice:":144" }}{% if post.body|length > 50 %}...{% endif %}
+                   </a>
+                   </p>
+                     
+                   <p class="full-body">
+                     <a href="{% url 'post_detail' post.id %}" id="post-body" >
+           
+                     {{ post.body }}</a> </p>
+                   {% if post.body|length > 50 %}
+                       <a class="show-more-link">Show more</a>
+                   {% endif %}
+                   <a class="show-less-link blue" style="display: none; ">Show less</a>
+           
+               </div>
                    
                        {% if post.post_image %}
-                      
+                       <a href="{% url 'post_detail' post.id %}">
                  <div class="post_card--creative mt-2">
            
                    <img src="{{ post.post_image.url }}">
                   
                    
-               </div>
+               </div> </a>
              
                {% endif %}
                  
-                 </a>
+                
                <div class="post_card--summary">
                  <!-- <a href="#">
                    <div class="post_card--cta">
@@ -240,55 +279,51 @@
                      <span><button class="btn btn-outline-danger btn-rounded px-"> TIP </button></span>
                    </div>
                  </a> -->
-                 <div class="post_card--input row ">
                    <!-- DO NOT CHANGE THIS IMAGE -->
-                   <div class="post_card--input--left ">
-                       <div class="post-icons like row ml-4 ">
+                   <div class="post_card--input--left mt-2 ">
+           
+                     <div class="post-icons">
+                       <button class="comment-button btn btn-light" data-post-id="{{ post.id }}">
+                         <i class="fa-regular fa-comment"></i>
+                         <span class="post-engagement ml-2" id="comment-count-{{ post.id }}">{{ post.comment_count }}</span>
+           
+                       </button>
+                     </div>
+           
+                       <div class=" like row ">
                          {% if user.is_authenticated %}
                          
                          <form action="{% url 'upvote_post' post.id %}" method="post">
                            {% csrf_token %}
-                         <span class="post-icons"> 
+                         <span class=" ml-2"> 
                              <button  class="btn btn-light upvote-button {% if user in post.likes.all or post.id in clicked_buttons %} clicked-button{% endif %}" data-post-id="{{ post.id }}"> <i class="fa-regular fa-thumbs-up"></i> </button>         
                          </span>
                          </form>
                        
-                       <span class="ml-2 mt-1" id="vote-count-{{ post.id }}" > {{ post.vote_count }} </span>
+                       <span class="ml-2 mt-2" id="vote-count-{{ post.id }}" > {{ post.vote_count }} </span>
                
                        <form action="{% url 'downvote_post' post.id %}" method="post">
                          {% csrf_token %}
-                       <span class="post-icons ml-2">
+                       <span class=" ml-2">
                          <button  class="btn btn-light downvote-button {% if user in post.dislikes.all %} clicked-button{% endif %}" data-post-id="{{ post.id }}"> <i class="fa-regular fa-thumbs-up fa-rotate-180"></i> </button>
                        </span>
                        </form>
                        {% endif %}
                        </div>
-                      <div class="post-icons  ml-5">
-                       <div class="card-action">
-                   <div class="dropdown">
-                   <a href="javascript:void();" class=" dropdown-toggle-nocaret" data-toggle="dropdown">
-                     <i class="fa-solid fa-retweet"></i> 
-                     <span class="post-engagement">13</span>
-                     </a>
-                    <div class=" dropdown-menu dropdown-menu-top">
-                    <a class="dropdown-item" href="javascript:void();"><i class="fa-solid fa-circle-plus "></i>  Repost</a>
-                    <a class="dropdown-item" href="javascript:void();"><i class="fa-solid fa-share"></i>  Share</a>
            
+           
+                      <div class="post-icons  mr-3">
+                       <button class="repost-button btn btn-light" data-post-id="{{ post.id }}" >
+                         <i class="fa-solid fa-retweet"></i> 
+                         <span class="post-engagement">13</span>
+                         </button>
                      </div>
-                    </div>
-                   </div>
-                  </div>
            
-                       <div class="post-icons  ml-4">
-                     <i class="fa-regular fa-comment "></i>
-                     <span class="post-engagement">{{post.comment_count}}</span>
-                   </div>
                  
            
-                  <div class="post-icons ml-4">
-                   <i class="fa-regular fa-bookmark"></i>
-                   <span class="post-engagement"></span>
-                 </div>
+                   
+                   
+                 
            
              
            
@@ -297,14 +332,35 @@
                 
                  
                 
-               </div>
                
                  </div>
+                 <form class="comment-form mt-3" data-post-id="{{ post.id }}">
+                   {% csrf_token %}
+           
+                   <div class="row " id="comment_form">
+                     <div class="col-11">
+                   <textarea name="comment" placeholder="Add a comment"></textarea>
                  </div>
+                 <div class="col-1 actions">
+                   <button type="submit" class="btn btn-primary "><i class="fa-solid fa-share"></i></button>
+                   <!-- <button type="button" class="cancel-comment btn btn-light"><i class="fa-solid fa-xmark red"></i></button> -->
+                   </div>
+                   </div>
+                 </form>
+                 </div>
+           
                  
+           
+                 </div>
                  </div>
      {% endfor %}
 
+                 {% else %}
+                 <p class="mt-3 text-center"> You haven't made any posts yet </p>
+
+                 <p class="mt-3 mb-3 text-center"><a  href="#" class="new-post"> <i class="fa-solid fa-circle-plus"></i> </a></p>
+                  {% endif %}
+                  <div class="spacer"></div>
         <!-- END FEED-->
       </div>
       
@@ -407,12 +463,12 @@
       
           </div>
         </div>
-      </div>
+   
           
           
       
       </div>
-</section>
+</div>
 </div>
 
 <div class="modal fade" id="ProfileEditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -425,40 +481,60 @@
       </div>
 
       <div class="modal-body mx-auto">
-          <p>Post 1 </p>
-          <hr>
-          <form method="POST" class="text-center ">
+        <form method="POST" class="text-center ">
             {% csrf_token %}
-            <div class="col-lg-12 text-center">
-              <label class=" col-form-label form-control-label">Username</label><br>
-              {{edit_profile_form.name}}
-             
+    
+            <div class="mx-auto profile-bg">
+              <div class="profile-cover">
+                  <label for="cover-image-input">
+                      {% if profile_detail.cover_image %}
+                          <img src="{{ profile_detail.cover_image.url }}" alt="User Avatar" id="user-cover">
+                      {% else %}
+                          <img src="{% static 'img/4.png' %}" alt="Default Avatar" id="user-cover">
+                      {% endif %}
+                  </label>
+                  <!-- Hidden input for cover image upload -->
+                  <input type="file" id="cover-image-input" accept="image/*" style="display: none;">
+              </div>
+      
+              <div class="profile-image mb-1">
+                  <label for="avatar-modal-input">
+                      {% if profile_detail.avatar %}
+                          <img src="{{ profile_detail.avatar.url }}" alt="User Avatar" id="user-avatar">
+                      {% else %}
+                          <img src="{% static 'img/default_avatar.jpg' %}" alt="Default Avatar" id="user-avatar">
+                      {% endif %}
+                  </label>
+                  <!-- Hidden input for avatar upload -->
+                  <input type="file" id="avatar-modal-input" accept="image/*" style="display: none;">
+              </div>
+          </div>
+            <div class="col-lg-12 text-center mt-2">
+                {{ edit_profile_form.name }}
             </div>
-          
-            <div class="col-lg-12 text-center">
-              <label class=" col-form-label form-control-label">location</label><br>
-              {{edit_profile_form.location}}
-             
+            <div class="col-lg-12 text-center mt-2">
+                {{ edit_profile_form.location }}
             </div>
-
-            <div class="col-lg-12 text-center">
-              <label class=" col-form-label form-control-label">bio</label><br>
-              {{edit_profile_form.bio}}
-             
+            <div class="col-lg-12 text-center mt-2">
+                {{ edit_profile_form.website }}
             </div>
-            
-
-          <br>
-          
-           <button type="submit" class="btn btn-dark px-5 ">Post</button>
-            
-         
-          
-           </form>        </div>
+            <div class="col-lg-12 text-center mt-2">
+                {{ edit_profile_form.bio }}
+            </div>
+            <div class="more-edit mt-2">
+                <a class="btn btn-light " href="{% url 'edit_profile' %}"> More Settings </a>
+                <button type="submit" class="btn btn-rounded ml-2 px-3 " id="save-changes-button">Save Changes</button>
+            </div>
+        </form>
+    </div>
+    
       <div class="modal-footer">
       
       </div>
     </div>
   </div>
 </div>
+
+
+
 {%endblock%}

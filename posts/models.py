@@ -6,47 +6,43 @@ import math
 from django.conf import settings
 User = settings.AUTH_USER_MODEL
 
-class Topics(models.TextChoices):
-    GENERAL = 'general', 'General'
-    SCIENCE_TECHNOLOGY = 'science_technology', 'Science & Technology'
-    CULTURE = 'culture', 'Culture'
-    FAITH_RELIGION = 'faith_religion', 'Faith & Religion'
-    POLITICS = 'politics', 'Politics'
-    SPORTS = 'sports', 'Sports'
-    BUSINESS_FINANCE = 'business_finance', 'Business & Finance'
-    NEWS = 'news', 'News'
-    MUSIC = 'music', 'Music'
-    HISTORY = 'history', 'History'
-    PHILOSOPHY = 'philosophy', 'Philosophy'
-    FICTION = 'fiction', 'Fiction'
-    HEALTH_WELLNESS = 'health_wellness', 'Health & Wellness'
+class Categories(models.TextChoices):
+    CARS = 'cars', 'Cars'
+    MOTORBIKES = 'motorbikes', 'Motorbikes'
+    BICYCLES = 'bicycles', 'Bicycles'
+    FASHION = 'fashion', 'Fashion'
+    GIGS = 'gigs', 'Gigs'
+    HIRING = 'hiring', 'Hiring'
+    ELECTRONICS = 'electronics', 'Electronics'
+    ACCESSORIES = 'accessories', 'Accessories'
     ART = 'art', 'Art'
-    DESIGN = 'design', 'Design'
-    EDUCATION = 'education', 'Education'
-    HUMOUR = 'humour', 'Humour'
-    LITERATURE = 'literature', 'Literature'
+    LUXURY = 'luxury', 'Luxury'
+    REAL_ESTATE = 'real estate', 'Real Estate'
+    FOOD_DRINKS = 'food and drinks', 'Food and Drinks'
+    BEAUTY_FITNESS = 'beauty and fitness', 'Beauty and Fitness'
+    FURNITURE = 'furniture', 'Furniture'
 
 
 
-
-
-
-    
   
 class Post(models.Model):
-    post_image = models.ImageField(upload_to='images/', null=True, blank=True,)
+    # post_images = models.ArrayField(
+    #     models.ImageField(upload_to='images/', null=True, blank=True),
+    #     size=7,  # Maximum number of images allowed
+    # )
     posted_by = models.ForeignKey(
         User, related_name="posted_by", on_delete=models.CASCADE, null=True
     )     
-    topic = models.CharField(
+    category = models.CharField(
         max_length=50,
-        choices=Topics.choices,
-        default=Topics.GENERAL
+        choices=Categories.choices,
+        default=Categories.CARS
     )  
     timestamp = models.DateTimeField(auto_now_add=True)
     
     likes = models.ManyToManyField(User, blank=True, related_name="liked_posts", symmetrical=False)
     dislikes = models.ManyToManyField(User, blank=True, related_name="disliked_posts", symmetrical=False)
+    listing_price = models.IntegerField(default=0)
     comment_count = models.IntegerField(default=0)
     bookmarked_users = models.ManyToManyField(User, blank=True, related_name="bookmarked_posts")
 
@@ -159,6 +155,8 @@ class Post(models.Model):
         return self.id
 
 
+class PostImage(models.Model):
+    models.ImageField(upload_to='images/', null=True, blank=True),
 
 class Like(models.Model):
     post = models.ForeignKey(

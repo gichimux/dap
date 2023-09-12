@@ -48,6 +48,27 @@ $(document).ready(function() {
                 }
             }
         });
+
+        function followUser(username) {
+            // Make an AJAX request to follow the user
+            $.ajax({
+                url: "{% url 'follow_user' %}",
+                method: "POST",
+                data: {
+                    username: username,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function (data) {
+                    // Handle success and update the UI as needed
+                    if (data.success) {
+                        // Update the UI to show that the user has been followed
+                        alert("You are now following " + username);
+                    } else {
+                        alert("Failed to follow " + username);
+                    }
+                }
+            });
+        }
         
     });
 });

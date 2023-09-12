@@ -7,16 +7,14 @@
 [DONE] create token model
 [DONE] create bid offer model
 [DONE] create gig apply model
-    create bid & apply to post forms
 [DONE] async follow 
-    explore/search feature
+[DONE] search feature
 [DONE] login form
-    signup form + email activation
+    complex login/signup form + email activation
     terms & EULA
     geolocate bids & gigs
     feed algo --- popularity
 [DONE] repost feature
-    highlight comment feature
 [DONE] create review model 
     create review forms
     display review
@@ -28,15 +26,19 @@ TODAY:
 [DONE] bookmark feature
 [DONE] repost/share feature
 [DONE] subject feature
-
-    list who to follow
+[DONE] list who to follow
+[DONE] complete profile edit & display 
+    
+    
     create chat feature
-
+    modify post form
     secondary forms
         edit profile
-        post sells
-        
+        make offer 
+        bid
+        apply
+           
     filter in explore - products/services
-    user can create shop & profile
+    user can create shop 
     
     create notifications on events

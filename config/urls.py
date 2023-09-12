@@ -21,7 +21,7 @@ urlpatterns = [
     path('', include('core.urls')),
     path('auth/', include('accounts.urls')),
     path('posts/', include('posts.urls')),
-    path('c/', include('forums.urls')),
-    # path('notifications/', include('notifications.urls')),
+    # path('chats/', include('chats.routing.websocket_urlpatterns')),
+    # path('listings/', include('listings.urls')),
 
 ]

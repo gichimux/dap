@@ -2,11 +2,11 @@ from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
-
+from .forms import *
 
 urlpatterns = [
     path("register", views.register_request, name="register"),
-    path("login", views.login_request, name="login"),
+    path("login", views.login_request, name="login", kwargs={"authentication_form":LoginForm}),
     # path("profile", views.my_profile, name="profile"),
     path("fofo", views.fofo, name="fofo"),
     path("logout", views.logout_request, name= "logout"),

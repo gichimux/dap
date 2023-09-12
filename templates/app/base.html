@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
     <link rel="stylesheet" href="{% static 'css/bootstrap-grid.min.css'%}">
     <link rel="stylesheet" crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==">
-    <link rel="stylesheet" href="{% static 'plugins/emojimart/emojimart.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'plugins/emojimart/emojimart.css' %}"> -->
 
     <link rel="stylesheet" href="{% static 'css/app_style.css'%}">
     <link rel="stylesheet" href="{% static 'css/camel.css'%}">
@@ -101,10 +101,12 @@
           </div></a>
           
           {% if user.is_authenticated %}
-          <a href="{% url 'view_profile' user.username %}" class="sidebar__link {% if request.path == '/view_profile/' %}active-nav{% endif %}"><div class="sidebar__link">
-            <span class="sidebar-icons"><img src="{% static 'img/icons/profile.png'%}"/></span>
-          <span class="pt-2"><h2>Profile</h2></span>
-          </div></a>
+          <a href="{% url 'view_profile' user.username %}" class="sidebar__link {% if request.resolver_match.view_name == 'view_profile' and request.resolver_match.kwargs.profile_username == user.username %}active-nav{% endif %}">
+            <div class="sidebar__link">
+                <span class="sidebar-icons"><img src="{% static 'img/icons/profile.png'%}"/></span>
+                <span class="pt-2"><h2>Profile</h2></span>
+            </div>
+        </a>
           {% endif %}
           <div class="card-action">
             <div class="dropdown ">
@@ -121,7 +123,7 @@
              <a href="{% url 'bookmark_list'%}" class="dropdown-item {% if request.path == '/bookmark_list/' %}active-nav{% endif %}"><i class="fa-solid fa-bookmark mr-2"></i> Bookmarks</a>
              <a class="dropdown-item" href="javascript:void();"><i class="fa-solid fa-gear mr-2 "></i> Settings</a>
              <a class="dropdown-item" href="javascript:void();"><i class="fa-solid fa-heart red mr-2"></i> Support </a>
-             <a class="dropdown-item" href="javascript:void();"><i class="fa-solid fa-arrow-right-from-bracket mr-2 "></i> Logout</a>
+             <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa-solid fa-arrow-right-from-bracket mr-2 "></i> Logout</a>
 
               </div>
              </div>
@@ -222,65 +224,48 @@
             <!-- <span class="baraza ml-4 pt-3"> 
               <img  src="{% static 'img/baraza.png'%}">
             </span> -->
-          <span ><h4 class="ml-3 pt-3 pb-1"><b> <a href="{% url 'baraza'%}">Topics</a> </b> </h4> </span>
+          <span ><h4 class="ml-3 pt-3 pb-1"><b> <a href="{% url 'baraza'%}">Categories</a> </b> </h4> </span>
           
         </div>
         <div class="">
-          <ul class=" topic_list ">
+          <ul class=" category_list ">
          
-          <a href="{% url 'topic_general' %}"><li ><i class="fa-solid fa-timeline mr-2 red"></i> General  <br><small class="grey ml-2">{{gen_c}} Posts</small> </li> </a>
-          <a href="{% url 'topic_politics' %}"><li ><i class="fa-solid fa-people-group mr-2 red"></i> Politics  <br><small class="grey ml-2">{{pol_c}} Posts</small> </li></a>
-          <a href="{% url 'topic_science & technology' %}"><li ><i class="fa-solid fa-atom mr-2 red"></i> Science & Technology  <br><small class="grey ml-2">{{sci_c}} Posts</small> </li></a>
-          <a href="{% url 'topic_business & finance' %}"><li ><i class="fa-solid fa-briefcase mr-2 red"></i> Business & Finance <br><small class="grey ml-2">{{bus_c}} Posts</small> </li></a>
-          <a href="{% url 'topic_art' %}"><li ><i class="fa-solid fa-paintbrush mr-2 red"></i> Art  <br><small class="grey ml-2">{{art_c}} Posts</small> </li> </a>
-          <a href="{% url 'topic_news' %}"><li ><i class="fa-regular fa-newspaper mr-2 red"></i> News  <br><small class="grey ml-2">{{new_c}} Posts</small> </li></a>
-          <a href="{% url 'topic_culture' %}"><li ><i class="fa-solid fa-earth-africa mr-2 red"></i> Culture  <br><small class="grey ml-2">{{cul_c}} Posts</small> </li></a>
-          <a href="{% url 'topic_sports' %}"><li ><i class="fa-solid fa-trophy mr-2 red"></i> Sports <br><small class="grey ml-2">{{spo_c}} Posts</small> </li></a>
-          <a href="{% url 'topic_music' %}"><li ><i class="fa-solid fa-music mr-2 red"></i> Music <br><small class="grey ml-2">{{mus_c}} Posts</small> </li> </a>
-          <a href="{% url 'topic_history' %}"><li ><i class="fa-solid fa-landmark mr-2 red"></i> History <br><small class="grey ml-2">{{his_c}} Posts</small> </li></a>
-          <a href="{% url 'topic_philosophy' %}"><li ><i class="fa-solid fa-book mr-2 red"></i> Philosophy  <br><small class="grey ml-2">{{phi_c}} Posts</small> </li></a>
-          <a href="{% url 'topic_fiction' %}"><li ><i class="fa-solid fa-dragon mr-2 red"></i> Fiction <br><small class="grey ml-2">{{fic_c}} Posts</small> </li></a>
-          <a href="{% url 'topic_faith & religion' %}"><li ><i class="fa-solid fa-dove mr-2 red"></i> Faith & Religion <br><small class="grey ml-2">{{rel_c}} Posts</small> </li></a>
-          <a href="{% url 'topic_health & wellness' %}"><li ><i class="fa-solid fa-star-of-life mr-2 red"></i> Health & Wellness  <br><small class="grey ml-2">{{hea_c}} Posts</small> </li> </a>
-          <a href="{% url 'topic_design' %}"><li ><i class="fa-solid fa-cubes mr-2 red"></i> Design  <br><small class="grey ml-2">{{des_c}} Posts</small> </li></a>
-          <a href="{% url 'topic_education' %}"><li ><i class="fa-solid fa-book-open mr-2 red"></i> Education  <br><small class="grey ml-2">{{edu_c}} Posts</small> </li></a>
-          <a href="{% url 'topic_humor' %}"><li ><i class="fa-solid fa-face-laugh-beam mr-2 red"></i> Humor <br><small class="grey ml-2">{{hum_c}} Posts</small> </li></a>
-          <a href="{% url 'topic_literature' %}"><li ><i class="fa-solid fa-book-bookmark mr-2 red"></i> Literature <br><small class="grey ml-2">{{lit_c}} Posts</small> </li></a>
+          <a href="{% url 'category_cars' %}"><li ><i class="fa-solid fa-car mr-2 red"></i> Cars  <br><small class="grey ml-2">{{car_c}} Posts</small> </li> </a>
+          <a href="{% url 'category_motorbikes' %}"><li ><i class="fa-solid fa-motorcycle mr-2 red"></i> Motorbikes  <br><small class="grey ml-2">{{mot_c}} Posts</small> </li></a>
+          <a href="{% url 'category_bicycles' %}"><li ><i class="fa-solid fa-bicycle mr-2 red"></i> Bicycles  <br><small class="grey ml-2">{{bic_c}} Posts</small> </li></a>
+          <a href="{% url 'category_fashion' %}"><li ><i class="fa-solid fa-shirt mr-2 red"></i> Fashion <br><small class="grey ml-2">{{fas_c}} Posts</small> </li></a>
+          <a href="{% url 'category_art' %}"><li ><i class="fa-solid fa-paintbrush mr-2 red"></i> Art  <br><small class="grey ml-2">{{art_c}} Posts</small> </li> </a>
+          <a href="{% url 'category_gigs' %}"><li ><i class="fa-regular fa-newspaper mr-2 red"></i> Gigs  <br><small class="grey ml-2">{{gig_c}} Posts</small> </li></a>
+          <a href="{% url 'category_hiring' %}"><li ><i class="fa-solid fa-briefcase mr-2 red"></i> Hiring  <br><small class="grey ml-2">{{hir_c}} Posts</small> </li></a>
+          <a href="{% url 'category_electronics' %}"><li ><i class="fa-solid fa-laptop mr-2 red"></i> Electronics <br><small class="grey ml-2">{{ele_c}} Posts</small> </li></a>
+          <a href="{% url 'category_accessories' %}"><li ><i class="fa-solid fa-keyboard mr-2 red"></i> Accessories <br><small class="grey ml-2">{{acc_c}} Posts</small> </li> </a>
+          <a href="{% url 'category_luxury' %}"><li ><i class="fa-solid fa-landmark mr-2 red"></i> Luxury <br><small class="grey ml-2">{{lux_c}} Posts</small> </li></a>
+          <a href="{% url 'category_real estate' %}"><li ><i class="fa-solid fa-building mr-2 red"></i> Real Estate  <br><small class="grey ml-2">{{rea_c}} Posts</small> </li></a>
+          <a href="{% url 'category_food and drinks' %}"><li ><i class="fa-solid fa-utensils mr-2 red"></i> Food and Drinks <br><small class="grey ml-2">{{foo_c}} Posts</small> </li></a>
+          <a href="{% url 'category_health and beauty' %}"><li ><i class="fa-solid fa-star-of-life mr-2 red"></i> Health and Beauty <br><small class="grey ml-2">{{hea_c}} Posts</small> </li></a>
+          <a href="{% url 'category_furniture' %}"><li ><i class="fa-solid fa-couch mr-2 red"></i> Furniture  <br><small class="grey ml-2">{{fur_c}} Posts</small> </li> </a>
+
 
         </ul>
         
-        <div class="follow-block ">
-          <h4 class="ml-4 "><b>Who to Follow </b></h4>
-
-            <div class="follow-account ml-3 mt-3">
+        <div class="follow-block">
+          <h4 class="ml-4"><b>Who to Follow</b></h4>
+          {% for user in random_users %}
+          <div class="follow-account ml-3 mt-3">
               <div class="account-avatar">
-                <img src="{% static 'img/avatar.jpg'%}" c alt="">
+                  <img src="{% static 'img/avatar.jpg' %}" alt="">
               </div>
-              <div class="user-details ">
-                <p><b>John Smith</b></p>
-                <p class="blue">@johnsmith</p>
+              <div class="user-details">
+                  <p><b>{{ user.username }}</b></p>
+                  <p class="blue">{{ user.username }}</p>
               </div>
               <div class="follow-btn ml-3">
-                <button class="btn btn-dark px-3 btn-rounded">Follow</button>
-              </div>
-            </div>
-         
-            <div class="follow-account ml-3">
-              <div class="account-avatar">
-                <img src="{% static 'img/avatar.jpg'%}" c alt="">
-              </div>
-              <div class="user-details ">
-                <p><b>John Smith</b></p>
-                <p class="blue">@johnsmith</p>
-              </div>
-              <div class="follow-btn ml-3">
-                <button class="btn btn-dark px-3 btn-rounded">Follow</button>
+                  <button class="btn btn-dark px-3 btn-rounded" onclick="followUser('{{ user.username }}')">Follow</button>
               </div>
           </div>
-          <p class="ml-5"><b>see more</b></p>
-
-       
-          </div>
+          {% endfor %}
+          <p class="ml-5"><b><a href="">See More</a></b></p>
+      </div>
         
       
 
@@ -302,6 +287,13 @@
 
   
   </div>
+
+
+
+
+
+  <!-- Main Body Ends -->
+  </body>
 
   <div class="fixed-bottom-menu ">
     <div class="fixed-bottom-menuــrow row ">
@@ -341,9 +333,6 @@
 </div>
 
 
-
-  <!-- Main Body Ends -->
-  </body>
   {% block scripts %}
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="{% static 'js/popper.min.js'%}"></script>
@@ -353,6 +342,8 @@
   <script src="{% static 'js/follow.js'%}"></script>
   <script src="{% static 'js/bookmark.js'%}"></script>
   <script src="{% static 'js/repost.js'%}"></script>
+  <script src="{% static 'js/edit_profile.js'%}"></script>
+  <script src="{% static 'js/edit_profile_modal.js'%}"></script>
 
   <script src="{% static 'js/votes.js'%}"></script>
   <script src="{% static 'js/comment.js'%}"></script>
