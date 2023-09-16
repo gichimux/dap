@@ -86,8 +86,7 @@ $(document).ready(function() {
 
    
 
-    // Attach an event listener to the form submission
-    $('form').on('submit', function(e) {
+   $('form').on('submit', function(e) {
         e.preventDefault(); // Prevent the default form submission
 
         var formData = new FormData();
@@ -104,6 +103,12 @@ $(document).ready(function() {
             formData.append('avatar', avatarInput.files[0]);
         }
 
+        // Append other profile information
+        formData.append('name', $('#id_name').val());
+        formData.append('location', $('#id_location').val());
+        formData.append('website', $('#id_website').val());
+        formData.append('bio', $('#id_bio').val());
+
         // Get the CSRF token
         var csrfToken = getCSRFToken();
 
@@ -117,16 +122,16 @@ $(document).ready(function() {
 
             $.ajax({
                 type: 'POST',
-                url: '/upload_images/', // Replace with your actual URL for image upload
+                url: '/update_profile/', // Replace with your actual URL for profile update
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function(data) {
                     // Handle the success response as needed
-                    console.log('Images uploaded successfully:', data);
+                    console.log('Profile updated successfully:', data);
                 },
                 error: function(xhr, status, error) {
-                    console.error('Image upload error:', xhr.responseText);
+                    console.error('Profile update error:', xhr.responseText);
                     // Handle the error as needed
                 }
             });
@@ -138,7 +143,9 @@ $(document).ready(function() {
         $('#ProfileEditModal').modal('hide');
 
         // Reload the current page
-        location.reload();
+        setTimeout(function() {
+            location.reload();
+        }, 1000); 
     });
 
 });

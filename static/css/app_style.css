@@ -3,16 +3,16 @@
   /** Globals **/
   body {
     font-family: 'Poppins', sans-serif;
-    background: #eee;
-	background: linear-gradient(0deg, rgba(0, 0, 200, 0.2) , rgba(0, 0, 200, 0) );
-background-size: cover;
-background-repeat: no-repeat;
+
   }
+
+  
+  
   .thumbnail-container {
     display: none;
     /* Other styles */
 }
-.category_badge a{
+.topic_badge a{
   height: 18px;
 }
 
@@ -121,7 +121,10 @@ background-repeat: no-repeat;
   .home-top {
     position: sticky;
   }
-
+.col .container{
+  width: 100%;
+  overflow: hidden;
+}
   .avatar-div img {
     height: 150px;
     width: 150px;
@@ -471,6 +474,7 @@ margin-top: -30px;
     color: black;
   }
   
+  
   .header__Option h3 {
     font-size: 14px;
     margin: 0 0 5px 0;
@@ -513,7 +517,9 @@ margin-top: -30px;
     margin-left: 0px;
     margin-right: 0px;
   }
-  
+  #TipModal .modal-content{
+    width: 300px;
+  }
   /** Sidebar **/
   .left__rail {
     position: sticky;
@@ -523,12 +529,22 @@ margin-top: -30px;
     height: 100%;
     width: 100%;
     max-width: 225px;
-    /* margin-top: 10px; */
+    padding-top: 90px ;
     /* padding-left: 50px; */
     text-align: center;
     justify-content: space-between;
   }
-  
+
+ .profile-dropdown {
+  display: none;
+ }
+  .profile-dropdown-menu {
+    background-color: #000;
+    
+  }
+  .profile-dropdown-menu li {
+    color: #ffffff;
+  }
   /* Feed */
   .feed {
     height: 100%;
@@ -711,11 +727,7 @@ margin-top: -30px;
   .mine-icon img {
     height: 28px;
   }
-   .follow-block {
-    /* border: 1px solid #555; */
-    border-radius: 10px;
-
-  }
+  
 
  
   .follow-account ,.account {
@@ -734,15 +746,25 @@ margin-top: -30px;
     align-items: flex-start;
   }
 
-  .category select {
+  .topic select {
     background-color: #000;
     color: #fff;
     padding: 5px;
     border: none;
+    border-radius: 5px;
    
   }
 
-  /* .category option:hover {
+.socials ul {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+}
+ .socials li {
+  margin-left: 15px;
+ }
+
+  /* .topic option:hover {
     background-color: #FF3131 ;
 
   } */
@@ -958,11 +980,38 @@ background-color: #bebebe;
 
 
 .profile-cover img{
-  background-size: cover;
+  /* background-size: cover; */
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+
+.profile-cover{
   width: 100%;
   height: 180px;
   position: relative;
 }
+
+.profile-info {
+  z-index: 1;
+  position: absolute;
+  background-color: #fff;
+  width: 93%;
+  margin-left: -15px;
+
+}
+.icon-info{
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: row;
+  justify-items: flex-start;
+}
+
+.profile-feed {
+  position: relative;
+  margin-top: 400px;
+}
+
 .new-post i {
   font-size: 30px;
 }
@@ -973,10 +1022,11 @@ background-color: #bebebe;
   margin-top: -45px;
 	height: 90px !important;
   width:90px !important;
-	position: relative;
+	position: absolute;
   border-radius: 50%;
   margin-left: 40px;
   border: 2px solid #fff;
+  z-index: 2;
 }
 .comment-card {
   padding: 10px;
@@ -1064,12 +1114,7 @@ margin-top: -45px;
   color: #FF3131;
 }
 
-.edit-btn {
-  height: auto;
-  width: auto;
-  float: right;
-  /* margin-top: 10px; */
-}
+
 
 textarea {resize: none;}
 #StoryModal form textarea{
@@ -1235,7 +1280,7 @@ margin-left: -15px;
   font-size: 12px;
   font-weight: 400;
   /* margin-top: -6px; */
-  margin-bottom: 0;
+  margin-bottom: 5px;
   color: #000000;
 }
 .fixed-bottom-menu__a i {
@@ -1245,6 +1290,9 @@ margin-left: -15px;
 .fixed-bottom-menu__a span {
   display: inline-block;
 }
+
+
+
 
 
 .fixed-add-to-cart {
@@ -1332,12 +1380,12 @@ color: #fff;
   width: auto;
 } 
 
-.category_list {
+.topic_list {
   list-style: none;
   height: 250px;
   overflow-y: scroll;
 }
-.category_list li {
+.topic_list li {
   padding: 5px;
 }
 
@@ -1390,16 +1438,22 @@ color: #fff;
   text-decoration: underline;
 }
 
+.navbar {
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  
+}
 /***** MEDIA QUERIES *****/
 
 
 /* RESPONSIVE MAIN DIVS */
 @media screen and (min-width: 950px) {
 
-.navbar {
+/* .navbar {
   display: none;
   
-}
+} */
 .tabs-bar {
   margin-top: 80px;
 }
@@ -1407,6 +1461,12 @@ color: #fff;
 }
 
 @media screen and (max-width: 950px) {
+  
+  .profile-dropdown {
+
+    display: block;
+   }
+    
 
   .left__rail  {
     display: none;
@@ -1442,6 +1502,11 @@ color: #fff;
 
 @media screen and (max-width: 590px) {
 
+  .profile-dropdown {
+
+    display: block;
+   }
+    
   .right__rail, .left__rail {
     display: none;
   }
@@ -1466,6 +1531,7 @@ color: #fff;
     position: fixed;
     z-index: 1;
     width: 100%;
+    
   }
    
   #logo img{

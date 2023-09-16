@@ -3,6 +3,8 @@ from django.contrib.auth import login, authenticate
 from posts.models import *
 from posts.forms import *
 from chats.models import *
+from notifications.models import *
+
 from random import sample
 from datetime import datetime
 from django.urls import reverse
@@ -27,20 +29,19 @@ def home(request):
     # my_profile = "" 
     
     #filters
-    car_c = Post.objects.filter(category="cars").count()
-    mot_c = Post.objects.filter(category="motorbikes").count()   
-    bik_c = Post.objects.filter(category="bicycles").count()   
-    fas_c = Post.objects.filter(category="fashion").count()   
-    gig_c = Post.objects.filter(category="gigs").count()   
-    hir_c = Post.objects.filter(category="hiring").count()   
-    ele_c = Post.objects.filter(category="electronics").count()   
-    acc_c = Post.objects.filter(category="accessories").count()
-    lux_c = Post.objects.filter(category="luxury").count()   
-    rea_c = Post.objects.filter(category="real estate").count()   
-    art_c = Post.objects.filter(category="art").count()   
-    foo_c = Post.objects.filter(category="food and drinks").count()   
-    hea_c = Post.objects.filter(category="health and beauty").count()   
-    fur_c = Post.objects.filter(category="furniture").count()   
+    gen_c = Post.objects.filter(topic="general").count()
+    sci_c = Post.objects.filter(topic="science & technology").count()   
+    cul_c = Post.objects.filter(topic="culture").count()   
+    rel_c = Post.objects.filter(topic="faith & religion").count()   
+    nat_c = Post.objects.filter(topic="nature").count()   
+    spo_c = Post.objects.filter(topic="sports").count()   
+    bus_c = Post.objects.filter(topic="business & finance").count()   
+    new_c = Post.objects.filter(topic="news").count()   
+    mus_c = Post.objects.filter(topic="music").count()   
+    his_c = Post.objects.filter(topic="history").count()
+    phi_c = Post.objects.filter(topic="philosophy").count()   
+    hea_c = Post.objects.filter(topic="health & wellness").count()   
+    art_c = Post.objects.filter(topic="art & design").count()   
 
     posts = Post.objects.all()
     res = {'success': True, 'message': 'Your post has posted'}
@@ -53,6 +54,7 @@ def home(request):
     # Randomly select two users to display
     random_users = sample(list(not_following_users), 2)
 
+
     if request.method == 'POST':
         post_form = PostForm(request.POST, request.FILES)  # Include request.FILES here
         if post_form.is_valid():
@@ -60,7 +62,7 @@ def home(request):
                 # Attempt to get the logged-in user's profile
                 my_profile = Profile.objects.get(user=request.user)
             except ObjectDoesNotExist:
-                pass  # Handle tacc case if necessary
+                pass  # Handle this case if necessary
             
             post = post_form.save(commit=False)  # Don't commit the post yet
             post.posted_by = request.user
@@ -74,27 +76,56 @@ def home(request):
         post_form = PostForm()
 
     context = {
-        'gen_c':car_c,
-        'mot_c': mot_c,
-        'gig_c': gig_c,
+        'gen_c': gen_c,
+        'nat_c': nat_c,
+        'sci_c': sci_c,
+        'bus_c': bus_c,
         'art_c': art_c,
-        'hir_c': hir_c,
-        'bik_c': bik_c,
-        'ele_c': ele_c,
-        'acc_c': acc_c,
-        'art_c': art_c,
-        'lux_c': lux_c,
-        'fas_c': fas_c,
-        'rea_c': rea_c,
-        'foo_c': foo_c,
+        'new_c': new_c,
+        'cul_c': cul_c,
+        'spo_c': spo_c,
+        'mus_c': mus_c,
+        'his_c': his_c,
+        'phi_c': phi_c,
+        'rel_c': rel_c,
         'hea_c': hea_c,
-        'fur_c': fur_c,
         'random_users': random_users,
         'post_form': post_form,
         'posts': posts,
         'my_profile': my_profile,
     }
     return render(request, 'app/home.html', context)
+
+@login_required
+def upload_post(request):
+    if request.method == 'POST':
+        # Assuming you have a form with fields 'topic', 'body', and 'post_image'
+
+        # Get form data from the request
+        topic = request.POST.get('topic')
+        body = request.POST.get('body')
+        post_image = request.FILES.get('post_image')
+
+        # Check if required data is provided
+        if topic and body:
+            # Create a new Post instance
+            new_post = Post(
+                topic=topic,
+                body=body,
+                post_image=post_image,  # This is the image field in your Post model
+                posted_by=request.user  # Assuming you're using Django's built-in User model
+            )
+            new_post.save()
+
+            response_data = {'success': True, 'message': 'Post submitted successfully.'}
+            return JsonResponse(response_data)
+        else:
+            response_data = {'success': False, 'message': 'Invalid form data.'}
+            return JsonResponse(response_data)
+
+    # Handle GET or other HTTP methods
+    response_data = {'success': False, 'message': 'Invalid request method.'}
+    return JsonResponse(response_data)
 
 
 def upload_avatar(request):
@@ -105,24 +136,33 @@ def upload_avatar(request):
         return JsonResponse({'avatar_url': request.user.profile.avatar.url})
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
-def upload_images(request):
+
+@require_POST
+def update_profile(request):
     if request.method == 'POST':
         # Handle the uploaded cover image
         if 'cover_image' in request.FILES:
             cover_image = request.FILES['cover_image']
             request.user.profile.cover_image = cover_image
-            request.user.profile.save()
 
         # Handle the uploaded avatar image
         if 'avatar' in request.FILES:
             avatar = request.FILES['avatar']
             request.user.profile.avatar = avatar
-            request.user.profile.save()
 
-        return JsonResponse({'message': 'Images uploaded successfully.'})
+        # Update other profile information
+        request.user.profile.name = request.POST.get('name', '')
+        request.user.profile.location = request.POST.get('location', '')
+        request.user.profile.website = request.POST.get('website', '')
+        request.user.profile.bio = request.POST.get('bio', '')
+
+        # Save the updated profile
+        request.user.profile.save()
+
+        return JsonResponse({'message': 'Profile updated successfully.'})
 
     return JsonResponse({'error': 'Invalid request method.'}, status=400)
-    
+ 
 def post_search(request):
     if request.method == 'GET':
         query= request.GET.get('q')
@@ -260,15 +300,61 @@ def upvote_post(request, post_id):
     post = Post.objects.get(pk=post_id)
     if request.user.is_authenticated:
         post.upvote(request.user)
+
+        # Create an alert for the post owner
+        if post.posted_by != request.user:
+            Alert.objects.create(
+                sender=request.user,
+                receiver=post.posted_by,
+                alert_type='like',
+                post=post,
+            )
+
         return JsonResponse({'success': True, 'vote_count': post.vote_count})
     return JsonResponse({'success': False})
 
-@login_required
-def private_chat_view(request, other_user_id):
-    other_user = get_object_or_404(User, id=other_user_id)
-    # Create or retrieve a chat room between the current user and the other user
-    chat_room, created = ChatRoom.objects.get_or_create(user1=request.user, user2=other_user)
-    return render(request, 'private_chat_room.html', {'chat_room': chat_room})
+def upvote_comment(request, comment_id):
+    comment = Comment.objects.get(pk=comment_id)
+    if request.user.is_authenticated:
+        comment.upvote(request.user)
+
+        # Create an alert for the comment owner
+        if comment.comment_by != request.user:
+            Alert.objects.create(
+                sender=request.user,
+                receiver=comment.comment_by,
+                alert_type='like',
+                comment=comment,
+            )
+
+        return JsonResponse({'success': True, 'vote_count': comment.vote_count})
+    return JsonResponse({'success': False})
+
+def upvote_reply(request, reply_id):
+    reply = Reply.objects.get(pk=reply_id)
+    if request.user.is_authenticated:
+        reply.upvote(request.user)
+
+        # Create an alert for the reply owner
+        if reply.reply_by != request.user:
+            Alert.objects.create(
+                sender=request.user,
+                receiver=reply.reply_by,
+                alert_type='like',
+                reply=reply,
+            )
+
+        return JsonResponse({'success': True, 'vote_count': reply.vote_count})
+    return JsonResponse({'success': False})
+
+
+
+# @login_required
+# def private_chat_view(request, other_user_id):
+#     other_user = get_object_or_404(User, id=other_user_id)
+#     # Create or retrieve a chat room between the current user and the other user
+#     chat_room, created = ChatRoom.objects.get_or_create(user1=request.user, user2=other_user)
+#     return render(request, 'private_chat_room.html', {'chat_room': chat_room})
 
 
 def downvote_post(request, post_id):
@@ -276,6 +362,22 @@ def downvote_post(request, post_id):
     if request.user.is_authenticated:
         post.downvote(request.user)
         return JsonResponse({'success': True, 'vote_count': post.vote_count})
+    return JsonResponse({'success': False})
+  
+
+def downvote_comment(request, comment_id):
+    comment = Comment.objects.get(pk=comment_id)
+    if request.user.is_authenticated:
+        comment.downvote(request.user)
+        return JsonResponse({'success': True, 'vote_count': comment.vote_count})
+    return JsonResponse({'success': False})
+  
+
+def downvote_reply(request, reply_id):
+    reply = Reply.objects.get(pk=reply_id)
+    if request.user.is_authenticated:
+        reply.downvote(request.user)
+        return JsonResponse({'success': True, 'vote_count': reply.vote_count})
     return JsonResponse({'success': False})
   
 
@@ -365,15 +467,56 @@ def add_comment(request, post_id):
         post.comment_count += 1
         post.save()
 
+        # Create an alert for the post owner
+        if post.posted_by != request.user:
+            Alert.objects.create(
+                sender=request.user,
+                receiver=post.posted_by,
+                alert_type='comment',
+                post=post,
+            )
+
         return JsonResponse({'message': 'Comment added successfully'})
     else:
-        
         return JsonResponse({'error': 'Comment text is required'}, status=400)
+    
+@require_POST
+def add_reply(request, comment_id):
+    comment = Comment.objects.get(id=comment_id)
+    reply_text = request.POST.get('reply')
 
+    if reply_text:
+        reply = Reply.objects.create(
+            reply_by=request.user,
+            parent_comment=comment,
+            body=reply_text
+        )
+        comment.reply_count += 1
+        comment.save()
+
+        # Create an alert for the post owner
+        if comment.comment_by != request.user:
+            Alert.objects.create(
+                sender=request.user,
+                receiver=comment.comment_by,
+                alert_type='reply',
+                comment=comment,
+            )
+
+        return JsonResponse({'message': 'reply added successfully'})
+    else:
+        return JsonResponse({'error': 'reply text is required'}, status=400)
+    
+       
 def get_comment_count(request, post_id):
     post = Post.objects.get(id=post_id)
     comment_count = Comment.objects.filter(parent_post=post).count()
     return JsonResponse({'comment_count': comment_count})
+
+def get_reply_count(request, comment_id):
+    comment = Comment.objects.get(id=comment_id)
+    reply_count = Reply.objects.filter(related_comment=comment).count()
+    return JsonResponse({'reply_count': reply_count})
 
 @login_required
 def post_detail(request, id):
@@ -424,20 +567,20 @@ def my_tokens(request):
     return render (request, 'tokens/my_tokens.html', context )
  
 @login_required
-def baraza(request):
+def shop(request):
        
     context ={
      
    }
-    return render (request, 'posts/baraza.html', context )
+    return render (request, 'markets/shop.html', context )
 
-def category_filter(request, category):
-    filtered_posts = Post.objects.filter(category=category)
+def topic_filter(request, topic):
+    filtered_posts = Post.objects.filter(topic=topic)
     context ={
         'filtered_posts': filtered_posts,
-        'categories': category
+        'topic': topic
         }
-    return render(request, 'category/category_posts.html', context)
+    return render(request, 'topics/topic_posts.html', context)
 
 
 @login_required
@@ -499,7 +642,16 @@ def edit_profile(request):
     return render (request, 'profiles/edit_profile.html', context )
 
 
+@login_required
+def view_alerts(request):
+    # Retrieve unread alerts for the logged-in user
+    user_alerts = Alert.objects.filter(receiver=request.user, is_read=False)
 
+    # Mark retrieved alerts as read
+    user_alerts.update(is_read=True)
+
+    context = {'user_alerts': user_alerts}
+    return render(request, 'notifications/notificationlist.html', context)
 
 
 def landing(request):

@@ -29,6 +29,7 @@ class Profile(models.Model):
     phone_number = models.CharField(validators=[phone_regex], max_length=16, blank=True)
     bio = models.TextField(max_length=150)
     user_tokens = models.IntegerField(default=50)
+    is_verified = models.BooleanField(default=False)
     following = models.ManyToManyField(
         "self", blank=True, related_name="followers", symmetrical=False
     )

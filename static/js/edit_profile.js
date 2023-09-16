@@ -76,6 +76,13 @@ $(document).ready(function() {
                 });
             }
         }
+
+
+
+        // edit modal
+        
     });
+    
+
     
     // Keep your existing code for other functionality

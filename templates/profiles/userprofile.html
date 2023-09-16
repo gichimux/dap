@@ -1,4 +1,4 @@
-{% extends '../app/base.html' %}
+{% extends '../app/profile_base.html' %}
 {% block content %}
 
 {% load static %}
@@ -32,7 +32,6 @@
 
 
     
-    <div class="mx-auto profile-bg ">
 
 
 		<div class="profile-image mb-1">
@@ -43,12 +42,15 @@
         {% endif %}
 		</div>
 
+   
+  <div class="profile-info">
+
     <div class="row">
-      <div class="mr-auto pt-3  ml-4">
-      <p class="user-name-tag "><b>{{profile_detail.name}}</b>  <span class="blue ml-2 " >@{{profile_detail.user.username}} </span></p>
+      <div class="mr-auto mt-5  ml-4">
+      <p class="user-name-tag "><b>{{profile_detail.name}}</b> <br> <span class="blue  " >@{{profile_detail.user.username}} </span></p>
     </div>
 
-    <div class="edit-btn ml-auto mr-3 pt-2">
+    <div class="edit-btn ml-auto mt-3 mr-4">
       {% if profile_detail.user == user %}
       <button class="btn btn-outline-dark px-3"  data-toggle="modal" data-target="#ProfileEditModal"><i class="fa-solid fa-user-pen"></i> Edit </button>
       {% endif %}
@@ -70,17 +72,20 @@
 
     </div>
     </div>
-  </div>
-  <div id="container">
   <div class="social-stats row social-bio mt-2 ml-2 ">
                 
-    <p> {{profile_detail.bio}} </p>
+    <p> {{profile_detail.bio}} </p><br>
+
 </div>
+
 <div class="icon-info row mt-2 ml-3">
-  <p><i class="fa-solid fa-location-dot"></i> {{profile_detail.location}}<b></b></p>
-  <p class="ml-5"><i class="fa-solid fa-globe"></i>  <a href="{{ profile_detail.website }}" target="_blank">{{ profile_detail.website }}</a>
+  <div><p><i class="fa-solid fa-location-dot"></i> {{profile_detail.location}}<b></b></p></div>
+  <div> Joined {{profile_detail.user.date_joined|date:"M, Y" }}</div>
+
   </p>
-  <p class="ml-5"> Joined {{profile_detail.user.date_joined|date:"M, Y" }}</p>
+</div> 
+  <div><p class="mt-2 text-center"><i class="fa-solid fa-link"></i>  <a href="{{ profile_detail.website }}" target="_blank">{{ profile_detail.website }}</a>
+<br>
 
 </div>
         
@@ -123,7 +128,7 @@
 
 
 
-    <div class=" feed">
+    <div class=" profile-feed ">
 
         
         <ul class="tabs-bar text-center">

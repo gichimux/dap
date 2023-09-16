@@ -68,7 +68,11 @@
               <div class="account-hover-content p-3">
                 <div class="account-avatar ml-2 row">
                  <div class="">
-                  <img src="{% static 'img/avatar.jpg'%}" alt="">
+                  {% if post.avatar %}
+                  <img src="{{ post.avatar.url }}" alt="User Avatar" id="user-main-avatar">
+              {% else %}
+                  <img src="{% static 'img/default_avatar.jpg' %}" alt="Default Avatar" id="user-main-avatar">
+              {% endif %}
                 </div>
                
                 <div class="ml-auto">
@@ -104,7 +108,11 @@
             
             <div class="follow-account ">
               <div class="account-avatar">
-                <img src="{% static 'img/avatar.jpg'%}" c alt="">
+                {% if post.avatar %}
+                <img src="{{ post.avatar.url }}" alt="User Avatar" id="user-main-avatar">
+                {% else %}
+                    <img src="{% static 'img/default_avatar.jpg' %}" alt="Default Avatar" id="user-main-avatar">
+                {% endif %}
               </div>
               <div class="user-details ">
                 <p><b>{{post.poster_full}} </b> <i class="fa-solid fa-circle-check blue"></i>  . {{post.whenpublished}} </p>
@@ -118,15 +126,15 @@
         </div>
       </div>
       
-      <div class=" ml-auto category_badge">
-        <a href="{% url 'category_'|add:post.category %}" class="badge badge-pill badge-primary category_badge mr-2">{{post.category|title}}</a> 
+      <div class=" ml-auto topic_badge">
+        <a href="{% url 'topic_'|add:post.topic %}" class="badge badge-pill badge-primary topic_badge mr-2">{{post.topic|title}}</a> 
 
       </div>
      <div class="container mt-2">
   
-
       <div class="post-body">
-        <p class="short-body">
+        
+        <p class="short-body mt-1">
           <a href="{% url 'post_detail' post.id %}" id="post-body" >
           {{ post.body|slice:":144" }}{% if post.body|length > 50 %}...{% endif %}
         </a>
@@ -170,7 +178,7 @@
         <div class="post_card--input--left mt-2 ">
 
           <div class="post-icons">
-            <button class="comment-button btn btn-light" data-post-id="{{ post.id }}">
+            <button class="comment-button btn btn-light" data-post-id="{{ post.id }}" data-toggle="tooltip" data-placement="top" title="Comments">
               <i class="fa-regular fa-comment"></i>
               <span class="post-engagement ml-2" id="comment-count-{{ post.id }}">{{ post.comment_count }}</span>
 
@@ -183,7 +191,7 @@
               <form action="{% url 'upvote_post' post.id %}" method="post">
                 {% csrf_token %}
               <span class=" ml-2"> 
-                  <button  class="btn btn-light upvote-button {% if user in post.likes.all or post.id in clicked_buttons %} clicked-button{% endif %}" data-post-id="{{ post.id }}"> <i class="fa-regular fa-thumbs-up"></i> </button>         
+                  <button  class="btn btn-light upvote-button {% if user in post.likes.all or post.id in clicked_buttons %} clicked-button{% endif %}" data-post-id="{{ post.id }}" data-toggle="tooltip" data-placement="top" title="Like" > <i class="fa-regular fa-thumbs-up"></i> </button>         
               </span>
               </form>
             
@@ -192,7 +200,7 @@
             <form action="{% url 'downvote_post' post.id %}" method="post">
               {% csrf_token %}
             <span class=" ml-2">
-              <button  class="btn btn-light downvote-button {% if user in post.dislikes.all %} clicked-button{% endif %}" data-post-id="{{ post.id }}"> <i class="fa-regular fa-thumbs-up fa-rotate-180"></i> </button>
+              <button  class="btn btn-light downvote-button {% if user in post.dislikes.all %} clicked-button{% endif %}" data-post-id="{{ post.id }}" data-toggle="tooltip" data-placement="top" title="Dislike"> <i class="fa-regular fa-thumbs-up fa-rotate-180"></i> </button>
             </span>
             </form>
             {% endif %}
@@ -200,9 +208,8 @@
 
 
            <div class="post-icons  mr-3">
-            <button class="repost-button btn btn-light" data-post-id="{{ post.id }}" >
-              <i class="fa-solid fa-retweet"></i> 
-              <span class="post-engagement">13</span>
+            <button class="repost-button btn btn-light" data-post-id="{{ post.id }}" data-toggle="tooltip" data-placement="top" title="Share Post">
+              <i class="fa-solid fa-share"></i>
               </button>
           </div>
 
@@ -229,7 +236,7 @@
         <textarea name="comment" placeholder="Add a comment"></textarea>
       </div>
       <div class="col-1 actions">
-        <button type="submit" class="btn btn-primary "><i class="fa-solid fa-share"></i></button>
+        <button type="submit" class="btn btn-dark "><i class="fa-solid fa-arrow-right"></i></button>
         <!-- <button type="button" class="cancel-comment btn btn-light"><i class="fa-solid fa-xmark red"></i></button> -->
         </div>
         </div>
@@ -251,7 +258,29 @@
 
       <div class="app--feed">
 
-    hhhhhhhhhhhhhhhhhh
+     
+        <div class="">
+          <h4 class="ml-4"><b>Who to Follow</b></h4>
+          {% for user in random_users %}
+          <div class="follow-account ml-3 mt-3">
+              <div class="account-avatar">
+                {% if user.avatar %}
+                <img src="{{ user.avatar.url }}" alt="User Avatar" id="user-main-avatar">
+                {% else %}
+                    <img src="{% static 'img/default_avatar.jpg' %}" alt="Default Avatar" id="user-main-avatar">
+                {% endif %}
+              </div>
+              <div class="user-details">
+                  <p><b>{{ profile.user.name }}</b></p>
+                  <p class="blue">@{{ user.username }}</p>
+              </div>
+              <div class="follow-btn ml-3">
+                  <button class="btn btn-dark px-3 btn-rounded" onclick="followUser('{{ user.username }}')">Follow</button>
+              </div>
+          </div>
+          {% endfor %}
+          <p class="ml-5"><b><a href="">See More</a></b></p>
+      </div>
 
 </div>
 
@@ -291,17 +320,17 @@
             <div class="form-content-container ">
               <div class="form-content form-content-tab1 form-content-active">
 
-                 <form class="post_form" accept-charset="UTF-8" action="" method="POST" enctype="multipart/form-data" id="post-form">
+                <form class="post_form" accept-charset="UTF-8" action="{% url 'upload_post' %}" method="POST" enctype="multipart/form-data" id="post-form">
                   {% csrf_token %}
-                  {{ form.as_p }}
-                 
-                  
-                  <div class="form-group ml-2 category">
-                    <label for="{{ form.topic.id_for_label }}" class="mr-2">Category: </label>
-                    {{ post_form.category }}
+                  <!-- {{ form.as_p }} -->
+                
+
+                  <div class="form-group ml-2 topic">
+                    <label for="{{ form.topic.id_for_label }}" class="mr-2">Topic: </label>
+                    {{ post_form.topic }}
                 </div>
 
-                
+
                 <div class="word-count-progress ml-3 mt-2 mb-2">
                   <div class="progress">
                       <div class="progress-bar bg-primary" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
@@ -310,10 +339,10 @@
               </div>
 
                   <div class="form-group">
-                   
-                    <textarea type="text" name="body" class="form-control"  placeholder="Write something here ..." style="height: 180px;" id="post-form-body"></textarea>
+
+                    <textarea type="text" name="body" class="form-control"  placeholder="Your story goes here ..." style="height: 180px;" id="post-form-body"></textarea>
                   </div>
-                  
+
                   <div class="col-12  ">
                     <div class="row">
                     
@@ -406,7 +435,7 @@
       </div>
             <div class="modal-body">
                 <p id="successMessage" class="text-center">Your post was successful. </p>
-                <div class="text-center"> <button class="btn btn-outline-danger "  > <a href="{% url 'view_post' %}" >View post</a>  </button></div>
+                <div class="text-center"> <button class="btn btn-outline-light "  > <a href="{% url 'view_post' %}" ><b>View post</b></a>  </button></div>
 
             </div>
             <div class="modal-footer mx-auto">

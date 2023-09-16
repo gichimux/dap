@@ -7,6 +7,7 @@
     <div class="spacer"></div>
     <h2 class="text-center">Your Bookmarks</h2>
 	
+    {% if bookmarked_posts %}
     {% for post in bookmarked_posts %}
      <div class="row mt-2">
 
@@ -189,6 +190,17 @@
       
       </div>
      {% endfor %}
+
+     {% else %}
+      <div class="container">
+        <div class="spacer"></div>
+        <div class="spacer"></div>
+        <p class="text-center mt-5">
+          Your bookmarked posts will show up here
+        </p>
+        <div class="spacer"></div>
+      </div>
+     {% endif%}
 
 </div>
 {%endblock%}

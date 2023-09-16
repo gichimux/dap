@@ -6,43 +6,38 @@ import math
 from django.conf import settings
 User = settings.AUTH_USER_MODEL
 
-class Categories(models.TextChoices):
-    CARS = 'cars', 'Cars'
-    MOTORBIKES = 'motorbikes', 'Motorbikes'
-    BICYCLES = 'bicycles', 'Bicycles'
-    FASHION = 'fashion', 'Fashion'
-    GIGS = 'gigs', 'Gigs'
-    HIRING = 'hiring', 'Hiring'
-    ELECTRONICS = 'electronics', 'Electronics'
-    ACCESSORIES = 'accessories', 'Accessories'
-    ART = 'art', 'Art'
-    LUXURY = 'luxury', 'Luxury'
-    REAL_ESTATE = 'real estate', 'Real Estate'
-    FOOD_DRINKS = 'food and drinks', 'Food and Drinks'
-    BEAUTY_FITNESS = 'beauty and fitness', 'Beauty and Fitness'
-    FURNITURE = 'furniture', 'Furniture'
+class Topics(models.TextChoices):
+    GENERAL = 'general', 'General'
+    SCIENCE_TECHNOLOGY = 'science & technology', 'Science & Technology'
+    CULTURE = 'culture', 'Culture'
+    FAITH_RELIGION = 'faith & religion', 'Faith & Religion'
+    NATURE = 'nature', 'Nature'
+    SPORTS = 'sports', 'Sports'
+    BUSINESS_FINANCE = 'business & finance', 'Business & Finance'
+    NEWS = 'news', 'News'
+    MUSIC = 'music', 'Music'
+    HISTORY = 'history', 'History'
+    PHILOSOPHY = 'philosophy', 'Philosophy'
+    HEALTH_WELLNESS = 'health & wellness', 'Health & Wellness'
+    ART_DESIGN = 'art & design', 'Art & Design'
 
 
 
-  
 class Post(models.Model):
-    # post_images = models.ArrayField(
-    #     models.ImageField(upload_to='images/', null=True, blank=True),
-    #     size=7,  # Maximum number of images allowed
-    # )
+    post_image = models.ImageField(upload_to='post_images/', null=True, blank=True)
+   
     posted_by = models.ForeignKey(
         User, related_name="posted_by", on_delete=models.CASCADE, null=True
     )     
-    category = models.CharField(
+    topic = models.CharField(
         max_length=50,
-        choices=Categories.choices,
-        default=Categories.CARS
+        choices=Topics.choices,
+        default=Topics.GENERAL
     )  
     timestamp = models.DateTimeField(auto_now_add=True)
     
     likes = models.ManyToManyField(User, blank=True, related_name="liked_posts", symmetrical=False)
     dislikes = models.ManyToManyField(User, blank=True, related_name="disliked_posts", symmetrical=False)
-    listing_price = models.IntegerField(default=0)
     comment_count = models.IntegerField(default=0)
     bookmarked_users = models.ManyToManyField(User, blank=True, related_name="bookmarked_posts")
 
@@ -74,7 +69,14 @@ class Post(models.Model):
         le_profile = Profile.objects.get(user=self.posted_by)
         name = le_profile.name
         return name
+   
+    @property
+    def avatar(self):
+        le_profile = Profile.objects.get(user=self.posted_by)
+        avatar = le_profile.avatar
+        return avatar
      
+
     def poster_bio(self):
         le_profile = Profile.objects.get(user=self.posted_by)
         bio = le_profile.bio
@@ -155,8 +157,7 @@ class Post(models.Model):
         return self.id
 
 
-class PostImage(models.Model):
-    models.ImageField(upload_to='images/', null=True, blank=True),
+
 
 class Like(models.Model):
     post = models.ForeignKey(
@@ -177,8 +178,10 @@ class Comment(models.Model):
     parent_post = models.ForeignKey(
         Post, related_name="parent_post", on_delete=models.CASCADE
     )
-
+    likes = models.ManyToManyField(User, blank=True, related_name="liked_comments", symmetrical=False)
+    dislikes = models.ManyToManyField(User, blank=True, related_name="disliked_comments", symmetrical=False)
     body = models.TextField(max_length=500)
+    reply_count = models.IntegerField(default=0)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def poster_full(self):
@@ -192,10 +195,34 @@ class Comment(models.Model):
         bio = le_profile.bio
         return bio
 
+    def upvote(self, user):
+        self.likes.add(user)
+        self.dislikes.remove(user)
+        self.save()
+
+    def downvote(self, user):
+        self.likes.remove(user)
+        self.dislikes.add(user)
+        self.save()
+
+    @property
+    def vote_count(self):
+        likes = self.likes.count()
+        dislikes = self.dislikes.count()
+        votes = likes - dislikes
+        return votes
+    
+  
     def related_poster(self):
         related = self.parent_post.posted_by
         le_profile = Profile.objects.get(user=related)
         return le_profile
+       
+    @property
+    def avatar(self):
+        le_profile = Profile.objects.get(user=self.comment_by)
+        avatar = le_profile.avatar
+        return avatar
     
     def whenpublished(self):
         now = timezone.now()
@@ -269,6 +296,20 @@ class Comment(models.Model):
     def __str__(self):
         return self.related_post
 
+class CommentLike(models.Model):
+    comment = models.ForeignKey(
+        Comment, related_name="comment_likes", on_delete=models.CASCADE
+        )
+    user = models.ForeignKey(
+        User, related_name="user_likes_comment", on_delete=models.CASCADE, null=True
+    )
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.comment
+   
+
+
 class Reply(models.Model):
     reply_by = models.ForeignKey(
         User, related_name="reply_by", on_delete=models.CASCADE, null=True
@@ -276,10 +317,33 @@ class Reply(models.Model):
     related_comment = models.ForeignKey(
         Comment, related_name="post_comment_reply", on_delete=models.CASCADE
     )
-
+    likes = models.ManyToManyField(User, blank=True, related_name="liked_replies", symmetrical=False)
+    dislikes = models.ManyToManyField(User, blank=True, related_name="disliked_replies", symmetrical=False)
     body = models.CharField(max_length=300)
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    def upvote(self, user):
+        self.likes.add(user)
+        self.dislikes.remove(user)
+        self.save()
+
+    def downvote(self, user):
+        self.likes.remove(user)
+        self.dislikes.add(user)
+        self.save()
+
+    @property
+    def vote_count(self):
+        likes = self.likes.count()
+        dislikes = self.dislikes.count()
+        votes = likes - dislikes
+        return votes
+        
+    @property
+    def avatar(self):
+        le_profile = Profile.objects.get(user=self.reply_by)
+        avatar = le_profile.avatar
+        return avatar    
     def whenpublished(self):
         now = timezone.now()
         
@@ -351,6 +415,19 @@ class Reply(models.Model):
 
     def __str__(self):
         return self.related_comment
+
+class ReplyLike(models.Model):
+    reply = models.ForeignKey(
+        Reply, related_name="reply_likes", on_delete=models.CASCADE
+        )
+    user = models.ForeignKey(
+        User, related_name="user_likes_reply", on_delete=models.CASCADE, null=True
+    )
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.reply
+ 
 
 class Repost(models.Model):
     reposted_by = models.ForeignKey(

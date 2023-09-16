@@ -36,38 +36,6 @@
       </div>
   
       </div>
-
-      <div class="ml-auto row">
-        <div>
-        <button class="comment-button btn btn-light mt-1 mr-1 "   data-toggle="modal" data-target="#TipModal">
-              <i class="fa-solid fa-heart red "></i>
-          </button>
-
-        </div>
-     
-      
-
-
-          <a class="profile-dropdown  dropdown-toggle-nocaret" data-toggle="dropdown" href="#">
-            <div class="account-avatar">
-              {% if my_profile.avatar %}
-              <img src="{{ my_profile.avatar.url }}" alt="User Avatar" id="user-main-avatar">
-              {% else %}
-                  <img src="{% static 'img/default_avatar.jpg' %}" alt="Default Avatar" id="user-main-avatar">
-              {% endif %}
-          
-          </div>          
-        </a>
-          <ul class="dropdown-menu profile-dropdown-menu dropdown-menu-right">
-            <li class="dropdown-divider"></li>
-            <li class="dropdown-item"><i class="fa-regular fa-user mr-2"></i> Profile</li>
-            <li class="dropdown-divider"></li>
-            <li class="dropdown-item"><i class="fa-solid fa-cog mr-2 "></i> Settings</li>
-            <li class="dropdown-divider"></li>
-           
-            <li class="dropdown-item"><i class="fa-solid fa-right-from-bracket mr-2"></i> Logout</li>
-          </ul>
-        </div>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main_nav">
       <!-- <span class="navbar-toggler-icon"></span> -->
@@ -90,10 +58,10 @@
     <div class="row">
       <!-- Sidebar Starts -->
       
-      <div class="col left__rail ">
+      <div class="col left__rail mt-3">
         <div class="sidebar">
 
-          <!-- <a class="" href="#">
+          <a class="" href="#">
             <div class="mt-5 mb-3  mr-auto ml-4 ">
               <div id="logo">
                 <a href="{% url 'home' %}">
@@ -102,7 +70,7 @@
             </div>
         
             </div>
-          </a> -->
+          </a>
                
         <a href="{% url 'home'%}" class="sidebar__link {% if request.path == '/home/' %}active-nav{% endif %}" ><div class="sidebar__link">
          
@@ -282,18 +250,18 @@
             <a href="{% url 'topic_art & design' %}"><li ><i class="fa-solid fa-cubes mr-2 red"></i> Art & Design  <br><small class="grey ml-2">{{art_c}} Posts</small> </li></a>
   
           </ul>
-        
-
+      
         
       
 
         </div>
 
+
        
       </div>
     </div> 
    
-
+    
     <!-- Widgets Ends -->
   </div>
 
@@ -316,12 +284,10 @@
       </ul>
     </div>
 </div>
-
-
+ 
 <div class="footer">
   Terms of Service - Privacy Policy - Cookie Policy  - @ 2022 Soconey
 </div>
- 
   </div>
 
   
@@ -333,6 +299,26 @@
 
   <!-- Main Body Ends -->
   </body>
+
+  <div class="modal" id="TipModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+            <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+            <div class="modal-body">
+                <p id="successMessage" class="text-center">Your post was successful. </p>
+                <div class="text-center"> <button class="btn btn-outline-light "  > <a href="{% url 'view_post' %}" ><b>View post</b></a>  </button></div>
+
+            </div>
+            <div class="modal-footer mx-auto">
+              
+          </div>
+        </div>
+    </div>
+</div>
 
   <div class="fixed-bottom-menu ">
     <div class="fixed-bottom-menuــrow row ">
@@ -361,38 +347,29 @@
         </span>
         <h6 class="mt-1">Alerts</h6>
       </a>
-
-      <a href="{% url 'shop'%}" title="" class="fixed-bottom-menu__a">
-        <span class="">
-          <img src="{% static 'img/icons/shop.png'%}"/>
-        </span>
-        <h6 class="mt-1">Shop</h6>
-      </a>
       
+      <div class="card-action">
+            <div class="dropdown mt-3 ">
+      <a href="javascript:void();" title="" class="dropdown-toggle-nocaret fixed-bottom-menu_more" data-toggle="dropdown">
+        <span class="">
+          <img src="{% static 'img/icons/more.png'%}"/>
+        </span>
+        <h6 class=" ml-2">More</h6>
+      </a>
+                   <div class="dropdown-menu more-dropdown dropdown-menu-right">
+              <a class="dropdown-item" href="{% url 'bookmark_list'%}"><i class="fa-regular fa-bookmark mr-2 "></i> Bookmarks</a>
+              <a class="dropdown-item" href="{% url 'shop'%}"><span class="mr-2"><img src="{% static 'img/icons/shop.png'%}"/></span> Shop</a>
 
-    </div>
-</div>
+             <a class="dropdown-item" href=""><i class="fa-solid fa-gear mr-2 "></i> Settings</a>
+             <a class="dropdown-item" href=""><i class="fa-solid fa-heart red mr-2"></i> Support </a>
+             <a class="dropdown-item" href="{% url 'logout' %}"><i class="fa-solid fa-arrow-right-from-bracket mr-2 "></i> Logout</a>
 
-
-<div class="modal" id="TipModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
-          <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-          <div class="modal-body">
-              <p id="successMessage" class="text-center">Love what we do? </p>
-              <div class="text-center"> 
-                <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support Me on Ko-fi', '#29abe0', 'Z8Z4P9PAD');kofiwidget2.draw();</script> 
-          </div>
-          <div class="modal-footer mx-auto">
-            
-        </div>
+              </div>
       </div>
-  </div>
+      </div>
+    </div>
 </div>
+
 
   {% block scripts %}
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -405,8 +382,8 @@
   <script src="{% static 'js/camel.js'%}"></script>
 
   <script src="{% static 'js/repost.js'%}"></script>
-  <!-- <script src="{% static 'js/edit_profile.js'%}"></script> -->
-  <!-- <script src="{% static 'js/edit_profile_modal.js'%}"></script> -->
+  <script src="{% static 'js/edit_profile.js'%}"></script>
+  <script src="{% static 'js/edit_profile_modal.js'%}"></script>
 
   <script src="{% static 'js/votes.js'%}"></script>
   <script src="{% static 'js/comment.js'%}"></script>
@@ -414,100 +391,6 @@
   <!-- <script src="{% static 'js/post_form.js'%}"></script> -->
   <script>
   
-  $(document).ready(function() {
-
-   
-$('#post-form').submit(function(event) {
-event.preventDefault();
-
-var formData = new FormData(this);
-var csrfToken = $('input[name=csrfmiddlewaretoken]').val();
-
-var modal = $('#StoryModal'); // Assuming your modal ID is 'postModal'
-
-var imageInput = $('#id_image')[0]; // Replace 'id_post_image' with the actual ID of the image input
-
-// Check if an image was selected
-if (imageInput.files.length > 0) {
-    // Append the selected file to formData
-    formData.append('post_image', imageInput.files[0]);
-}
-
-var successModal = $('#successModal'); // Your success modal ID
-$.ajaxSetup({
-    headers: {
-        'X-CSRFToken': csrfToken
-    }
-});
-$.ajax({
-    url: '{% url "upload_post" %}',
-    type: 'POST',
-    data: formData,
-    processData: false,
-    contentType: false,
-    success: function(response) {
-        if (response.success) {
-            modal.modal('hide');
-            $('#post-form')[0].reset();
-            // Show the success modal
-            successModal.modal('show');
-            // Update the success message in the modal
-            $('#successMessage').text(response.message);
-            // Close the success modal after a certain delay (e.g., 3 seconds)
-            setTimeout(function() {
-                successModal.modal('hide');
-            }, 3000); // 3000 milliseconds (3 seconds)
-        } else {
-            alert(response.message);
-        }
-    },
-    error: function() {
-        alert('An error occurred while submitting the form.');
-    }
-});
-});
-
-
-
-$('.follow-button').click(function(e) {
-    e.preventDefault();
-    var profileUsername = $(this).data('profile-username');
-    var button = $(this);
-
-    $.ajax({
-        url: '/follow/' + profileUsername + '/',
-        type: 'post',
-        dataType: 'json',
-        data: {
-            csrfmiddlewaretoken: getCSRFToken()  // Include the CSRF token
-        },
-        success: function(response) {
-            if (response.success) {
-                if (response.action === 'follow') {
-                    button.text('Unfollow');
-                } else if (response.action === 'unfollow') {
-                    button.text('Follow');
-                }
-            }
-        }
-    });
-});
-
-var maxWords = 144;
-
-    $('#post-form-body').on('input', function() {
-        var words = $(this).val().trim().split(/\s+/).length;
-        var progress = (words / maxWords) * 100;
-        $('.progress-bar').css('width', progress + '%').attr('aria-valuenow', progress);
-        $('.word-count').text(words + '/' + maxWords + ' words');
-
-        if (words > maxWords) {
-            $(this).val($(this).val().split(/\s+/).slice(0, maxWords).join(' '));
-        }
-    });
-
-});
-
   </script>
   {% endblock %}
   

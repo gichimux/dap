@@ -5,36 +5,39 @@
 
 <div class="col">
     <div class="spacer"></div>
-    <h2 class="text-center">Your Notifications</h2>
+    <h2 class="text-center">Your Alerts</h2>
+    <div class="container">
 	<div class="list-group mt-4">
-       
-        <a href="#" class="list-group-item notification list-group-item-action">
+    
+    {% if user_alerts %}
+    <ul>
+      
+      {% for alert in user_alerts %}
+        <li  class="list-group-item notification list-group-item-action">
           <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">List group item heading</h5>
-            <small class="text-muted">3 days ago</small>
+            <h5 class="mb-1"><strong>{{ alert.sender.username }}</strong> {{ alert.alert_type }}d your post</h5>
+            <small class="text-muted">"{{ alert.post.title }}" on {{ alert.timestamp|date:"F j, Y H:i" }}</small>
           </div>
-          <p class="mb-1">Some placeholder content in a paragraph.</p>
-          <small class="text-muted">And some muted small print.</small>
-        </a>
+          {% if not alert.is_read %}
+                    <span style="color: red;">Unread</span>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+        
 
-        <a href="#" class="list-group-item notification list-group-item-action">
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">List group item heading</h5>
-              <small class="text-muted">3 days ago</small>
-            </div>
-            <p class="mb-1">Some placeholder content in a paragraph.</p>
-            <small class="text-muted">And some muted small print.</small>
-          </a>
+     {% else %}
+     <div class="container">
+       <div class="spacer"></div>
+       <div class="spacer"></div>
+       <p class="text-center mt-5">
+         There are no alerts to show at the moment
+       </p>
+       <div class="spacer"></div>
+     </div>
+    {% endif%}
 
-          <a href="#" class="list-group-item notification list-group-item-action">
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">List group item heading</h5>
-              <small class="text-muted">3 days ago</small>
-            </div>
-            <p class="mb-1">Some placeholder content in a paragraph.</p>
-            <small class="text-muted">And some muted small print.</small>
-          </a>
-       
       </div>
+    </div>
 </div>
 {%endblock%}
